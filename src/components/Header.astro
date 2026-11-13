@@ -1,0 +1,23 @@
+---
+import { languages, ui, homeUrl, projectUrl, type Language } from '../i18n/ui';
+
+interface Props { lang: Language; projectKey?: string }
+const { lang, projectKey } = Astro.props;
+const t = ui[lang];
+const sections = ['projects', 'presentations', 'about', 'contact'];
+---
+<header class="site-header">
+  <a class="wordmark" href={homeUrl(lang)} aria-label={`${t.name} — ${t.home}`}>sm<span>.dev</span></a>
+  <nav class="navigation" aria-label={lang === 'ru' ? 'Главная навигация' : 'Main navigation'}>
+    {t.navigation.map((label, index) => <a href={`${homeUrl(lang)}#${sections[index]}`}>{label}</a>)}
+  </nav>
+  <nav class="language" aria-label={t.language}>
+    {languages.map((language) => <a
+      href={projectKey ? projectUrl(language, projectKey) : homeUrl(language)}
+      lang={language}
+      hreflang={language}
+      aria-current={language === lang ? 'page' : undefined}
+      aria-label={language === 'ru' ? 'Русская версия' : 'English version'}
+    >{language.toUpperCase()}</a>)}
+  </nav>
+</header>

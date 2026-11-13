@@ -1,0 +1,11 @@
+---
+import { ui, type Language } from '../i18n/ui';
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+<footer class="site-footer">
+  <span>{t.name}</span>
+  <span>Python Backend · ML Engineering</span>
+  <a href="#top">{lang === 'ru' ? 'Наверх' : 'Back to top'} <span aria-hidden="true">↑</span></a>
+</footer>
