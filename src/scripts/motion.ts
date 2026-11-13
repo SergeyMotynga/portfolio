@@ -1,8 +1,7 @@
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia('(pointer: fine)');
 const root = document.documentElement;
-let effectsPaused = false;
-const motionDisabled = () => preference.matches || effectsPaused;
+const motionDisabled = () => preference.matches;
 const activeAnimations = new Set<Animation>();
 const tokenStyles = getComputedStyle(root);
 const timing = {
@@ -19,85 +18,50 @@ function animate(element: Element, frames: Keyframe[], duration: number, delay =
   animation.finished.then(() => activeAnimations.delete(animation)).catch(() => activeAnimations.delete(animation));
 }
 
-const scenes = {
-  ru: {
-    api: ['POST /tasks', 'Авторизация → логика → сохранение'],
-    data: ['GET /projects', 'Запрос → фильтрация → данные'],
-    ml: ['POST /query', 'Поиск → переранжирование → ответ'],
-  },
-  en: {
-    api: ['POST /tasks', 'Authentication → logic → persistence'],
-    data: ['GET /projects', 'Request → filtering → data'],
-    ml: ['POST /query', 'Retrieval → reranking → answer'],
-  },
-} as const;
+const revealElements = [...document.querySelectorAll<HTMLElement>('.section-heading, [data-reveal]')];
+const revealOffsets = new WeakMap<HTMLElement, number>();
+const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
-function setupSystem(system: HTMLElement): () => void {
-  const controls = system.querySelector<HTMLElement>('.system-controls');
-  const toggle = system.querySelector<HTMLButtonElement>('[data-motion-toggle]');
-  const request = system.querySelector<HTMLElement>('[data-request-label]');
-  const caption = system.querySelector<HTMLElement>('[data-system-caption]');
-  if (!controls || !toggle || !request || !caption) return () => {};
-
-  let visible = true;
-  const buttons = system.querySelectorAll<HTMLButtonElement>('[data-scene-button]');
-  const lang = system.dataset.language === 'en' ? 'en' : 'ru';
-
-  function updateMotion(): void {
-    const reduce = preference.matches;
-    system.dataset.motion = motionDisabled() || !visible || document.hidden ? 'paused' : 'running';
-    toggle!.disabled = reduce;
-    toggle!.setAttribute('aria-pressed', String(motionDisabled()));
-    toggle!.textContent = reduce ? toggle!.dataset.reducedLabel! : effectsPaused ? toggle!.dataset.playLabel! : toggle!.dataset.pauseLabel!;
-  }
-
-  controls.hidden = false;
-  buttons.forEach((button) => button.addEventListener('click', () => {
-    const scene = button.dataset.sceneButton as keyof typeof scenes.ru;
-    const content = scenes[lang][scene];
-    system.dataset.scene = scene;
-    request.textContent = content[0];
-    caption.textContent = content[1];
-    buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-  }));
-  toggle.addEventListener('click', () => { effectsPaused = !effectsPaused; applyMotionPreference(); });
-  document.addEventListener('visibilitychange', updateMotion);
-  const visibility = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; updateMotion(); });
-  visibility.observe(system);
-  updateMotion();
-  return updateMotion;
+// Scroll determines the visible state in both directions; no one-shot observer.
+function measureReveals(viewportHeight: number, remainingScroll: number) {
+  return revealElements.map((element) => {
+    const bounds = element.getBoundingClientRect();
+    const distance = Math.min(240, viewportHeight * .34);
+    const previousOffset = revealOffsets.get(element) || 0;
+    const top = bounds.top - previousOffset;
+    const bottom = bounds.bottom - previousOffset;
+    const entryProgress = clamp((viewportHeight * .88 - top) / distance);
+    const endProgress = top < viewportHeight && bottom > 0 ? clamp(1 - remainingScroll / distance) : 0;
+    const progress = motionDisabled() ? 1 : Math.max(entryProgress, endProgress);
+    return { element, progress };
+  });
 }
 
-const systemUpdates = [...document.querySelectorAll<HTMLElement>('[data-system]')].map(setupSystem);
-const revealElements = document.querySelectorAll<HTMLElement>('.section-heading, [data-reveal]');
-const seen = new WeakSet<Element>();
-const reveals = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting || seen.has(entry.target)) return;
-    seen.add(entry.target);
-    reveals.unobserve(entry.target);
-    if (motionDisabled()) return;
-    const element = entry.target as HTMLElement;
-    const words = element.querySelectorAll('.motion-word');
-    if (words.length) {
-      words.forEach((word, index) => animate(word, [
-        { transform: 'translateY(110%)', opacity: 0 },
-        { transform: 'translateY(0)', opacity: 1 },
-      ], timing.heading, Math.min(index, 5) * timing.stagger));
-      const subtitle = element.querySelector('.micro');
-      if (subtitle) animate(subtitle, [{ opacity: 0, transform: 'translateX(16px)' }, { opacity: 1, transform: 'translateX(0)' }], timing.entrance, timing.stagger);
-      if (element.matches('.section-heading')) return;
+function paintReveals(states: ReturnType<typeof measureReveals>): void {
+  states.forEach(({ element, progress }) => {
+    element.dataset.scrollReveal = '';
+    const words = element.querySelectorAll<HTMLElement>('.motion-word');
+    words.forEach((word, index) => {
+      const offset = Math.min(index, 5) * .07;
+      const wordProgress = clamp((progress - offset) / (1 - offset));
+      word.style.setProperty('--word-shift', `${(1 - wordProgress) * 105}%`);
+      word.style.setProperty('--word-opacity', String(wordProgress));
+    });
+    if (element.matches('.section-heading')) {
+      element.style.setProperty('--reveal-opacity', '1');
+      return;
     }
+    const sequence = Number(element.dataset.sequence || 0) % 3;
+    const offset = sequence * .04;
+    const itemProgress = clamp((progress - offset) / (1 - offset));
+    const distance = (1 - itemProgress) * 36;
     const direction = element.dataset.reveal;
-    const offset = direction === 'left' ? 'translateX(-32px)' : direction === 'right' ? 'translateX(32px)' : 'translateY(36px)';
-    const delay = (Number(element.dataset.sequence || 0) % 4) * timing.stagger;
-    animate(element, [
-      { opacity: 0.15, transform: offset },
-      { opacity: 1, transform: 'translateY(0)' },
-    ], timing.entrance, delay);
+    const transform = direction === 'left' ? `translateX(${-distance}px)` : direction === 'right' ? `translateX(${distance}px)` : `translateY(${distance}px)`;
+    element.style.setProperty('--reveal-opacity', String(itemProgress));
+    element.style.setProperty('--reveal-transform', transform);
+    revealOffsets.set(element, direction === 'left' || direction === 'right' ? 0 : distance);
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
-revealElements.forEach((element) => reveals.observe(element));
+}
 
 const hero = document.querySelector<HTMLElement>('.hero');
 const visual = document.querySelector<HTMLElement>('[data-system]');
@@ -119,7 +83,7 @@ document.addEventListener('focusin', (event) => {
 let pointerFrame = 0;
 if (hero && visual) {
   hero.addEventListener('pointermove', (event) => {
-    if (motionDisabled() || !finePointer.matches || visual.dataset.motion === 'paused' || pointerFrame) return;
+    if (motionDisabled() || !finePointer.matches || pointerFrame) return;
     pointerFrame = requestAnimationFrame(() => {
       const bounds = hero.getBoundingClientRect();
       const x = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
@@ -139,21 +103,40 @@ if (hero && visual) {
   });
 }
 
+const header = document.querySelector<HTMLElement>('.site-header');
+let lastScrollY = window.scrollY;
+let headerScrollDistance = 0;
+function measureHeader(): void {
+  root.style.setProperty('--header-height', `${header?.getBoundingClientRect().height || 88}px`);
+}
+measureHeader();
 let scrollFrame = 0;
 function updateScroll(): void {
-  const range = document.documentElement.scrollHeight - window.innerHeight;
+  const currentY = Math.max(0, window.scrollY);
+  const viewportHeight = window.innerHeight;
+  const range = document.documentElement.scrollHeight - viewportHeight;
+  const revealStates = measureReveals(viewportHeight, Math.max(0, range - currentY));
+  const heroTop = hero?.getBoundingClientRect().top || 0;
   document.documentElement.style.setProperty('--scroll-progress', String(range > 0 ? Math.min(1, Math.max(0, window.scrollY / range)) : 0));
   if (heroTitle && hero) {
-    const progress = motionDisabled() ? 0 : Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / Math.max(340, window.innerHeight * .6)));
+    const progress = motionDisabled() ? 0 : Math.min(1, Math.max(0, -heroTop / Math.max(340, viewportHeight * .6)));
     const opacity = Math.max(0, 1 - progress * 1.6);
     heroTitle.style.setProperty('--hero-opacity', String(opacity));
     heroTitle.style.setProperty('--hero-lift', `${-progress * 64}px`);
   }
   root.style.setProperty('--ambient-shift', motionDisabled() ? '0px' : `${-Math.min(window.scrollY * .04, 120)}px`);
+  paintReveals(revealStates);
+  if (header) {
+    const delta = currentY - lastScrollY;
+    if (delta !== 0) headerScrollDistance = Math.sign(delta) === Math.sign(headerScrollDistance) ? headerScrollDistance + delta : delta;
+    if (currentY < 100 || headerScrollDistance < -8) header.dataset.hidden = 'false';
+    else if (currentY > 160 && headerScrollDistance > 12) header.dataset.hidden = 'true';
+  }
+  lastScrollY = currentY;
   scrollFrame = 0;
 }
 window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll); }, { passive: true });
-window.addEventListener('resize', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll); });
+window.addEventListener('resize', () => { measureHeader(); if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll); });
 function applyMotionPreference(): void {
   root.dataset.effects = motionDisabled() ? 'paused' : 'running';
   activeAnimations.forEach((animation) => animation.cancel());
@@ -161,10 +144,13 @@ function applyMotionPreference(): void {
     visual.style.setProperty('--tilt-x', '0deg');
     visual.style.setProperty('--tilt-y', '0deg');
   }
-  systemUpdates.forEach((update) => update());
   updateScroll();
 }
 preference.addEventListener('change', applyMotionPreference);
 // Keep animation cancellation for user changes; initial entrances may finish normally.
 root.dataset.effects = motionDisabled() ? 'paused' : 'running';
 updateScroll();
+
+// Details change page geometry without scrolling; recompute every visible state.
+document.addEventListener('toggle', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll); }, true);
+window.addEventListener('pageshow', updateScroll);
