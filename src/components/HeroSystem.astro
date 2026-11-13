@@ -3,15 +3,15 @@ import type { Language } from '../i18n/ui';
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = lang === 'ru' ? {
-  title: 'От запроса к результату', demo: 'Интерактивная схема',
+  title: 'Как проходит запрос', demo: 'Backend в движении',
   description: 'Демонстрация пути запроса через API, бизнес-логику и данные или ML. Можно выбрать сценарий; схема не обращается к серверу.',
-  label: 'Выберите сценарий запроса', data: 'Данные', pause: 'Пауза', play: 'Продолжить', reduced: 'Движение уменьшено',
-  request: 'Запрос', service: 'Бизнес-логика', response: 'Результат', caption: 'Авторизация → логика → сохранение',
+  label: 'Выберите сценарий запроса', data: 'Данные', pause: 'Пауза анимации', play: 'Продолжить', reduced: 'Движение уменьшено',
+  request: 'Запрос', service: 'Логика', response: 'Результат', caption: 'Авторизация → логика → сохранение',
 } : {
-  title: 'From request to result', demo: 'Interactive diagram',
+  title: 'The journey of a request', demo: 'Backend in motion',
   description: 'An illustration of a request passing through an API, business logic, and data or ML. Choose a scenario; the diagram does not call a server.',
-  label: 'Choose a request scenario', data: 'Data', pause: 'Pause', play: 'Resume', reduced: 'Reduced motion',
-  request: 'Request', service: 'Business logic', response: 'Result', caption: 'Authentication → logic → persistence',
+  label: 'Choose a request scenario', data: 'Data', pause: 'Pause motion', play: 'Resume', reduced: 'Reduced motion',
+  request: 'Request', service: 'Logic', response: 'Result', caption: 'Authentication → logic → persistence',
 };
 ---
 <div class="hero-visual" data-system data-scene="api" data-motion="paused" data-language={lang}>
@@ -19,19 +19,17 @@ const t = lang === 'ru' ? {
     <div class="console-heading"><span class="micro">{t.demo}</span><span class="console-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>
     <div class="system-diagram" role="img" aria-label={t.description}>
       <svg class="system-wires" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-        <path class="wire wire-entry" d="M500 60 C500 160 160 120 160 260" />
-        <path class="wire wire-core" d="M160 260 H500" />
-        <path class="wire wire-data" d="M500 260 C650 260 650 160 840 160" />
-        <path class="wire wire-ml" d="M500 260 C650 260 650 380 840 380" />
-        <path class="wire wire-data-return" d="M840 160 V470 Q840 530 500 530" />
-        <path class="wire wire-ml-return" d="M840 380 V470 Q840 530 500 530" />
+        <path class="wire wire-entry" d="M160 110 V210" />
+        <path class="wire wire-core" d="M280 260 H380" />
+        <path class="wire wire-data wire-ml" d="M620 260 H720" />
+        <path class="wire wire-data-return wire-ml-return" d="M840 310 V450" />
       </svg>
       <div class="system-node node-request"><span class="node-dot" aria-hidden="true"></span><span data-request-label>POST /tasks</span></div>
       <div class="system-node node-api"><span class="node-mini">01 / API</span><strong>FastAPI</strong></div>
       <div class="system-node node-core"><span class="node-mini">02 / CORE</span><strong>{t.service}</strong></div>
-      <div class="system-node node-data"><span class="node-mini">03 / DATA</span><strong>PostgreSQL</strong></div>
-      <div class="system-node node-ml"><span class="node-mini">03 / ML</span><strong>ML pipeline</strong></div>
-      <div class="system-node node-result"><span class="node-dot" aria-hidden="true"></span><span>{t.response}</span><span aria-hidden="true">↗</span></div>
+      <div class="system-node node-data"><span class="node-mini">03 / DATA</span><strong>SQL</strong></div>
+      <div class="system-node node-ml"><span class="node-mini">03 / ML</span><strong>ML</strong></div>
+      <div class="system-node node-result"><span class="node-dot" aria-hidden="true"></span><span>200 OK</span><span aria-hidden="true">↗</span></div>
     </div>
     <p class="system-title">{t.title}</p>
     <p class="system-caption" data-system-caption aria-live="polite">{t.caption}</p>

@@ -7,7 +7,7 @@ const { project, index, lang, compact = false } = Astro.props;
 const { data } = project;
 const t = ui[lang];
 ---
-<details class:list={['project-row', { compact }]} id={`project-${data.key}`}>
+<details class:list={['project-row', { compact }]} id={`project-${data.key}`} data-reveal="left" data-sequence={index - 1}>
   <summary>
     <span class="project-index" aria-hidden="true">{String(index).padStart(2, '0')}</span>
     <span class="project-summary">
