@@ -1,0 +1,2 @@
+# Keep imported skill resources intact; upstream formatting is not project code.
+.agents/skills/** -text -whitespace linguist-vendored
