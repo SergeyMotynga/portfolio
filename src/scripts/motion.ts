@@ -137,7 +137,6 @@ function updateScroll(): void {
     const opacity = Math.pow(1 - progress, 3);
     heroScene.style.setProperty('--scene-opacity', String(opacity));
     heroScene.style.setProperty('--scene-pin', `${pin}px`);
-    heroScene.style.setProperty('--scene-lift', `${-progress * 24}px`);
     hero.dataset.sceneHidden = String(opacity < .02);
     hero.dataset.sceneFading = String(progress > 0);
   }
