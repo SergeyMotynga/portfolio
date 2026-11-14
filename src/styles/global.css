@@ -256,7 +256,9 @@
 
 @layer components {
   .site-shell { overflow: clip; }
-  .hero-scene { opacity: var(--scene-opacity, 1); transform: translate3d(0, var(--scene-pin, 0px), 0); }
+  .hero-scene { opacity: var(--scene-opacity, 1); }
+  [data-effects='running'] .hero { position: sticky; top: var(--hero-sticky-top, var(--header-height, 88px)); }
+  [data-effects='running'] .hero:has(:focus-visible) { position: relative; top: auto; }
   .hero { z-index: 0; }
   .hero:has(:focus-visible) { z-index: 2; }
   .section, .contact-section { position: relative; z-index: 1; }
@@ -289,6 +291,7 @@
   [data-effects='paused'] .hero-visual { transform: none; }
   [data-effects='paused'] .ambient-background::before { transform: none; }
   @media (prefers-reduced-motion: reduce) {
+    [data-effects='running'] .hero { position: relative; top: auto; }
     .hero-scene { opacity: 1 !important; transform: none !important; }
     .name-line, .motion-word, [data-reveal], .ambient-background::before { transform: none !important; }
     .ambient-orbit { animation: none !important; }

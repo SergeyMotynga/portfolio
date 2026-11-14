@@ -67,6 +67,7 @@ const hero = document.querySelector<HTMLElement>('.hero');
 const visual = document.querySelector<HTMLElement>('[data-system]');
 const heroCopy = document.querySelector<HTMLElement>('.hero-copy');
 const heroScene = document.querySelector<HTMLElement>('.hero-scene');
+const heroContainer = hero?.closest('main');
 root.dataset.home = String(Boolean(hero));
 document.querySelectorAll('.name-line').forEach((line, index) => animate(line, [
   { transform: 'translateY(110%)' }, { transform: 'translateY(0)' },
@@ -117,6 +118,10 @@ let headerHeight = 88;
 function measureHeader(): void {
   headerHeight = header?.getBoundingClientRect().height || 88;
   root.style.setProperty('--header-height', `${headerHeight}px`);
+  if (hero) {
+    // CSS holds the scene; tall scenes can scroll until their bottom is visible.
+    hero.style.setProperty('--hero-sticky-top', `${Math.min(headerHeight, window.innerHeight - hero.getBoundingClientRect().height)}px`);
+  }
 }
 measureHeader();
 let scrollFrame = 0;
@@ -125,18 +130,17 @@ function updateScroll(): void {
   const viewportHeight = window.innerHeight;
   const range = document.documentElement.scrollHeight - viewportHeight;
   const revealStates = measureReveals(viewportHeight, Math.max(0, range - currentY));
-  const heroBounds = hero?.getBoundingClientRect();
+  const heroHeight = hero?.getBoundingClientRect().height;
+  const heroStart = heroContainer?.getBoundingClientRect().top;
   document.documentElement.style.setProperty('--scroll-progress', String(range > 0 ? Math.min(1, Math.max(0, window.scrollY / range)) : 0));
-  if (heroScene && heroBounds && hero) {
-    // The next section rises over a fading scene. Tall scenes scroll through first.
+  if (heroScene && heroHeight !== undefined && heroStart !== undefined && hero) {
+    // Measure normal document flow, never the sticky element's clamped position.
     const visibleHeight = Math.max(1, viewportHeight - headerHeight);
-    const readTravel = Math.max(0, heroBounds.height - visibleHeight);
-    const travel = Math.max(0, headerHeight - heroBounds.top);
-    const pin = motionDisabled() ? 0 : Math.min(visibleHeight, Math.max(0, travel - readTravel));
+    const readTravel = Math.max(0, heroHeight - visibleHeight);
+    const travel = Math.max(0, headerHeight - heroStart);
     const progress = motionDisabled() ? 0 : clamp((travel - readTravel) / visibleHeight);
     const opacity = Math.pow(1 - progress, 3);
     heroScene.style.setProperty('--scene-opacity', String(opacity));
-    heroScene.style.setProperty('--scene-pin', `${pin}px`);
     hero.dataset.sceneHidden = String(opacity < .02);
     hero.dataset.sceneFading = String(progress > 0);
   }
