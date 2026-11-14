@@ -18,21 +18,23 @@ const resume = profile.resume?.[lang];
 ---
 <BaseLayout lang={lang}>
   <section class="hero" aria-labelledby="hero-title">
-    <p class="eyebrow micro"><span class="status-dot" aria-hidden="true"></span>Python backend · ML Engineering</p>
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <h1 id="hero-title" class="hero-title-motion" aria-label={t.name}><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ')[0]}</span></span><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ').slice(1).join(' ')}</span></span></h1>
-        <p class="hero-role">Python Backend Developer <span>/ ML Engineering</span></p>
-        <p class="hero-lead">{t.lead}</p>
-        <div class="hero-actions">
-          <a class="primary-link" href="#projects">{t.explore} <span aria-hidden="true">↘</span></a>
-          <a class="text-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-          {resume && <a class="text-link" href={resume} download>{t.resume} <span aria-hidden="true">↓</span></a>}
+    <div class="hero-scene">
+      <p class="eyebrow micro"><span class="status-dot" aria-hidden="true"></span>Python backend · ML Engineering</p>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title" aria-label={t.name}><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ')[0]}</span></span><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ').slice(1).join(' ')}</span></span></h1>
+          <p class="hero-role">Python Backend Developer <span>/ ML Engineering</span></p>
+          <p class="hero-lead">{t.lead}</p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#projects">{t.explore} <span aria-hidden="true">↘</span></a>
+            <a class="text-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+            {resume && <a class="text-link" href={resume} download>{t.resume} <span aria-hidden="true">↓</span></a>}
+          </div>
         </div>
+        <HeroSystem lang={lang} />
       </div>
-      <HeroSystem lang={lang} />
+      <ul class="tech-strip" aria-label={lang === 'ru' ? 'Основной стек' : 'Core stack'}>{['Python', 'FastAPI', 'PostgreSQL', 'SQLAlchemy'].map((technology) => <li>{technology}</li>)}</ul>
     </div>
-    <ul class="tech-strip" aria-label={lang === 'ru' ? 'Основной стек' : 'Core stack'}>{['Python', 'FastAPI', 'PostgreSQL', 'SQLAlchemy'].map((technology) => <li>{technology}</li>)}</ul>
   </section>
 
   <section class="section" id="projects" aria-labelledby="projects-title">

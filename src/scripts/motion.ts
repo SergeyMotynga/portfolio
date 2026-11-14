@@ -66,7 +66,7 @@ function paintReveals(states: ReturnType<typeof measureReveals>): void {
 const hero = document.querySelector<HTMLElement>('.hero');
 const visual = document.querySelector<HTMLElement>('[data-system]');
 const heroCopy = document.querySelector<HTMLElement>('.hero-copy');
-const heroTitle = heroCopy?.querySelector<HTMLElement>('h1');
+const heroScene = document.querySelector<HTMLElement>('.hero-scene');
 root.dataset.home = String(Boolean(hero));
 document.querySelectorAll('.name-line').forEach((line, index) => animate(line, [
   { transform: 'translateY(110%)' }, { transform: 'translateY(0)' },
@@ -78,36 +78,45 @@ heroCopy?.querySelectorAll('.hero-role, .hero-lead, .hero-actions').forEach((ele
 document.addEventListener('focusin', (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
-  target.closest('[data-reveal], .section-heading, .hero-copy')?.getAnimations({ subtree: true }).forEach((animation) => animation.cancel());
+  target.closest('[data-reveal], .section-heading, .hero-scene')?.getAnimations({ subtree: true }).forEach((animation) => animation.cancel());
+  if (target.matches(':focus-visible') && hero?.contains(target) && hero.dataset.sceneFading === 'true') {
+    target.scrollIntoView({ block: 'center', behavior: 'instant' });
+  }
 });
 let pointerFrame = 0;
-if (hero && visual) {
-  hero.addEventListener('pointermove', (event) => {
-    if (motionDisabled() || !finePointer.matches || pointerFrame) return;
-    pointerFrame = requestAnimationFrame(() => {
-      const bounds = hero.getBoundingClientRect();
-      const x = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
-      const y = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
-      document.documentElement.style.setProperty('--spot-x', `${event.clientX}px`);
-      document.documentElement.style.setProperty('--spot-y', `${event.clientY}px`);
-      visual.style.setProperty('--tilt-x', `${(0.5 - y) * 9}deg`);
-      visual.style.setProperty('--tilt-y', `${(x - 0.5) * 11}deg`);
-      pointerFrame = 0;
-    });
-  });
-  hero.addEventListener('pointerleave', () => {
-    if (pointerFrame) cancelAnimationFrame(pointerFrame);
-    pointerFrame = 0;
-    visual.style.setProperty('--tilt-x', '0deg');
-    visual.style.setProperty('--tilt-y', '0deg');
-  });
+let pointerX = 0;
+let pointerY = 0;
+function resetTilt(): void {
+  visual?.style.setProperty('--tilt-x', '0deg');
+  visual?.style.setProperty('--tilt-y', '0deg');
 }
+function updatePointer(): void {
+  pointerFrame = 0;
+  if (motionDisabled() || !finePointer.matches) return;
+  const bounds = hero?.getBoundingClientRect();
+  root.style.setProperty('--spot-x', `${pointerX}px`);
+  root.style.setProperty('--spot-y', `${pointerY}px`);
+  if (bounds && visual && pointerY >= bounds.top && pointerY <= bounds.bottom && pointerX >= bounds.left && pointerX <= bounds.right) {
+    const x = clamp((pointerX - bounds.left) / bounds.width);
+    const y = clamp((pointerY - bounds.top) / bounds.height);
+    visual.style.setProperty('--tilt-x', `${(0.5 - y) * 9}deg`);
+    visual.style.setProperty('--tilt-y', `${(x - 0.5) * 11}deg`);
+  } else resetTilt();
+}
+// The light lives in viewport coordinates and follows the pointer on every page.
+document.addEventListener('pointermove', (event) => {
+  if (motionDisabled() || !finePointer.matches || event.pointerType === 'touch') return;
+  pointerX = event.clientX;
+  pointerY = event.clientY;
+  if (!pointerFrame) pointerFrame = requestAnimationFrame(updatePointer);
+}, { passive: true });
+document.addEventListener('pointerleave', resetTilt);
 
 const header = document.querySelector<HTMLElement>('.site-header');
-let lastScrollY = window.scrollY;
-let headerScrollDistance = 0;
+let headerHeight = 88;
 function measureHeader(): void {
-  root.style.setProperty('--header-height', `${header?.getBoundingClientRect().height || 88}px`);
+  headerHeight = header?.getBoundingClientRect().height || 88;
+  root.style.setProperty('--header-height', `${headerHeight}px`);
 }
 measureHeader();
 let scrollFrame = 0;
@@ -116,23 +125,24 @@ function updateScroll(): void {
   const viewportHeight = window.innerHeight;
   const range = document.documentElement.scrollHeight - viewportHeight;
   const revealStates = measureReveals(viewportHeight, Math.max(0, range - currentY));
-  const heroTop = hero?.getBoundingClientRect().top || 0;
+  const heroBounds = hero?.getBoundingClientRect();
   document.documentElement.style.setProperty('--scroll-progress', String(range > 0 ? Math.min(1, Math.max(0, window.scrollY / range)) : 0));
-  if (heroTitle && hero) {
-    const progress = motionDisabled() ? 0 : Math.min(1, Math.max(0, -heroTop / Math.max(340, viewportHeight * .6)));
-    const opacity = Math.max(0, 1 - progress * 1.6);
-    heroTitle.style.setProperty('--hero-opacity', String(opacity));
-    heroTitle.style.setProperty('--hero-lift', `${-progress * 64}px`);
+  if (heroScene && heroBounds && hero) {
+    // The next section rises over a fading scene. Tall scenes scroll through first.
+    const visibleHeight = Math.max(1, viewportHeight - headerHeight);
+    const readTravel = Math.max(0, heroBounds.height - visibleHeight);
+    const travel = Math.max(0, headerHeight - heroBounds.top);
+    const pin = motionDisabled() ? 0 : Math.min(visibleHeight, Math.max(0, travel - readTravel));
+    const progress = motionDisabled() ? 0 : clamp((travel - readTravel) / visibleHeight);
+    const opacity = Math.pow(1 - progress, 3);
+    heroScene.style.setProperty('--scene-opacity', String(opacity));
+    heroScene.style.setProperty('--scene-pin', `${pin}px`);
+    heroScene.style.setProperty('--scene-lift', `${-progress * 24}px`);
+    hero.dataset.sceneHidden = String(opacity < .02);
+    hero.dataset.sceneFading = String(progress > 0);
   }
   root.style.setProperty('--ambient-shift', motionDisabled() ? '0px' : `${-Math.min(window.scrollY * .04, 120)}px`);
   paintReveals(revealStates);
-  if (header) {
-    const delta = currentY - lastScrollY;
-    if (delta !== 0) headerScrollDistance = Math.sign(delta) === Math.sign(headerScrollDistance) ? headerScrollDistance + delta : delta;
-    if (currentY < 100 || headerScrollDistance < -8) header.dataset.hidden = 'false';
-    else if (currentY > 160 && headerScrollDistance > 12) header.dataset.hidden = 'true';
-  }
-  lastScrollY = currentY;
   scrollFrame = 0;
 }
 window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll); }, { passive: true });
@@ -140,10 +150,9 @@ window.addEventListener('resize', () => { measureHeader(); if (!scrollFrame) scr
 function applyMotionPreference(): void {
   root.dataset.effects = motionDisabled() ? 'paused' : 'running';
   activeAnimations.forEach((animation) => animation.cancel());
-  if (visual) {
-    visual.style.setProperty('--tilt-x', '0deg');
-    visual.style.setProperty('--tilt-y', '0deg');
-  }
+  if (pointerFrame) cancelAnimationFrame(pointerFrame);
+  pointerFrame = 0;
+  resetTilt();
   updateScroll();
 }
 preference.addEventListener('change', applyMotionPreference);
