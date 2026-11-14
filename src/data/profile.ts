@@ -7,6 +7,8 @@ export const profile: {
   resume?: Partial<Record<Language, string>>;
 } = {
   github: 'https://github.com/SergeyMotynga',
+  email: 'Motynga12345@mail.ru',
+  telegram: 'https://t.me/S1moll',
 };
 
 export const skills = {

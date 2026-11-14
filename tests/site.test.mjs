@@ -47,6 +47,19 @@ test('language switching keeps the current project', async () => {
   }
 });
 
+test('contact details are available in static footers on home and case pages', async () => {
+  for (const lang of ['ru', 'en']) {
+    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`)]) {
+      const doc = await page(route);
+      assert.equal(doc.querySelectorAll('#contact').length, 1, `${route}: one contact destination`);
+      const footer = doc.querySelector('footer');
+      assert(footer.querySelector('a[href="mailto:Motynga12345@mail.ru"]').textContent.includes('Motynga12345@mail.ru'));
+      assert(footer.querySelector('a[href="https://t.me/S1moll"]').textContent.includes('@S1moll'));
+      assert(footer.querySelector('a[href="https://github.com/SergeyMotynga"]'));
+    }
+  }
+});
+
 test('all local links, fragment targets and stylesheet assets resolve', async () => {
   const routes = ['/ru', '/en', ...['ru', 'en'].flatMap((lang) => projectKeys.map((key) => `/${lang}/projects/${key}`)), '/404.html', '/'];
   for (const route of routes) {
@@ -67,7 +80,7 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
 });
 
 test('public pages contain only approved external links and anonymised case content', async () => {
-  const approved = new Set(['https://github.com/SergeyMotynga', ...approvedRepositoryUrls]);
+  const approved = new Set(['https://github.com/SergeyMotynga', 'https://t.me/S1moll', ...approvedRepositoryUrls]);
   for (const lang of ['ru', 'en']) {
     for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`)]) {
       const doc = await page(route);

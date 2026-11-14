@@ -35,7 +35,7 @@ npm run preview
 | Что | Источник |
 |---|---|
 | Тексты и сведения о проекте | `src/content/projects/<key>/<lang>.md` |
-| GitHub, будущие почта/Telegram/PDF | `src/data/profile.ts` |
+| GitHub, почта, Telegram; будущий PDF | `src/data/profile.ts` |
 | Хакатоны и выступления | `presentations` в `src/data/profile.ts` |
 | Подписи интерфейса | `src/i18n/ui.ts` |
 | Оформление | `src/styles/global.css` |

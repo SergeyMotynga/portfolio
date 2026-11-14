@@ -104,11 +104,20 @@
   .education { padding-left: 32px; border-left: 1px solid var(--line); }
   .education h3 { font-size: 24px; font-weight: 500; line-height: 1.4; margin-top: 11px; letter-spacing: -.7px; }
   .education > p:not(.micro) { color: var(--muted); font-size: 16px; line-height: 1.85; margin-top: 14px; }
-  .contact-section { display: flex; justify-content: space-between; gap: 30px; border-top: 1px solid var(--line); margin-top: 60px; padding: 48px 0 37px; }
-  .contact-section h2 { font-size: 38px; line-height: 1.2; letter-spacing: -1.2px; font-weight: 500; }
-  .contact-section p { max-width: 620px; color: var(--muted); font-size: 16px; line-height: 1.85; margin-top: 14px; }
-  .contact-links { display: flex; flex-direction: column; align-items: flex-start; }
-  .site-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 23px; border-top: 1px solid var(--line); padding: 20px 0 28px; font: 10px/1.8 var(--mono); color: var(--muted); }
+  .site-footer { position: relative; z-index: 1; margin-top: 80px; border-top: 1px solid var(--line); }
+  .contact-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 7vw, 120px); align-items: center; padding: clamp(48px, 6vw, 88px) 0; }
+  .contact-intro > .micro { color: var(--accent); margin-bottom: 22px; }
+  .contact-section h2 { max-width: 12ch; font-size: clamp(38px, 4.5vw, 72px); line-height: 1.08; letter-spacing: -.045em; font-weight: 500; text-wrap: balance; }
+  .contact-lead { max-width: 44ch; color: var(--muted); font-size: 17px; line-height: 1.8; margin-top: 24px; }
+  .contact-links { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .contact-link { display: grid; grid-template-columns: minmax(0, 1fr) 28px; gap: 6px 16px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .contact-channel { grid-column: 1; color: var(--muted); font: 12px/1.6 var(--mono); }
+  .contact-value { grid-column: 1; font-size: clamp(20px, 1.65vw, 29px); line-height: 1.4; letter-spacing: -.025em; overflow-wrap: anywhere; }
+  .contact-arrow { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--accent); font-size: 25px; transition: transform 150ms ease-out; }
+  .contact-link:hover .contact-arrow { transform: translate(3px, -3px); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-top: 1px solid var(--line); padding: 22px 0 28px; color: var(--muted); font-size: 13px; }
+  .footer-role { display: block; font: 11px/1.8 var(--mono); margin-top: 4px; }
+  .footer-top { display: inline-flex; gap: 16px; align-items: center; min-height: 44px; }
   .case-page { max-width: 890px; margin: 0 auto; padding-top: 37px; }
   .back-link { display: inline-flex; gap: 15px; align-items: center; min-height: 44px; color: var(--muted); font-size: 12px; }
   .case-header { padding: 34px 0 36px; border-bottom: 1px solid var(--line); }
@@ -162,8 +171,11 @@
     .presentation h3 { font-size: 21px; }
     .education { border-left: 0; border-top: 1px solid var(--line); padding: 25px 0 0; margin-top: 29px; }
     .skills { grid-template-columns: 84px minmax(0, 1fr); gap: 17px 14px; }
-    .contact-section { flex-direction: column; gap: 14px; margin-top: 39px; padding: 34px 0 28px; }
-    .contact-section h2 { font-size: 32px; }
+    .site-footer { margin-top: 48px; }
+    .contact-section { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 40px; }
+    .contact-section h2 { font-size: clamp(38px, 8vw, 52px); }
+    .contact-lead { font-size: 16px; }
+    .contact-link { padding-block: 18px; }
     .case-page { padding-top: 25px; }
     .case-header { padding-top: 24px; }
     .case-lead { font-size: 16px; }

@@ -65,12 +65,4 @@ const resume = profile.resume?.[lang];
     </div>
   </section>
 
-  <section class="contact-section" id="contact" aria-labelledby="contact-title" data-reveal="up">
-    <div><MotionHeading id="contact-title" text={t.contact} /><p>{t.contactText}</p></div>
-    <div class="contact-links">
-      {profile.email && <a class="text-link" href={`mailto:${profile.email}`}>{profile.email} <span aria-hidden="true">↗</span></a>}
-      {profile.telegram && <a class="text-link" href={profile.telegram} target="_blank" rel="noopener noreferrer">Telegram <span aria-hidden="true">↗</span></a>}
-      <a class="text-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-    </div>
-  </section>
 </BaseLayout>
