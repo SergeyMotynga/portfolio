@@ -764,7 +764,11 @@ export function mountLanyard(host, {
     const canvas = renderer.domElement;
     canvas.className = 'lanyard-canvas';
     canvas.setAttribute('aria-hidden', 'true');
-    container.appendChild(canvas);
+    canvas.dataset.badgeOverlay = '';
+    document.body.appendChild(canvas);
+    // The portal is outside host: forward context loss to the fallback controller.
+    const onContextLost = () => host.dispatchEvent(new Event('webglcontextlost'));
+    canvas.addEventListener('webglcontextlost', onContextLost);
 
     const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     const scene = new THREE.Scene();
@@ -908,11 +912,14 @@ export function mountLanyard(host, {
 
     const frameView = () => {
       const s = settingsRef.current;
+      const slot = container.getBoundingClientRect();
+      const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0;
       const aspect = view.width / view.height;
-      let viewHeight = layout.height / clamp(s.size, 0.15, 0.9);
-      const minimumWidth = layout.width / 0.72;
-      if (viewHeight * aspect < minimumWidth) viewHeight = minimumWidth / aspect;
+      // Preserve the card's pixel size while the renderer covers the entire window.
+      const cardPixels = Math.max(120, slot.height * clamp(s.size, 0.15, 0.9));
+      const viewHeight = layout.height * view.height / cardPixels;
       const viewWidth = viewHeight * aspect;
+      const unitsPerPixel = viewHeight / view.height;
       camera.aspect = aspect;
       camera.position.set(0, 0, viewHeight / 2 / Math.tan((FOV * Math.PI) / 360));
       camera.lookAt(0, 0, 0);
@@ -921,9 +928,12 @@ export function mountLanyard(host, {
       foilUniforms.foilKey.value.set(-2.5, 4, 6).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilFill.value.set(3, -1, 4).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilTop.value.set(0.5, 4.5, 8).normalize().transformDirection(camera.matrixWorldInverse);
-      const anchorX = ((ANCHORS[s.anchor] ?? 0.5) - 0.5) * viewWidth;
-      const anchorY = viewHeight / 2 + 0.2;
-      const cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+      const anchorPixel = slot.left + slot.width * (ANCHORS[s.anchor] ?? 0.5);
+      const anchorX = (anchorPixel / view.width - 0.5) * viewWidth;
+      const anchorY = (view.height / 2 - headerBottom) * unitsPerPixel;
+      const desiredTop = slot.top + slot.height * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+      const topPixel = Math.max(headerBottom + 45, Math.min(desiredTop, view.height - cardPixels - 24));
+      const cardTop = (view.height / 2 - topPixel) * unitsPerPixel;
       const hangTop = cardTop + (layout.hangY - layout.height / 2);
       sim.anchor.set(anchorX, anchorY, 0);
       configureSimulation(sim, layout, anchorY - hangTop);
@@ -1168,19 +1178,19 @@ export function mountLanyard(host, {
       return hits[0] || null;
     };
 
-    const setCursor = value => {
-      if (canvas.style.cursor !== value) canvas.style.cursor = value;
-    };
+    const previousCursor = document.documentElement.style.cursor;
+    const setCursor = value => { document.documentElement.style.cursor = value || previousCursor; };
+    let suppressClickUntil = 0;
+    let capturedPointer = null;
 
     const flip = () => {
       faceTarget = faceTarget === 0 ? Math.PI : 0;
       host.dataset.face = faceTarget === 0 ? 'front' : 'back';
-      host.parentElement?.querySelector('[data-badge-flip]')?.setAttribute('aria-pressed', String(faceTarget !== 0));
     };
 
     const onPointerDown = event => {
-      if (event.pointerType === 'touch') return;
-      if (!settingsRef.current.interactive || event.button > 0) return;
+      if (event.pointerType === 'touch' || host.closest('.hero')?.dataset.sceneHidden === 'true' || !visible) return;
+      if (sim.grab || !settingsRef.current.interactive || event.button > 0) return;
       toPointer(event);
       const hit = pickCard();
       if (!hit) return;
@@ -1192,14 +1202,19 @@ export function mountLanyard(host, {
         target: hit.point.clone()
       };
       press = { x: event.clientX, y: event.clientY, time: performance.now(), point: hit.point.clone() };
+      capturedPointer = event.pointerId;
+      canvas.dataset.dragging = 'true';
       canvas.setPointerCapture?.(event.pointerId);
+      event.stopPropagation();
       setCursor('grabbing');
       event.preventDefault();
       start();
     };
 
     const onPointerMove = event => {
+      if (event.pointerType === 'touch' || (sim.grab && event.pointerId !== capturedPointer)) return;
       if (!settingsRef.current.interactive) return;
+      if (host.closest('.hero')?.dataset.sceneHidden === 'true' || !visible) { setCursor(''); return; }
       toPointer(event);
       if (sim.grab) {
         if (press && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 6) press = null;
@@ -1213,8 +1228,11 @@ export function mountLanyard(host, {
     };
 
     const onPointerUp = event => {
-      if (!sim.grab) return;
+      if (!sim.grab || event.pointerId !== capturedPointer) return;
       sim.grab = null;
+      canvas.dataset.dragging = 'false';
+      suppressClickUntil = performance.now() + 100;
+      capturedPointer = null;
       if (press && event.type === 'pointerup' && performance.now() - press.time < 450) flip();
       press = null;
       canvas.releasePointerCapture?.(event.pointerId);
@@ -1222,37 +1240,51 @@ export function mountLanyard(host, {
       start();
     };
 
-    const onTouchStart = event => {
-      if (!settingsRef.current.interactive || event.touches.length !== 1) return;
-      toPointer(event.touches[0]);
-      if (pickCard()) event.preventDefault();
+    const onClick = event => {
+      if (event.detail > 0 && performance.now() < suppressClickUntil) {
+        event.preventDefault(); event.stopPropagation();
+      }
     };
-
-    canvas.addEventListener('pointerdown', onPointerDown);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerup', onPointerUp);
-    canvas.addEventListener('pointercancel', onPointerUp);
+    const cancelDrag = () => {
+      if (sim.grab) onPointerUp({ type: 'pointercancel', pointerId: capturedPointer, pointerType: 'mouse' });
+      setCursor('');
+    };
+    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('pointermove', onPointerMove, true);
+    document.addEventListener('pointerup', onPointerUp, true);
+    document.addEventListener('pointercancel', onPointerUp, true);
     canvas.addEventListener('lostpointercapture', onPointerUp);
-
+    document.addEventListener('click', onClick, true);
+    window.addEventListener('blur', cancelDrag);
+    window.addEventListener('scroll', cancelDrag, { passive: true });
 
     const resize = () => {
-      view.width = Math.max(1, container.clientWidth);
-      view.height = Math.max(1, container.clientHeight);
+      view.width = Math.max(1, window.innerWidth);
+      view.height = Math.max(1, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
       renderer.setSize(view.width, view.height, false);
+      applied.framingKey = '';
       apply();
       render();
+      start();
     };
 
+    window.addEventListener('resize', resize);
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
+    const header = document.querySelector('.site-header');
+    const heroGrid = container.closest('.hero-grid');
+    if (header) resizeObserver.observe(header);
+    if (heroGrid) resizeObserver.observe(heroGrid);
+    document.fonts.addEventListener('loadingdone', resize);
+    void document.fonts.ready.then(() => { if (alive) resize(); });
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       if (visible) start();
     });
     intersectionObserver.observe(container);
     const onVisibility = () => {
-      if (!document.hidden) start();
+      if (document.hidden) cancelDrag(); else start();
     };
     document.addEventListener('visibilitychange', onVisibility);
 
@@ -1268,14 +1300,20 @@ export function mountLanyard(host, {
       applyRef.current = null;
       host.removeEventListener('badge-flip', onFlip);
       resizeObserver.disconnect();
+      document.fonts.removeEventListener('loadingdone', resize);
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerup', onPointerUp);
-      canvas.removeEventListener('pointercancel', onPointerUp);
+      cancelDrag();
+      window.removeEventListener('resize', resize);
+      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('pointermove', onPointerMove, true);
+      document.removeEventListener('pointerup', onPointerUp, true);
+      document.removeEventListener('pointercancel', onPointerUp, true);
       canvas.removeEventListener('lostpointercapture', onPointerUp);
-      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('webglcontextlost', onContextLost);
+      document.removeEventListener('click', onClick, true);
+      window.removeEventListener('blur', cancelDrag);
+      window.removeEventListener('scroll', cancelDrag);
       [bodyMesh, frontMesh, backMesh, ring, clampMesh, eyelet, band].forEach(mesh => mesh.geometry?.dispose());
       [frontMaterial, backMaterial, edgeMaterial, metalMaterial, bandMaterial].forEach(material => material.dispose());
       [frontTexture, backTexture, strapTexture, grain, weave].forEach(texture => texture.dispose());

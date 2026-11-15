@@ -103,3 +103,8 @@
 #about .crystal-stage { position: absolute; z-index: 0; width: min(900px, 95vw); height: min(900px, 95vw); left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: .22; pointer-events: none; }
 .about-visual { display: block; }
 @media (max-width: 750px) { #about .crystal-stage { width: 100vw; height: 100vw; left: 50%; top: 50%; opacity: .16; } }
+
+@font-face { font-family: 'Contact Numbers'; src: url('/fonts/ContactNumbers.ttf') format('truetype'); font-weight: 400; font-display: swap; unicode-range: U+0030-0039; }
+.contact-value { font-family: 'Contact Numbers', var(--sans); font-variant-numeric: lining-nums proportional-nums; }
+/* The rendering layer has no local clip and never catches empty-space input. */
+.lanyard-canvas[data-badge-overlay] { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: 16; pointer-events: none; opacity: var(--badge-opacity, 1); visibility: var(--badge-visibility, visible); }

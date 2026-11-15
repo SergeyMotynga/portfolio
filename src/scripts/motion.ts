@@ -132,6 +132,8 @@ function updateScroll(): void {
     const progress = motionDisabled() ? 0 : clamp((travel - readTravel) / visibleHeight);
     const opacity = Math.pow(1 - progress, 3);
     heroScene.style.setProperty('--scene-opacity', String(opacity));
+    root.style.setProperty('--badge-opacity', String(opacity));
+    root.style.setProperty('--badge-visibility', opacity < .02 ? 'hidden' : 'visible');
     hero.dataset.sceneHidden = String(opacity < .02);
     hero.dataset.sceneFading = String(progress > 0);
   }
