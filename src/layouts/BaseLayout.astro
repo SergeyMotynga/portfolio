@@ -18,7 +18,7 @@ const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#02343F" />
+    <meta name="theme-color" content="#111018" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -29,7 +29,7 @@ const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body id="top">
-    <div class="ambient-background" aria-hidden="true"><span class="ambient-orbit"></span></div>
+    <div class="ambient-background" aria-hidden="true"><div class="molten-background" data-molten></div></div>
     <div class="scroll-progress" aria-hidden="true"></div>
     <a class="skip-link" href="#content">{ui[lang].skip}</a>
     <div class="site-shell">

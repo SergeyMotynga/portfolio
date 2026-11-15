@@ -60,10 +60,11 @@ const resume = profile.resume?.[lang];
   </section>
 
   <section class="section" id="about" aria-labelledby="about-title">
+    <div class="crystal-stage" data-crystal aria-hidden="true"><span class="crystal-fallback"></span></div>
     <div class="section-heading"><MotionHeading id="about-title" text={t.about} /><p class="micro">{t.aboutMeta}</p></div>
     <div class="about-grid">
       <dl class="skills" data-reveal="left">{(Object.keys(skills) as (keyof typeof skills)[]).map((key) => <><dt>{t[key]}</dt><dd>{skills[key].join(' · ')}</dd></>)}<dt>{t.next}</dt><dd>{t.go}</dd></dl>
-      <div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div>
+      <div class="about-visual"><div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div></div>
     </div>
   </section>
 

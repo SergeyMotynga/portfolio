@@ -105,6 +105,9 @@ test('the showcase keeps project contributions and hero navigation in static HTM
   for (const lang of ['ru', 'en']) {
     const doc = await page(`/${lang}`);
     assert(doc.querySelector('.hero a[href="#contact"]'));
+    assert.equal(doc.querySelectorAll('[data-badge-flip]').length, 0);
+    const crystal = doc.querySelector('#about > [data-crystal]');
+    assert.equal(crystal?.getAttribute('aria-hidden'), 'true');
     const fallback = doc.querySelector('.hero img');
     assert(fallback?.getAttribute('alt').length > 10);
     await access(path.join(dist, fallback.getAttribute('src')));

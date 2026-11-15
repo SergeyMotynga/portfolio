@@ -15,15 +15,17 @@
 
 @layer theme {
   :root {
-    --page: #02343F;
+    --page: #111018;
     --page-gutter: clamp(22px, 4.5vw, 96px);
-    --surface: #083F49;
-    --text: #F0EDCC;
-    --muted: #B1C6BB;
-    --line: #41656A;
-    --accent: #F0EDCC;
-    --on-accent: #02343F;
-    --sans: Arial, 'Segoe UI', sans-serif;
+    --surface: #1C1928;
+    --text: #F2EEF9;
+    --muted: #B5ADC4;
+    --line: #423A56;
+    --accent: #BFA7FF;
+    --on-accent: #111018;
+    --sans: 'Bespoke Serif', 'PT Serif Cyrillic', Georgia, serif;
+    --display: 'Tanker', 'Oswald Cyrillic', 'Arial Narrow', Arial, sans-serif;
+    --editorial: 'Bespoke Serif', 'PT Serif Cyrillic', Georgia, serif;
     --mono: 'Cascadia Code', Consolas, 'Courier New', monospace;
     --motion-heading: 800ms;
     --motion-enter: 600ms;
@@ -66,7 +68,7 @@
   .hero-lead { color: var(--muted); max-width: 690px; font-size: clamp(16px, 1.25vw, 21px); line-height: 1.85; margin-top: 29px; }
   .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px 29px; margin-top: 31px; }
   .primary-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 37px; padding: 15px 20px; background: var(--accent); color: var(--on-accent); font-size: 14px; font-weight: 700; }
-  .primary-link:hover { background: #FFFBDD; color: var(--on-accent); }
+  .primary-link:hover { background: #D3C1FF; color: var(--on-accent); }
   .text-link { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: 14px; }
   .tech-strip { display: flex; flex-wrap: wrap; gap: 12px 25px; padding: 19px 0; list-style: none; border-block: 1px solid var(--line); background: transparent; font: 13px var(--mono); }
   .tech-strip li + li::before { content: '/'; color: var(--accent); margin-right: 25px; }
@@ -211,9 +213,9 @@
 }
 
 @layer components {
-  .ambient-background { position: fixed; inset: 0; pointer-events: none; overflow: clip; background: radial-gradient(ellipse at 78% 20%, #F0EDCC0d, transparent 55%); }
-  .ambient-background::before { content: ''; position: absolute; inset: 0; background: radial-gradient(#F0EDCC2B .7px, transparent .7px); background-size: 26px 26px; mask-image: radial-gradient(ellipse at 55% 30%, #0008, transparent 80%); }
-  .ambient-background::after { content: ''; position: absolute; inset: 0; background: radial-gradient(650px circle at var(--spot-x, 65%) var(--spot-y, 30%), #F0EDCC19, transparent 72%); }
+  .ambient-background { position: fixed; inset: 0; pointer-events: none; overflow: clip; background: radial-gradient(ellipse at 78% 20%, #BFA7FF0d, transparent 55%); }
+  .ambient-background::before { content: ''; position: absolute; inset: 0; background: radial-gradient(#BFA7FF2B .7px, transparent .7px); background-size: 26px 26px; mask-image: radial-gradient(ellipse at 55% 30%, #0008, transparent 80%); }
+  .ambient-background::after { content: ''; position: absolute; inset: 0; background: radial-gradient(650px circle at var(--spot-x, 65%) var(--spot-y, 30%), #BFA7FF19, transparent 72%); }
   .hero-role { font-size: clamp(18px, 1.65vw, 28px); line-height: 1.5; margin-top: 30px; }
   .hero-role span { color: var(--muted); display: block; font-size: .72em; margin-top: 4px; }
   .hero-visual { max-width: 760px; width: 100%; justify-self: end; }
@@ -241,9 +243,9 @@
   .hero h1 .name-mask:first-child .name-line { color: var(--text); }
   .motion-word-mask { display: inline-block; overflow: clip; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
   .motion-word { display: inline-block; }
-  .ambient-background::before { background-image: radial-gradient(#F0EDCC3D .7px, transparent .7px), linear-gradient(#F0EDCC0A 1px, transparent 1px), linear-gradient(90deg, #F0EDCC0A 1px, transparent 1px); background-size: 26px 26px, 130px 130px, 130px 130px; mask-image: radial-gradient(ellipse at 65% 30%, #000, transparent 90%); transform: translateY(var(--ambient-shift, 0px)); }
-  .ambient-orbit { position: absolute; left: 48%; top: 8%; width: min(85vw, 1400px); aspect-ratio: 1; border: 1px solid #F0EDCC17; border-radius: 50%; transform: rotate(-25deg) scaleY(.7); }
-  .ambient-orbit::after { content: ''; position: absolute; inset: 15%; border: 1px solid #F0EDCC10; border-radius: inherit; }
+  .ambient-background::before { background-image: radial-gradient(#BFA7FF3D .7px, transparent .7px), linear-gradient(#BFA7FF0A 1px, transparent 1px), linear-gradient(90deg, #BFA7FF0A 1px, transparent 1px); background-size: 26px 26px, 130px 130px, 130px 130px; mask-image: radial-gradient(ellipse at 65% 30%, #000, transparent 90%); transform: translateY(var(--ambient-shift, 0px)); }
+  .ambient-orbit { position: absolute; left: 48%; top: 8%; width: min(85vw, 1400px); aspect-ratio: 1; border: 1px solid #BFA7FF17; border-radius: 50%; transform: rotate(-25deg) scaleY(.7); }
+  .ambient-orbit::after { content: ''; position: absolute; inset: 15%; border: 1px solid #BFA7FF10; border-radius: inherit; }
   .navigation a, .text-link { text-underline-offset: 5px; }
   .hero-copy:focus-within .name-line { transform: none !important; }
   [data-reveal]:focus-within { opacity: 1 !important; transform: none !important; }

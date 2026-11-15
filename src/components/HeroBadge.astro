@@ -7,8 +7,4 @@ const { lang } = Astro.props;
   <div class="badge-stage" data-badge data-front="/images/cat-badge.svg" data-back="/images/badge-back.svg">
     <img class="badge-fallback" src="/images/cat-badge.svg" width="480" height="680" alt={lang === 'ru' ? 'Временный бейдж с иллюстрацией котика' : 'Temporary badge with a cat illustration'} />
   </div>
-  <figcaption class="badge-caption">
-    <span>{lang === 'ru' ? 'Потяни за бейдж' : 'Drag the badge'}</span>
-    <button class="badge-flip" type="button" data-badge-flip aria-pressed="false" hidden>{lang === 'ru' ? 'Перевернуть' : 'Flip badge'} <span aria-hidden="true">↻</span></button>
-  </figcaption>
 </figure>

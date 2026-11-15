@@ -156,3 +156,6 @@ updateScroll();
 // Details change page geometry without scrolling; recompute every visible state.
 document.addEventListener('toggle', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll); }, true);
 window.addEventListener('pageshow', updateScroll);
+
+// Web fonts can change sticky geometry after first paint.
+void document.fonts.ready.then(() => { measureHeader(); updateScroll(); });

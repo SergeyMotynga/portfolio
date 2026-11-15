@@ -92,28 +92,35 @@ let generation = 0;
 async function enhance(host: HTMLElement): Promise<void> {
   if (reduced.matches || effects.has(host) || pending.has(host) || (host.hasAttribute('data-elastic') && !fine.matches)) return;
   const version = generation;
+  const palette = getComputedStyle(document.documentElement);
+  const accent = palette.getPropertyValue('--accent').trim();
   pending.add(host);
   try {
     if (host.hasAttribute('data-badge')) {
       const { mountLanyard } = await import('../lib/effects/lanyard.js');
       if (version !== generation || reduced.matches) return;
-      const dispose = mountLanyard(host, { frontImage: host.dataset.front, backImage: host.dataset.back, cardColor: '#F0EDCC', strapColor: '#F0EDCC', size: .7, strapLength: .25, breeze: 0, intro: true, damping: .8, finish: 'glossy' });
-      const flip = host.parentElement?.querySelector<HTMLButtonElement>('[data-badge-flip]');
-      const onFlip = () => host.dispatchEvent(new Event('badge-flip'));
-      if (dispose) {
-        if (flip) { flip.hidden = false; flip.setAttribute('aria-pressed', 'false'); flip.addEventListener('click', onFlip); }
-        effects.set(host, () => { dispose(); if (flip) { flip.hidden = true; flip.removeEventListener('click', onFlip); } });
-      }
+      const dispose = mountLanyard(host, { frontImage: host.dataset.front, backImage: host.dataset.back, cardColor: accent, strapColor: accent, size: .7, strapLength: .25, breeze: 0, intro: true, damping: .8, finish: 'glossy' });
+      if (dispose) effects.set(host, dispose);
+    } else if (host.hasAttribute('data-molten')) {
+      const { mountMoltenMetal } = await import('../lib/effects/molten.js');
+      if (version !== generation || reduced.matches) return;
+      const dispose = mountMoltenMetal(host, { colors: ['#48246E', '#8D5BD6', accent], coreColor: '#E3D9FF', speed: .18, detail: 2, glow: .9, brightness: 1.1, haze: .5, scale: 4, dpr: 1, flareOnClick: false });
+      if (dispose) effects.set(host, dispose);
+    } else if (host.hasAttribute('data-crystal')) {
+      const { mountCrystalizedBall } = await import('../lib/effects/crystal.js');
+      if (version !== generation || reduced.matches) return;
+      const dispose = mountCrystalizedBall(host, { color: accent, particleCount: 2400, speed: .4, intro: true });
+      if (dispose) effects.set(host, dispose);
     } else {
       const { mountElasticMesh } = await import('../lib/effects/mesh.js');
       if (version !== generation || reduced.matches) return;
-      const dispose = mountElasticMesh(host, { text: host.dataset.text, color: '#F0EDCC', fontFamily: 'Arial, sans-serif', fontWeight: 700, material: 'balloon', inflate: .45, stiffness: .65, wobble: .35, stretch: .3, intro: false, shadow: .25, dpr: 1.5 });
+      const dispose = mountElasticMesh(host, { text: host.dataset.text, color: accent, fontFamily: getComputedStyle(host).fontFamily, fontWeight: Number(getComputedStyle(host).fontWeight) || 700, material: 'balloon', inflate: .45, stiffness: .65, wobble: .35, stretch: .3, intro: false, shadow: .25, dpr: 1.5 });
       if (dispose) effects.set(host, dispose);
     }
   } catch (error) { console.warn('Optional visual effect unavailable; static content retained.', error); }
   finally { pending.delete(host); }
 }
-const hosts = [...document.querySelectorAll<HTMLElement>('[data-badge], [data-elastic]')];
+const hosts = [...document.querySelectorAll<HTMLElement>('[data-badge], [data-elastic], [data-molten], [data-crystal]')];
 const visible = new Set<HTMLElement>();
 const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
   const host = entry.target as HTMLElement;
