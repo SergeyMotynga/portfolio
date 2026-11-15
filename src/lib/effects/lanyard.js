@@ -870,6 +870,7 @@ export function mountLanyard(host, {
     let last = performance.now();
     let time = 0;
     let faceAngle = 0;
+    let faceVelocity = 0;
     let faceTarget = 0;
     const faceRotation = new THREE.Quaternion();
     const faceAxis = new THREE.Vector3(0, 1, 0);
@@ -1067,7 +1068,7 @@ export function mountLanyard(host, {
         if (side.lengthSq() < 1e-10) side.copy(i > 0 ? sides[i - 1] : scratch.a.set(1, 0, 0));
         side.normalize();
         if (i > 0 && side.dot(sides[i - 1]) < 0) side.negate();
-        const angle = -sim.twist * Math.pow(Math.min(1, i / (SAMPLES - 1) / held), 1.3);
+        const angle = -(sim.twist + faceAngle) * Math.pow(Math.min(1, i / (SAMPLES - 1) / held), 1.3);
         facing.crossVectors(tangent, side);
         across.copy(side).multiplyScalar(Math.cos(angle)).addScaledVector(facing, Math.sin(angle));
         facing.crossVectors(tangent, across);
@@ -1140,7 +1141,13 @@ export function mountLanyard(host, {
       const dt = Math.min(1 / 30, Math.max(1 / 240, (now - last) / 1000));
       last = now;
       time += dt;
-      faceAngle += (faceTarget - faceAngle) * (1 - Math.exp(-dt * 10));
+      // One damped swivel drives the card, connector and distributed strap twist.
+      // Substeps keep quick frame-time changes from destabilising the spring.
+      for (let i = 0; i < 8; i++) {
+        const h = dt / 8;
+        faceVelocity += (180 * (faceTarget - faceAngle) - 24 * faceVelocity) * h;
+        faceAngle += faceVelocity * h;
+      }
       const current = physics();
       stepSimulation(sim, dt, current, time);
       const body = sim.body;
@@ -1149,7 +1156,7 @@ export function mountLanyard(host, {
         placeHanging(sim, layout, false);
       }
       render();
-      const resting = sim.calm > 1.2 && !sim.grab && current.breeze === 0 && Math.abs(faceTarget - faceAngle) < .001;
+      const resting = sim.calm > 1.2 && !sim.grab && current.breeze === 0 && Math.abs(faceTarget - faceAngle) < .001 && Math.abs(faceVelocity) < .001;
       if (visible && !resting) raf = requestAnimationFrame(tick);
     };
 
@@ -1191,6 +1198,7 @@ export function mountLanyard(host, {
     const onPointerDown = event => {
       if (event.pointerType === 'touch' || host.closest('.hero')?.dataset.sceneHidden === 'true' || !visible) return;
       if (sim.grab || !settingsRef.current.interactive || event.button > 0) return;
+      if (event.clientY < (document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0)) return;
       toPointer(event);
       const hit = pickCard();
       if (!hit) return;
@@ -1223,7 +1231,7 @@ export function mountLanyard(host, {
         return;
       }
       if (event.pointerType === 'touch') return;
-      hovering = !!pickCard();
+      hovering = event.clientY >= (document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0) && !!pickCard();
       setCursor(hovering ? 'grab' : '');
     };
 
