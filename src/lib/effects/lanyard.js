@@ -931,7 +931,10 @@ export function mountLanyard(host, {
       foilUniforms.foilTop.value.set(0.5, 4.5, 8).normalize().transformDirection(camera.matrixWorldInverse);
       const anchorPixel = slot.left + slot.width * (ANCHORS[s.anchor] ?? 0.5);
       const anchorX = (anchorPixel / view.width - 0.5) * viewWidth;
-      const anchorY = (view.height / 2 - headerBottom) * unitsPerPixel;
+      // Keep the cut end well above the viewport, including perspective tilt.
+      // The longer hidden strap preserves the card's resting position below.
+      const anchorPixelY = -Math.max(120, headerBottom);
+      const anchorY = (view.height / 2 - anchorPixelY) * unitsPerPixel;
       const desiredTop = slot.top + slot.height * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
       const topPixel = Math.max(headerBottom + 45, Math.min(desiredTop, view.height - cardPixels - 24));
       const cardTop = (view.height / 2 - topPixel) * unitsPerPixel;
