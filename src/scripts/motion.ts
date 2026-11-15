@@ -1,3 +1,5 @@
+import './showcase';
+
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia('(pointer: fine)');
 const root = document.documentElement;
@@ -46,6 +48,7 @@ function paintReveals(states: ReturnType<typeof measureReveals>): void {
       const wordProgress = clamp((progress - offset) / (1 - offset));
       word.style.setProperty('--word-shift', `${(1 - wordProgress) * 105}%`);
       word.style.setProperty('--word-opacity', String(wordProgress));
+      word.style.setProperty('--word-blur', `${(1 - wordProgress) * 8}px`);
     });
     if (element.matches('.section-heading')) {
       element.style.setProperty('--reveal-opacity', '1');
@@ -64,7 +67,6 @@ function paintReveals(states: ReturnType<typeof measureReveals>): void {
 }
 
 const hero = document.querySelector<HTMLElement>('.hero');
-const visual = document.querySelector<HTMLElement>('[data-system]');
 const heroCopy = document.querySelector<HTMLElement>('.hero-copy');
 const heroScene = document.querySelector<HTMLElement>('.hero-scene');
 const heroContainer = hero?.closest('main');
@@ -87,22 +89,12 @@ document.addEventListener('focusin', (event) => {
 let pointerFrame = 0;
 let pointerX = 0;
 let pointerY = 0;
-function resetTilt(): void {
-  visual?.style.setProperty('--tilt-x', '0deg');
-  visual?.style.setProperty('--tilt-y', '0deg');
-}
 function updatePointer(): void {
   pointerFrame = 0;
   if (motionDisabled() || !finePointer.matches) return;
-  const bounds = hero?.getBoundingClientRect();
   root.style.setProperty('--spot-x', `${pointerX}px`);
   root.style.setProperty('--spot-y', `${pointerY}px`);
-  if (bounds && visual && pointerY >= bounds.top && pointerY <= bounds.bottom && pointerX >= bounds.left && pointerX <= bounds.right) {
-    const x = clamp((pointerX - bounds.left) / bounds.width);
-    const y = clamp((pointerY - bounds.top) / bounds.height);
-    visual.style.setProperty('--tilt-x', `${(0.5 - y) * 9}deg`);
-    visual.style.setProperty('--tilt-y', `${(x - 0.5) * 11}deg`);
-  } else resetTilt();
+
 }
 // The light lives in viewport coordinates and follows the pointer on every page.
 document.addEventListener('pointermove', (event) => {
@@ -111,7 +103,6 @@ document.addEventListener('pointermove', (event) => {
   pointerY = event.clientY;
   if (!pointerFrame) pointerFrame = requestAnimationFrame(updatePointer);
 }, { passive: true });
-document.addEventListener('pointerleave', resetTilt);
 
 const header = document.querySelector<HTMLElement>('.site-header');
 let headerHeight = 88;
@@ -155,7 +146,6 @@ function applyMotionPreference(): void {
   activeAnimations.forEach((animation) => animation.cancel());
   if (pointerFrame) cancelAnimationFrame(pointerFrame);
   pointerFrame = 0;
-  resetTilt();
   updateScroll();
 }
 preference.addEventListener('change', applyMotionPreference);

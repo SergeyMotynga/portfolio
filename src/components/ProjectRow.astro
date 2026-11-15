@@ -1,30 +1,26 @@
 ---
 import { ui, projectUrl, type Language } from '../i18n/ui';
 import type { Project } from '../lib/projects';
-
+import TextEffect from './TextEffect.astro';
+import '../styles/showcase.css';
 interface Props { project: Project; index: number; lang: Language; compact?: boolean }
 const { project, index, lang, compact = false } = Astro.props;
 const { data } = project;
 const t = ui[lang];
 ---
-<details class:list={['project-row', { compact }]} id={`project-${data.key}`} data-reveal="left" data-sequence={index - 1}>
-  <summary>
-    <span class="project-index" aria-hidden="true">{String(index).padStart(2, '0')}</span>
-    <span class="project-summary">
-      <span class="project-title">{data.title}</span>
-      <span class="project-description">{data.summary}</span>
-    </span>
-    <span class="project-meta">
-      <span class="category">{t.categories[data.category]}</span>
-      <span class="technology">{data.stack.slice(0, 2).join(' / ')}</span>
-    </span>
-    <span class="row-arrow" aria-hidden="true">↗</span>
-  </summary>
-  <div class="project-expanded">
-    <p class="micro">{t.contribution}</p>
-    <p>{data.contribution}</p>
-    <ul class="stack-list" aria-label={t.stack}>{data.stack.map((technology) => <li>{technology}</li>)}</ul>
-    <a class="text-link" href={projectUrl(lang, data.key)}>{t.case} <span aria-hidden="true">↗</span></a>
-    {data.repository && <a class="text-link repository-link" href={data.repository} target="_blank" rel="noopener noreferrer">{t.repository} <span aria-hidden="true">↗</span></a>}
-  </div>
-</details>
+<article class:list={['project-row', 'project-card', { compact }]} id={`project-${data.key}`} data-card data-reveal="up" data-sequence={index - 1}>
+  <div class="card-tilt"><div class="card-rotor">
+    <div class="card-face card-front" data-card-front>
+      <div class="card-eyebrow"><span class="category">{t.categories[data.category]}</span><span class="project-index">{String(index).padStart(2, '0')}</span></div>
+      <svg class="card-diagram" viewBox="0 0 480 130" aria-hidden="true"><path d="M64 65H176Q196 65 196 45V35H290M196 65V95H350"/><rect x="28" y="35" width="72" height="60" rx="14"/><rect x="155" y="39" width="82" height="52" rx="14"/><rect x="288" y="13" width="100" height="44" rx="12"/><rect x="326" y="76" width="100" height="44" rx="12"/><text x="64" y="71">{'{ }'}</text><text x="196" y="71">↔</text><text x="338" y="41">API</text><text x="376" y="104">DATA</text></svg>
+      <h3 class="project-title">{data.title}</h3><p class="project-description"><TextEffect text={data.summary} /></p>
+      <div class="card-actions"><button type="button" class="card-flip" data-card-flip hidden>{lang === 'ru' ? 'Мой вклад' : 'My contribution'} <span aria-hidden="true">↻</span></button><a class="text-link" href={projectUrl(lang, data.key)}>{t.case} <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <div class="card-face card-back" data-card-back>
+      <p class="micro">{t.contribution}</p><h3 class="card-back-title">{data.title}</h3><p>{data.contribution}</p>
+      <ul class="stack-list" aria-label={t.stack}>{data.stack.map((technology) => <li>{technology}</li>)}</ul>
+      <div class="card-actions"><button type="button" class="card-flip" data-card-flip hidden>{lang === 'ru' ? 'К обзору' : 'Back to overview'} <span aria-hidden="true">↶</span></button><a class="text-link" href={projectUrl(lang, data.key)}>{t.case} <span aria-hidden="true">↗</span></a></div>
+      {data.repository && <a class="text-link" href={data.repository} target="_blank" rel="noopener noreferrer">{t.repository} <span aria-hidden="true">↗</span></a>}
+    </div>
+  </div><span class="card-glare" aria-hidden="true"></span></div>
+</article>

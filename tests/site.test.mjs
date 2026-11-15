@@ -99,3 +99,22 @@ test('FinGuru is a hackathon and SPAS is an invited conference presentation', as
   assert(entries.some((entry) => entry.textContent.includes('FinGuru') && entry.textContent.includes('Хакатон')));
   assert(entries.some((entry) => entry.textContent.includes('SPAS System') && entry.textContent.includes('по приглашению')));
 });
+
+
+test('the showcase keeps project contributions and hero navigation in static HTML', async () => {
+  for (const lang of ['ru', 'en']) {
+    const doc = await page(`/${lang}`);
+    assert(doc.querySelector('.hero a[href="#contact"]'));
+    const fallback = doc.querySelector('.hero img');
+    assert(fallback?.getAttribute('alt').length > 10);
+    await access(path.join(dist, fallback.getAttribute('src')));
+    for (const card of doc.querySelectorAll('[data-card]')) {
+      const front = card.querySelector('[data-card-front]');
+      const back = card.querySelector('[data-card-back]');
+      assert(front.textContent.trim().length > 40);
+      assert(back.textContent.trim().length > 80);
+      assert(!back.hasAttribute('inert') && !back.hasAttribute('hidden'), 'contribution is readable without JS');
+      assert(front.querySelector('a[href*="/projects/"]'), 'case opens directly without flipping');
+    }
+  }
+});

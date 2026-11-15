@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectRow from '../../components/ProjectRow.astro';
-import HeroSystem from '../../components/HeroSystem.astro';
+import HeroBadge from '../../components/HeroBadge.astro';
+import TextEffect from '../../components/TextEffect.astro';
 import MotionHeading from '../../components/MotionHeading.astro';
 import { languages, ui, projectUrl, type Language } from '../../i18n/ui';
 import { getProjects } from '../../lib/projects';
@@ -22,16 +23,17 @@ const resume = profile.resume?.[lang];
       <p class="eyebrow micro"><span class="status-dot" aria-hidden="true"></span>Python backend · ML Engineering</p>
       <div class="hero-grid">
         <div class="hero-copy">
-          <h1 id="hero-title" aria-label={t.name}><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ')[0]}</span></span><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ').slice(1).join(' ')}</span></span></h1>
+          <h1 id="hero-title" aria-label={t.name} data-elastic data-text={t.name.replace(' ', '\n')}><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ')[0]}</span></span><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ').slice(1).join(' ')}</span></span></h1>
           <p class="hero-role">Python Backend Developer <span>/ ML Engineering</span></p>
-          <p class="hero-lead">{t.lead}</p>
+          <p class="hero-lead"><TextEffect text={t.lead} /></p>
           <div class="hero-actions">
             <a class="primary-link" href="#projects">{t.explore} <span aria-hidden="true">↘</span></a>
-            <a class="text-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+            <span data-magnet><a class="text-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></span>
+            <span data-magnet><a class="text-link" href="#contact">{lang === 'ru' ? 'Связаться' : 'Contact me'} <span aria-hidden="true">↓</span></a></span>
             {resume && <a class="text-link" href={resume} download>{t.resume} <span aria-hidden="true">↓</span></a>}
           </div>
         </div>
-        <HeroSystem lang={lang} />
+        <HeroBadge lang={lang} />
       </div>
       <ul class="tech-strip" aria-label={lang === 'ru' ? 'Основной стек' : 'Core stack'}>{['Python', 'FastAPI', 'PostgreSQL', 'SQLAlchemy'].map((technology) => <li>{technology}</li>)}</ul>
     </div>

@@ -15,11 +15,13 @@
     "verify": "npm run check && npm run build && npm test"
   },
   "dependencies": {
-    "astro": "7.4.12"
+    "astro": "7.4.12",
+    "three": "0.187.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
     "@types/node": "26.6.6",
+    "@types/three": "0.187.0",
     "linkedom": "0.18.15",
     "typescript": "6.0.3"
   }
