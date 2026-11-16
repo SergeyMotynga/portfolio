@@ -39,8 +39,8 @@ const resume = profile.resume?.[lang];
     </div>
   </section>
 
-  <section class="section" id="projects" aria-labelledby="projects-title">
-    <div class="section-heading"><MotionHeading id="projects-title" text={t.selected} /><p class="micro">{t.selectedMeta}</p></div>
+  <section class="section page-scene scene-projects" id="projects" aria-labelledby="projects-title">
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">01</span><MotionHeading id="projects-title" text={t.selected} /></div><p class="micro">{t.selectedMeta}</p></div>
     {featured.map((project, index) => <ProjectRow project={project} index={index + 1} lang={lang} />)}
     {catalog.length > 0 && <details class="catalog">
       <summary><span>{t.catalog}</span><span class="catalog-count">{t.more} {catalog.length} <span aria-hidden="true">↗</span></span></summary>
@@ -48,8 +48,8 @@ const resume = profile.resume?.[lang];
     </details>}
   </section>
 
-  <section class="section" id="presentations" aria-labelledby="presentations-title">
-    <div class="section-heading"><MotionHeading id="presentations-title" text={t.presentations} /><p class="micro">{t.presentationsMeta}</p></div>
+  <section class="section page-scene scene-presentations" id="presentations" aria-labelledby="presentations-title">
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">02</span><MotionHeading id="presentations-title" text={t.presentations} /></div><p class="micro">{t.presentationsMeta}</p></div>
     <div class="presentations-grid">{presentations.map((presentation, index) => {
       const text = presentation.labels[lang];
       return <article class="presentation" data-reveal={index % 2 ? 'right' : 'up'} data-sequence={index}>
@@ -59,9 +59,9 @@ const resume = profile.resume?.[lang];
     })}</div>
   </section>
 
-  <section class="section" id="about" aria-labelledby="about-title">
+  <section class="section page-scene scene-about" id="about" aria-labelledby="about-title">
     <div class="crystal-stage" data-crystal aria-hidden="true"><span class="crystal-fallback"></span></div>
-    <div class="section-heading"><MotionHeading id="about-title" text={t.about} /><p class="micro">{t.aboutMeta}</p></div>
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">03</span><MotionHeading id="about-title" text={t.about} /></div><p class="micro">{t.aboutMeta}</p></div>
     <div class="about-grid">
       <dl class="skills" data-reveal="left">{(Object.keys(skills) as (keyof typeof skills)[]).map((key) => <><dt>{t[key]}</dt><dd>{skills[key].join(' · ')}</dd></>)}<dt>{t.next}</dt><dd>{t.go}</dd></dl>
       <div class="about-visual"><div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div></div>
