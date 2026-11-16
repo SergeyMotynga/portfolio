@@ -3,7 +3,8 @@ export {};
 // Ordinary pointer and keyboard focus remain intact; this layer never captures input.
 const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-const enabled = () => fine.matches && !reduced.matches && !document.hidden;
+const forcedColors = window.matchMedia('(forced-colors: active)');
+const enabled = () => fine.matches && !reduced.matches && !forcedColors.matches && !document.hidden;
 const layer = document.createElement('div');
 layer.className = 'target-cursor';
 layer.setAttribute('aria-hidden', 'true');
@@ -52,17 +53,25 @@ function paint(now: number): void {
   const right = rect ? rect.right + padding : pointer.x + half;
   const top = rect ? rect.top - padding : pointer.y - half;
   const bottom = rect ? rect.bottom + padding : pointer.y + half;
-  const goals = [{ x: left, y: top }, { x: right, y: top }, { x: right, y: bottom }, { x: left, y: bottom }];
-  if (!rect) goals.forEach((point) => {
-    const x = point.x - pointer.x;
-    const y = point.y - pointer.y;
-    point.x = pointer.x + (x - y) * Math.SQRT1_2;
-    point.y = pointer.y + (x + y) * Math.SQRT1_2;
-  });
   const blend = 1 - Math.exp(-dt * (rect ? 20 : 32));
-  const goalAngle = rect ? 0 : 45;
-  angle += (goalAngle - angle) * blend;
-  let distance = Math.abs(goalAngle - angle);
+  if (rect) angle += (0 - angle) * blend;
+  else {
+    angle = (angle + dt * 90) % 360;
+    if (angle > 180) angle -= 360;
+  }
+  const goals = [{ x: left, y: top }, { x: right, y: top }, { x: right, y: bottom }, { x: left, y: bottom }];
+  if (!rect) {
+    const radians = angle * Math.PI / 180;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+    goals.forEach((point) => {
+      const x = point.x - pointer.x;
+      const y = point.y - pointer.y;
+      point.x = pointer.x + x * cos - y * sin;
+      point.y = pointer.y + x * sin + y * cos;
+    });
+  }
+  let distance = Math.abs(angle);
   goals.forEach((goal, index) => {
     goal.x = clamp(goal.x, 3, innerWidth - 3);
     goal.y = clamp(goal.y, 3, innerHeight - 3);
@@ -79,7 +88,7 @@ function paint(now: number): void {
     corner.style.borderTopLeftRadius = `${radius}px`;
   });
   layer.classList.toggle('is-locked', !!rect);
-  if (distance > .15) raf = requestAnimationFrame(paint);
+  if (!rect || distance > .15) raf = requestAnimationFrame(paint);
   else last = 0;
 }
 function wake(): void {
@@ -111,3 +120,4 @@ window.addEventListener('resize', hide);
 window.addEventListener('pagehide', hide);
 fine.addEventListener('change', hide);
 reduced.addEventListener('change', hide);
+forcedColors.addEventListener('change', hide);

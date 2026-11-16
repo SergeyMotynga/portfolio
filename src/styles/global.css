@@ -85,10 +85,10 @@
   .catalog-count { color: var(--accent); font: 11px var(--mono); }
   .catalog[open] > summary { color: var(--accent); }
   .compact .project-title { font-size: 20px; }
-  .presentation { border-top: 1px solid var(--line); padding: 25px 0 21px; }
-  .presentation > .micro { color: var(--accent); font-size: 9px; letter-spacing: 1.3px; }
+  .presentation { border-top: 1px solid var(--line); }
+  .presentation-link > .micro { color: var(--accent); font-size: 9px; letter-spacing: 1.3px; }
   .presentation h3 { font-size: 22px; line-height: 1.35; font-weight: 500; letter-spacing: -.4px; margin-top: 15px; }
-  .presentation > p:not(.micro) { color: var(--muted); font-size: 16px; line-height: 1.85; margin-top: 13px; max-width: 470px; }
+  .presentation-link > p:not(.micro) { color: var(--muted); font-size: 16px; line-height: 1.85; margin-top: 13px; max-width: 470px; }
   .presentation .text-link { margin-top: 12px; }
   .skills { display: grid; grid-template-columns: 95px minmax(0, 1fr); gap: 20px 17px; }
   .skills dt { color: var(--accent); font: 10px/1.8 var(--mono); }
@@ -253,7 +253,7 @@
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .primary-link { transition: transform 150ms ease-out, background-color 150ms ease-out; }
     .primary-link:hover { transform: translateY(-2px); }
-    .navigation a:hover, .text-link:hover { text-decoration: underline; }
+    .navigation a:hover { text-decoration: underline; }
   }
   @media (prefers-reduced-motion: no-preference) {
     [data-home='true'][data-effects='running'] .ambient-orbit { animation: ambient-drift 4s ease-out 1 both; }

@@ -129,3 +129,22 @@ test('the showcase keeps project contributions and hero navigation in static HTM
     }
   }
 });
+
+
+test('each event is one named native link covering its heading and description in both languages', async () => {
+  for (const lang of ['ru', 'en']) {
+    const document = await page(`/${lang}`);
+    const events = [...document.querySelectorAll('.presentation')];
+    assert.equal(events.length, 4);
+    for (const event of events) {
+      const link = event.querySelector('.presentation-link');
+      assert.ok(link);
+      assert.equal(event.querySelectorAll('a').length, 1);
+      assert.ok(link.getAttribute('href').startsWith(`/${lang}/projects/`));
+      const title = document.getElementById(link.getAttribute('aria-labelledby'));
+      assert.ok(title && link.contains(title));
+      assert.ok(link.querySelector('p:not(.micro)'));
+      assert.equal(link.querySelectorAll('button, a, input').length, 0);
+    }
+  }
+});
