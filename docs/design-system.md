@@ -9,7 +9,7 @@
 | `src/layouts/BaseLayout.astro` | Метаданные, язык, общий фон, skip link, шапка/подвал и подключение движения |
 | `src/components/Header.astro` | Навигация и перевод текущего кейса; мобильная навигация переносится в строку |
 | `src/components/Footer.astro` | Общий контактный блок с почтой, Telegram и GitHub; подпись и ссылка наверх |
-| `src/components/HeroBadge.astro` | Бейдж с котиком, статичный fallback и перетаскивание |
+| `src/components/HeroBadge.astro` | Бейдж с фотографией владельца, статичный fallback и перетаскивание |
 | `src/components/ProjectRow.astro` | Карточка с обзором и вкладом, нативными кнопками переворота и ссылками на кейс |
 | `src/components/MotionHeading.astro` | Семантический заголовок с отдельными словами для последовательного появления |
 
