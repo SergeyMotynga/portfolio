@@ -16,8 +16,8 @@
 .card-eyebrow { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .card-eyebrow .category { color: var(--muted); text-align: left; }
 .card-eyebrow .project-index { font-size: 12px; padding: 0; }
-.project-card .project-title { font-size: clamp(22px, 1.6vw, 28px); line-height: 1.15; letter-spacing: -.035em; font-weight: 500; }
-.project-card .project-description { font-size: 16px; line-height: 1.7; margin-block: 16px 22px; }
+.project-card .project-title { font-size: clamp(21px, 1.6vw, 26px); line-height: 1.3; letter-spacing: -.018em; font-weight: 500; }
+.project-card .project-description { font-size: 15px; line-height: 1.65; margin-block: 12px 16px; }
 .card-actions { display: flex; gap: 12px 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: auto; padding-top: 16px; }
 .card-flip, .badge-flip { color: var(--text); border: 1px solid var(--line); border-radius: 999px; background: transparent; padding: 10px 17px; min-height: 44px; cursor: pointer; font-size: 13px; }
 .card-flip:hover, .badge-flip:hover { color: var(--on-accent); background: var(--accent); }
@@ -75,7 +75,7 @@
 .icon-control[hidden] { display: none; }
 .hero-badge { position: relative; }
 .hero-badge > .badge-flip { position: absolute; right: 16px; bottom: 8px; }
-.card-front .project-title { margin-top: 32px; }
+.card-front .project-title { margin-top: 16px; min-height: 2.6em; text-wrap: balance; }
 .project-card[data-enhanced] .project-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .project-card[data-enhanced] .card-back-title { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
 .project-card[data-enhanced] .card-back > p:not(.micro) { font-size: 14px; line-height: 1.6; }
@@ -108,3 +108,15 @@
 .contact-value { font-family: 'Contact Numbers', var(--sans); font-variant-numeric: lining-nums proportional-nums; }
 /* The rendering layer has no local clip and never catches empty-space input. */
 .lanyard-canvas[data-badge-overlay] { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: 14; clip-path: inset(var(--header-height, 88px) 0 0); pointer-events: none; opacity: var(--badge-opacity, 1); visibility: var(--badge-visibility, visible); }
+
+.project-card .card-face { padding: 20px; }
+.project-cover { margin-top: 18px; border-radius: 14px; overflow: hidden; background: #17131F; }
+.project-cover img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; }
+.card-preview-stack { display: flex; flex-wrap: wrap; gap: 6px 10px; padding: 0; margin: auto 0 14px; padding-top: 12px; list-style: none; color: var(--muted); font: 10px/1.5 var(--mono); }
+.card-preview-stack li { padding: 4px 7px; border: 1px solid #BFA7FF20; border-radius: 6px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .project-cover img { transition: transform 320ms cubic-bezier(.2,.8,.2,1); }
+  .project-card:hover .project-cover img { transform: scale(1.025); }
+}
+
+.card-front .card-actions { margin-top: 0; }

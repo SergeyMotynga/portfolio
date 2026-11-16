@@ -12,7 +12,9 @@ const t = ui[lang];
   <div class="card-tilt"><div class="card-rotor">
     <div class="card-face card-front" data-card-front>
       <div class="card-eyebrow"><span class="category">{t.categories[data.category]}</span><span class="project-index">{String(index).padStart(2, '0')}</span></div>
+      <div class="project-cover" aria-hidden="true"><img src={`/images/projects/${data.key}.svg`} alt="" width="720" height="360" loading="lazy" decoding="async" /></div>
       <h3 class="project-title">{data.title}</h3><p class="project-description"><TextEffect text={data.summary} /></p>
+      <ul class="card-preview-stack" aria-label={t.stack}>{data.stack.slice(0, 3).map((technology) => <li>{technology}</li>)}</ul>
       <div class="card-actions"><button type="button" class="card-flip icon-control" data-card-flip aria-label={`${lang === 'ru' ? 'Подробнее о проекте' : 'More about'}: ${data.title}`} hidden>{lang === 'ru' ? 'Подробнее' : 'Details'}</button><a class="text-link" href={projectUrl(lang, data.key)}>{t.case} <span aria-hidden="true">↗</span></a></div>
     </div>
     <div class="card-face card-back" data-card-back>

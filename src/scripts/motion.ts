@@ -1,4 +1,5 @@
 import './showcase';
+import { selectActiveSection } from '../lib/active-section';
 
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia('(pointer: fine)');
@@ -118,25 +119,41 @@ measureHeader();
 let scrollFrame = 0;
 // Measure stationary wrappers, so the child's transform cannot feed back into scroll.
 const sceneFrames = [...document.querySelectorAll<HTMLElement>('[data-scene-frame]')];
-function paintScenePanels(viewportHeight: number, remainingScroll: number): void {
+const sectionLinks = [...document.querySelectorAll<HTMLAnchorElement>('.navigation [data-section-link]')];
+let activeSection: string | null = null;
+function measureScenePanels(viewportHeight: number, remainingScroll: number) {
   const distance = Math.min(320, viewportHeight * .45);
-  const states = sceneFrames.map((frame) => {
+  return sceneFrames.map((frame) => {
     const bounds = frame.getBoundingClientRect();
     const entry = clamp((viewportHeight * .92 - bounds.top) / distance);
     const atEnd = bounds.top < viewportHeight && bounds.bottom > 0 ? clamp(1 - remainingScroll / distance) : 0;
-    return { frame, progress: motionDisabled() ? 1 : Math.max(entry, atEnd) };
+    return { frame, id: frame.id, top: bounds.top, progress: motionDisabled() ? 1 : Math.max(entry, atEnd) };
   });
+}
+function paintScenePanels(states: ReturnType<typeof measureScenePanels>): void {
   states.forEach(({ frame, progress }) => {
     frame.style.setProperty('--panel-opacity', String(.45 + .55 * progress));
     frame.style.setProperty('--panel-shift', `${(1 - progress) * 40}px`);
     frame.style.setProperty('--panel-scale', String(.98 + .02 * progress));
   });
 }
+function paintActiveSection(states: ReturnType<typeof measureScenePanels>, viewportHeight: number, remainingScroll: number): void {
+  if (!sectionLinks.length) return;
+  const next = selectActiveSection(states, headerHeight + Math.min(180, viewportHeight * .2), remainingScroll <= 2);
+  if (next === activeSection) return;
+  activeSection = next;
+  sectionLinks.forEach((link) => {
+    if (link.dataset.sectionLink === next) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+}
 function updateScroll(): void {
   const currentY = Math.max(0, window.scrollY);
   const viewportHeight = window.innerHeight;
   const range = document.documentElement.scrollHeight - viewportHeight;
-  const revealStates = measureReveals(viewportHeight, Math.max(0, range - currentY));
+  const remainingScroll = Math.max(0, range - currentY);
+  const revealStates = measureReveals(viewportHeight, remainingScroll);
+  const panelStates = measureScenePanels(viewportHeight, remainingScroll);
   const heroHeight = hero?.getBoundingClientRect().height;
   const heroStart = heroContainer?.getBoundingClientRect().top;
   document.documentElement.style.setProperty('--scroll-progress', String(range > 0 ? Math.min(1, Math.max(0, window.scrollY / range)) : 0));
@@ -154,7 +171,8 @@ function updateScroll(): void {
     hero.dataset.sceneFading = String(progress > 0);
   }
   root.style.setProperty('--ambient-shift', motionDisabled() ? '0px' : `${-Math.min(window.scrollY * .04, 120)}px`);
-  paintScenePanels(viewportHeight, Math.max(0, range - currentY));
+  paintScenePanels(panelStates);
+  paintActiveSection(panelStates, viewportHeight, remainingScroll);
   paintReveals(revealStates);
   scrollFrame = 0;
 }

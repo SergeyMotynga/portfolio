@@ -44,7 +44,7 @@
 .scene-about .skills { gap: 26px 24px; }
 .scene-about .education { border: 0; margin: 0; padding: 0; }
 .scene-about .education h3 { font: 400 clamp(30px, 3.1vw, 46px)/1.2 var(--display); margin-top: 16px; }
-.scene-about .crystal-stage { opacity: .18; }
+.scene-about .crystal-stage { opacity: .16; }
 .site-footer {
   background: var(--scene-contact);
   color: var(--text);
@@ -107,3 +107,9 @@
   [data-effects='running'] .scene-frame > .page-scene,
   [data-effects='running'] .scene-frame > .site-footer { opacity: 1; transform: none; }
 }
+
+/* Soft local scrims keep the particle sphere visible in the open space. */
+.scene-about .skills, .scene-about .education { position: relative; isolation: isolate; }
+.scene-about .skills::before, .scene-about .education::before { content: ''; position: absolute; z-index: -1; inset: -24px -28px; pointer-events: none; background: radial-gradient(ellipse, #17141FCC 15%, #17141F66 60%, transparent 80%); }
+.scene-about .education > p:not(.micro) { line-height: 1.75; }
+.scene-presentations .presentation h3 { text-wrap: balance; }

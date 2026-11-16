@@ -300,3 +300,24 @@
     [data-scroll-reveal], .motion-word { opacity: 1 !important; transform: none !important; }
   }
 }
+
+@layer components {
+  .navigation a { position: relative; text-decoration: none; }
+  .navigation a::after { content: ''; position: absolute; inset-inline: 0; bottom: 2px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+  .navigation a[aria-current='location'] { color: var(--accent); }
+  .navigation a[aria-current='location']::after { transform: scaleX(1); }
+  .ambient-background::after { opacity: .6; }
+  .hero-copy { position: relative; isolation: isolate; }
+  .hero-copy::before { content: ''; position: absolute; z-index: -1; inset: -24px -32px; background: radial-gradient(ellipse, #111018C2 10%, #11101852 55%, transparent 75%); pointer-events: none; }
+}
+@layer responsive {
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .navigation a::after { transition: transform 200ms ease-out; }
+    .navigation a:hover { text-decoration: none; }
+    .navigation a:hover::after { transform: scaleX(1); }
+    .text-link > span[aria-hidden], .primary-link > span[aria-hidden], .contact-arrow, .footer-top > span[aria-hidden] { display: inline-block; transition: transform 180ms ease-out; }
+    .text-link:hover > span[aria-hidden], .text-link:focus-visible > span[aria-hidden], .contact-link:hover .contact-arrow, .contact-link:focus-visible .contact-arrow { transform: translate(3px, -3px); }
+    .primary-link:hover > span[aria-hidden] { transform: translate(3px, 3px); }
+    .footer-top:hover > span[aria-hidden] { transform: translateY(-3px); }
+  }
+}

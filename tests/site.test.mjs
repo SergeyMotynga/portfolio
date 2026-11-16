@@ -117,6 +117,11 @@ test('the showcase keeps project contributions and hero navigation in static HTM
     for (const card of doc.querySelectorAll('[data-card]')) {
       const front = card.querySelector('[data-card-front]');
       const back = card.querySelector('[data-card-back]');
+      const cover = front.querySelector('.project-cover img');
+      assert.equal(cover?.getAttribute('alt'), '');
+      await access(path.join(dist, cover.getAttribute('src')));
+      const technologies = front.querySelectorAll('.card-preview-stack li');
+      assert(technologies.length >= 1 && technologies.length <= 3);
       assert(front.textContent.trim().length > 40);
       assert(back.textContent.trim().length > 80);
       assert(!back.hasAttribute('inert') && !back.hasAttribute('hidden'), 'contribution is readable without JS');
