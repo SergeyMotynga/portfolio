@@ -3,9 +3,9 @@
 /* Lavender / graphite showcase. Local Latin and Cyrillic faces. */
 @font-face { font-family: 'Tanker'; src: url('/fonts/Tanker-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0000-024F; }
 @font-face { font-family: 'Bespoke Serif'; src: url('/fonts/BespokeSerif-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0000-024F; }
-#projects { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-#projects > .section-heading, #projects > .catalog { grid-column: 1 / -1; }
-#projects > .section-heading { margin-bottom: 12px; }
+.scene-projects { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.scene-projects > .section-heading, .scene-projects > .catalog { grid-column: 1 / -1; }
+.scene-projects > .section-heading { margin-bottom: 12px; }
 .catalog > div { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; padding-block: 24px; }
 .project-card { border: 0; perspective: 1200px; min-width: 0; }
 .card-tilt { position: relative; height: 100%; border-radius: 24px; transform: perspective(1200px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg)); transition: transform 220ms ease-out; }
@@ -51,7 +51,7 @@
 .motion-word { filter: blur(var(--word-blur, 0px)); }
 [data-scroll-reveal]:focus-within .motion-word { filter: none; }
 @media (max-width: 750px) {
-  #projects, .catalog > div { grid-template-columns: minmax(0, 1fr); }
+  .scene-projects, .catalog > div { grid-template-columns: minmax(0, 1fr); }
   .card-front { min-height: 300px; }
   .hero-badge { max-width: 540px; margin-inline: auto; }
 }
@@ -90,19 +90,19 @@
 .crystal-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .crystal-fallback { position: absolute; inset: 16%; border-radius: 50%; border: 1px solid var(--accent); box-shadow: inset 0 0 24px #BFA7FF30, 0 0 30px #BFA7FF18; background: radial-gradient(circle at 35% 30%, #BFA7FF25, #1C1928 70%); }
 .crystal-stage[data-ready='true'] .crystal-fallback { opacity: 0; }
-@media (min-width: 751px) and (max-width: 1199px) { #projects, .catalog > div { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 751px) and (max-width: 1199px) { .scene-projects, .catalog > div { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 950px) { .about-visual { grid-template-columns: minmax(0, 1fr); gap: 12px; } .crystal-stage { height: 200px; } }
-@media (max-width: 750px) { #projects, .catalog > div { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 750px) { .scene-projects, .catalog > div { grid-template-columns: minmax(0, 1fr); } }
 
 /* No visible flip helpers; native controls remain available to keyboards. */
 .card-flip { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); }
 .card-flip:focus-visible { position: static; width: auto; height: auto; min-height: 44px; padding: 10px 17px; clip-path: none; }
 .hero h1, .project-title, .card-back-title, .section-heading h2, .contact-section h2 { font-weight: 400; }
-#about { position: relative; isolation: isolate; }
-#about > .section-heading, #about > .about-grid { position: relative; z-index: 1; }
-#about .crystal-stage { position: absolute; z-index: 0; width: min(900px, 95vw); height: min(900px, 95vw); left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: .22; pointer-events: none; }
+.scene-about { position: relative; isolation: isolate; }
+.scene-about > .section-heading, .scene-about > .about-grid { position: relative; z-index: 1; }
+.scene-about .crystal-stage { position: absolute; z-index: 0; width: min(900px, 95vw); height: min(900px, 95vw); left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: .22; pointer-events: none; }
 .about-visual { display: block; }
-@media (max-width: 750px) { #about .crystal-stage { width: 100vw; height: 100vw; left: 50%; top: 50%; opacity: .16; } }
+@media (max-width: 750px) { .scene-about .crystal-stage { width: 100vw; height: 100vw; left: 50%; top: 50%; opacity: .16; } }
 
 @font-face { font-family: 'Contact Numbers'; src: url('/fonts/ContactNumbers.ttf') format('truetype'); font-weight: 400; font-display: swap; unicode-range: U+0030-0039; }
 .contact-value { font-family: 'Contact Numbers', var(--sans); font-variant-numeric: lining-nums proportional-nums; }

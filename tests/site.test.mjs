@@ -22,7 +22,7 @@ test('both home pages and every translated case contain useful static HTML', asy
     const home = await page(`/${lang}`);
     assert.equal(home.documentElement.lang, lang);
     assert.equal(home.querySelectorAll('.project-row').length, projectKeys.length);
-    assert.equal(home.querySelectorAll('#projects > .project-row').length, 4);
+    assert.equal(home.querySelectorAll('#projects > .page-scene > .project-row').length, 4);
     assert.equal(home.querySelectorAll('.presentation').length, 4);
     assert.equal(home.querySelectorAll('h1').length, 1);
     assert(home.querySelector('meta[name="description"]').content.length > 30);
@@ -105,8 +105,11 @@ test('the showcase keeps project contributions and hero navigation in static HTM
   for (const lang of ['ru', 'en']) {
     const doc = await page(`/${lang}`);
     assert(doc.querySelector('.hero a[href="#contact"]'));
+    for (const id of ['projects', 'presentations', 'about', 'contact']) {
+      assert(doc.getElementById(id)?.hasAttribute('data-scene-frame'), `${id}: navigation targets the stationary frame`);
+    }
     assert.equal(doc.querySelectorAll('[data-badge-flip]').length, 0);
-    const crystal = doc.querySelector('#about > [data-crystal]');
+    const crystal = doc.querySelector('#about > .page-scene > [data-crystal]');
     assert.equal(crystal?.getAttribute('aria-hidden'), 'true');
     const fallback = doc.querySelector('.hero img');
     assert(fallback?.getAttribute('alt').length > 10);

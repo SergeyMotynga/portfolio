@@ -6,8 +6,9 @@ interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = ui[lang];
 ---
+<div class="scene-frame footer-frame" id="contact" data-scene-frame>
 <footer class="site-footer">
-  <section class="contact-section" id="contact" aria-labelledby="contact-title">
+  <section class="contact-section" aria-labelledby="contact-title">
     <div class="contact-intro">
       <div class="contact-kicker"><span class="scene-number" aria-hidden="true">04</span><p class="micro">{t.contactLabel}</p></div>
       <MotionHeading id="contact-title" text={t.contact} />
@@ -33,3 +34,4 @@ const t = ui[lang];
     <a class="footer-top" href="#top">{lang === 'ru' ? 'Наверх' : 'Back to top'} <span aria-hidden="true">↑</span></a>
   </div>
 </footer>
+</div>

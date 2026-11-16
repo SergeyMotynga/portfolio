@@ -39,7 +39,8 @@ const resume = profile.resume?.[lang];
     </div>
   </section>
 
-  <section class="section page-scene scene-projects" id="projects" aria-labelledby="projects-title">
+  <div class="scene-frame" id="projects" data-scene-frame>
+  <section class="section page-scene scene-projects" aria-labelledby="projects-title">
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">01</span><MotionHeading id="projects-title" text={t.selected} /></div><p class="micro">{t.selectedMeta}</p></div>
     {featured.map((project, index) => <ProjectRow project={project} index={index + 1} lang={lang} />)}
     {catalog.length > 0 && <details class="catalog">
@@ -47,8 +48,10 @@ const resume = profile.resume?.[lang];
       <div>{catalog.map((project, index) => <ProjectRow project={project} index={featured.length + index + 1} lang={lang} compact />)}</div>
     </details>}
   </section>
+  </div>
 
-  <section class="section page-scene scene-presentations" id="presentations" aria-labelledby="presentations-title">
+  <div class="scene-frame" id="presentations" data-scene-frame>
+  <section class="section page-scene scene-presentations" aria-labelledby="presentations-title">
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">02</span><MotionHeading id="presentations-title" text={t.presentations} /></div><p class="micro">{t.presentationsMeta}</p></div>
     <div class="presentations-grid">{presentations.map((presentation, index) => {
       const text = presentation.labels[lang];
@@ -58,8 +61,10 @@ const resume = profile.resume?.[lang];
       </article>;
     })}</div>
   </section>
+  </div>
 
-  <section class="section page-scene scene-about" id="about" aria-labelledby="about-title">
+  <div class="scene-frame" id="about" data-scene-frame>
+  <section class="section page-scene scene-about" aria-labelledby="about-title">
     <div class="crystal-stage" data-crystal aria-hidden="true"><span class="crystal-fallback"></span></div>
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">03</span><MotionHeading id="about-title" text={t.about} /></div><p class="micro">{t.aboutMeta}</p></div>
     <div class="about-grid">
@@ -67,5 +72,6 @@ const resume = profile.resume?.[lang];
       <div class="about-visual"><div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div></div>
     </div>
   </section>
+  </div>
 
 </BaseLayout>
