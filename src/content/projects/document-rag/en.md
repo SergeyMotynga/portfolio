@@ -2,17 +2,28 @@
 key: "document-rag"
 lang: "en"
 title: "RAG document search"
-summary: "An academic question-answering service for the Russian Constitution."
-contribution: "An academic implementation of document preparation, ChromaDB vector search, result reranking and answer generation with Ollama. A FastAPI API and Streamlit interface provide answers with source references."
+summary: "An academic RAG service for document questions with retrieved source passages."
+contribution: "Built an academic question-answering system over the Russian Constitution: text preparation and indexing, passage retrieval, reranking and Ollama generation. Connected the RAG pipeline to FastAPI and a Streamlit interface."
 category: "academic"
 disclosure: "open"
 order: 6
 featured: false
-stack: ["FastAPI","ChromaDB","Ollama","Streamlit"]
+stack: ["Python", "ChromaDB", "Ollama", "FastAPI", "Streamlit", "LangChain", "sentence-transformers"]
 ---
+
+## Purpose
+
+The academic service answers questions using passages retrieved from a document. This project uses the Russian Constitution as its source. The interface displays source passages alongside the generated answer.
+
+## My work
+
+- Prepared and chunked the text and built a ChromaDB index.
+- Connected passage retrieval to cross-encoder reranking.
+- Integrated answer generation through Ollama.
+- Exposed the pipeline through FastAPI and connected a Streamlit interface.
 
 ## Technical approach
 
-- Documents are prepared and stored in a vector database.
-- Retrieved passages are reranked before answer generation.
-- FastAPI and Streamlit provide answers with source references.
+Retrieval-augmented generation connects document search with answer generation. The system retrieves passages, reranks them and passes the context to a language model. LangChain and sentence-transformers support the processing stages.
+
+This academic project integrates existing models and tools. Answers need to be checked against the original document.
