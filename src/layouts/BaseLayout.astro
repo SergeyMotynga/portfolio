@@ -29,7 +29,7 @@ const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
     {(['ru', 'en'] as const).map((language) => <link rel="alternate" hreflang={language} href={projectKey ? projectUrl(language, projectKey) : homeUrl(language)} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body id="top">
+  <body id="top" class:list={{ 'case-view': Boolean(projectKey) }}>
     <div class="ambient-background" aria-hidden="true"><div class="silk-background" data-silk></div></div>
     <div class="scroll-progress" aria-hidden="true"></div>
     <a class="skip-link" href="#content">{ui[lang].skip}</a>
