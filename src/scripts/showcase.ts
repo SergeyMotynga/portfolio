@@ -101,10 +101,10 @@ async function enhance(host: HTMLElement): Promise<void> {
       if (version !== generation || reduced.matches) return;
       const dispose = mountLanyard(host, { frontImage: host.dataset.front, backImage: host.dataset.back, cardColor: accent, strapColor: accent, size: .7, strapLength: .25, breeze: 0, intro: true, damping: .8, finish: 'glossy' });
       if (dispose) effects.set(host, dispose);
-    } else if (host.hasAttribute('data-molten')) {
-      const { mountMoltenMetal } = await import('../lib/effects/molten.js');
+    } else if (host.hasAttribute('data-silk')) {
+      const { mountSilk } = await import('../lib/effects/silk.js');
       if (version !== generation || reduced.matches) return;
-      const dispose = mountMoltenMetal(host, { colors: ['#48246E', '#8D5BD6', accent], coreColor: '#E3D9FF', speed: .18, detail: 2, glow: .9, brightness: 1.1, haze: .5, scale: 4, dpr: 1, flareOnClick: false });
+      const dispose = mountSilk(host, { sheenColor: accent });
       if (dispose) effects.set(host, dispose);
     } else if (host.hasAttribute('data-crystal')) {
       const { mountCrystalizedBall } = await import('../lib/effects/crystal.js');
@@ -120,7 +120,7 @@ async function enhance(host: HTMLElement): Promise<void> {
   } catch (error) { console.warn('Optional visual effect unavailable; static content retained.', error); }
   finally { pending.delete(host); }
 }
-const hosts = [...document.querySelectorAll<HTMLElement>('[data-badge], [data-elastic], [data-molten], [data-crystal]')];
+const hosts = [...document.querySelectorAll<HTMLElement>('[data-badge], [data-elastic], [data-silk], [data-crystal]')];
 const visible = new Set<HTMLElement>();
 const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
   const host = entry.target as HTMLElement;

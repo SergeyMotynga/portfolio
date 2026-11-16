@@ -1,6 +1,6 @@
 # Визуальные адаптации
 
-React Bits (David Haz, 2026), https://reactbits.dev/: ElasticMesh, Lanyard, MoltenMetal и CrystalizedBall перенесены из предоставленного владельцем JavaScript/CSS-кода в нативные DOM/WebGL-модули. Сохранены shader/physics реализации; React lifecycle заменён mount/dispose, добавлены fallback, ограничения DPR, отсутствие breeze, клавиатурный flip и нативный touch-scroll. Портфолио использует компоненты в составе сайта. Полный MIT + Commons Clause — `public/licenses/react-bits.txt`; компоненты и их порты нельзя распространять как самостоятельный набор.
+React Bits (David Haz, 2026), https://reactbits.dev/: ElasticMesh, Lanyard, Silk и CrystalizedBall перенесены из предоставленного владельцем JavaScript/CSS-кода в нативные DOM/WebGL-модули. Сохранены shader/physics реализации; React lifecycle заменён mount/dispose, добавлены fallback, ограничения DPR, отсутствие breeze, клавиатурный flip и нативный touch-scroll. Портфолио использует компоненты в составе сайта. Полный MIT + Commons Clause — `public/licenses/react-bits.txt`; компоненты и их порты нельзя распространять как самостоятельный набор.
 
 FlipCard, GlareHover и Magnet из тех же примеров использованы как ориентир нативных CSS/TypeScript-взаимодействий: две стороны карточки, блик, наклон и ограниченное притяжение к курсору.
 
@@ -17,3 +17,5 @@ CrystalizedBall использует OGL (MIT), устанавливаемый �
 ContactNumbers.ttf — подмножество цифр PT Serif Regular из того же источника и под той же OFL. Внутреннее имя изменено на Portfolio Contact Numbers согласно Reserved Font Names. Оно используется только в контактных строках, чтобы цифры имели общую базовую линию и высоту.
 
 Обложки в public/images/projects — собственные SVG-иллюстрации портфолио. Не являются скриншотами коммерческих продуктов, не используют чужие логотипы или реальные данные. Обложка ограниченного кейса с календарём и часами не воспроизводит его графики, данные или материалы.
+
+Silk: https://reactbits.dev/backgrounds/silk, исходник https://github.com/DavidHDev/react-bits/blob/main/src/ts-default/Backgrounds/Silk/Silk.tsx. Исходные shader-формулы и реакция на указатель адаптированы под mount/dispose без React; добавлены ограничение пикселей, четырёхсекундный автоход, touch/reduced-motion fallback и очистка ресурсов. Применяется та же лицензия React Bits в public/licenses/react-bits.txt.
