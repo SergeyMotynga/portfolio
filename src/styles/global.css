@@ -15,14 +15,15 @@
 
 @layer theme {
   :root {
-    --page: #111018;
+    --page: #10131C;
     --page-gutter: clamp(22px, 4.5vw, 96px);
-    --surface: #1C1928;
-    --text: #F2EEF9;
-    --muted: #B5ADC4;
-    --line: #423A56;
-    --accent: #BFA7FF;
-    --on-accent: #111018;
+    --surface: #1B202D;
+    --text: #EEF2FA;
+    --muted: #AFB9CC;
+    --line: #3D485F;
+    --accent: #9EAEFF;
+    --accent-hover: #BEC8FF;
+    --on-accent: #10131C;
     --sans: 'Bespoke Serif', 'PT Serif Cyrillic', Georgia, serif;
     --display: 'Tanker', 'Oswald Cyrillic', 'Arial Narrow', Arial, sans-serif;
     --editorial: 'Bespoke Serif', 'PT Serif Cyrillic', Georgia, serif;
@@ -68,7 +69,7 @@
   .hero-lead { color: var(--muted); max-width: 690px; font-size: clamp(16px, 1.25vw, 21px); line-height: 1.85; margin-top: 29px; }
   .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px 29px; margin-top: 31px; }
   .primary-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 37px; padding: 15px 20px; background: var(--accent); color: var(--on-accent); font-size: 14px; font-weight: 700; }
-  .primary-link:hover { background: #D3C1FF; color: var(--on-accent); }
+  .primary-link:hover { background: var(--accent-hover); color: var(--on-accent); }
   .text-link { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: 14px; }
   .tech-strip { display: flex; flex-wrap: wrap; gap: 12px 25px; padding: 19px 0; list-style: none; border-block: 1px solid var(--line); background: transparent; font: 13px var(--mono); }
   .tech-strip li + li::before { content: '/'; color: var(--accent); margin-right: 25px; }
@@ -208,14 +209,12 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .hero-visual, .hero h1 { transform: none !important; }
-    .ambient-background::after { background: none; }
   }
 }
 
 @layer components {
-  .ambient-background { position: fixed; inset: 0; pointer-events: none; overflow: clip; background: radial-gradient(ellipse at 78% 20%, #BFA7FF0d, transparent 55%); }
-  .ambient-background::before { content: ''; position: absolute; inset: 0; background: radial-gradient(#BFA7FF2B .7px, transparent .7px); background-size: 26px 26px; mask-image: radial-gradient(ellipse at 55% 30%, #0008, transparent 80%); }
-  .ambient-background::after { content: ''; position: absolute; inset: 0; background: radial-gradient(650px circle at var(--spot-x, 65%) var(--spot-y, 30%), #BFA7FF19, transparent 72%); }
+  .ambient-background { position: fixed; inset: 0; pointer-events: none; overflow: clip; background: radial-gradient(ellipse at 78% 20%, #9EAEFF0d, transparent 55%); }
+  .ambient-background::before { content: ''; position: absolute; inset: 0; background: radial-gradient(#9EAEFF2B .7px, transparent .7px); background-size: 26px 26px; mask-image: radial-gradient(ellipse at 55% 30%, #0008, transparent 80%); }
   .hero-role { font-size: clamp(18px, 1.65vw, 28px); line-height: 1.5; margin-top: 30px; }
   .hero-role span { color: var(--muted); display: block; font-size: .72em; margin-top: 4px; }
   .hero-visual { max-width: 760px; width: 100%; justify-self: end; }
@@ -225,7 +224,6 @@
   @media (max-width: 950px) { .hero h1 { font-size: clamp(58px, 8vw, 78px); } }
   @media (max-width: 750px) { .hero h1 { font-size: clamp(58px, 12vw, 88px); } .hero-visual { justify-self: center; } }
   @media (max-width: 400px) { .hero h1 { font-size: clamp(48px, 14vw, 56px); } .navigation { font-size: 11px; } .hero-role { font-size: 17px; } }
-  @media (prefers-reduced-motion: reduce) { .ambient-background::after { background: none; } }
 }
 
 @layer components {
@@ -243,9 +241,9 @@
   .hero h1 .name-mask:first-child .name-line { color: var(--text); }
   .motion-word-mask { display: inline-block; overflow: clip; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
   .motion-word { display: inline-block; }
-  .ambient-background::before { background-image: radial-gradient(#BFA7FF3D .7px, transparent .7px), linear-gradient(#BFA7FF0A 1px, transparent 1px), linear-gradient(90deg, #BFA7FF0A 1px, transparent 1px); background-size: 26px 26px, 130px 130px, 130px 130px; mask-image: radial-gradient(ellipse at 65% 30%, #000, transparent 90%); transform: translateY(var(--ambient-shift, 0px)); }
-  .ambient-orbit { position: absolute; left: 48%; top: 8%; width: min(85vw, 1400px); aspect-ratio: 1; border: 1px solid #BFA7FF17; border-radius: 50%; transform: rotate(-25deg) scaleY(.7); }
-  .ambient-orbit::after { content: ''; position: absolute; inset: 15%; border: 1px solid #BFA7FF10; border-radius: inherit; }
+  .ambient-background::before { background-image: radial-gradient(#9EAEFF3D .7px, transparent .7px), linear-gradient(#9EAEFF0A 1px, transparent 1px), linear-gradient(90deg, #9EAEFF0A 1px, transparent 1px); background-size: 26px 26px, 130px 130px, 130px 130px; mask-image: radial-gradient(ellipse at 65% 30%, #000, transparent 90%); transform: translateY(var(--ambient-shift, 0px)); }
+  .ambient-orbit { position: absolute; left: 48%; top: 8%; width: min(85vw, 1400px); aspect-ratio: 1; border: 1px solid #9EAEFF17; border-radius: 50%; transform: rotate(-25deg) scaleY(.7); }
+  .ambient-orbit::after { content: ''; position: absolute; inset: 15%; border: 1px solid #9EAEFF10; border-radius: inherit; }
   .navigation a, .text-link { text-underline-offset: 5px; }
   .hero-copy:focus-within .name-line { transform: none !important; }
   [data-reveal]:focus-within { opacity: 1 !important; transform: none !important; }
@@ -306,9 +304,8 @@
   .navigation a::after { content: ''; position: absolute; inset-inline: 0; bottom: 2px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
   .navigation a[aria-current='location'] { color: var(--accent); }
   .navigation a[aria-current='location']::after { transform: scaleX(1); }
-  .ambient-background::after { opacity: .6; }
   .hero-copy { position: relative; isolation: isolate; }
-  .hero-copy::before { content: ''; position: absolute; z-index: -1; inset: -24px -32px; background: radial-gradient(ellipse, #111018C2 10%, #11101852 55%, transparent 75%); pointer-events: none; }
+  .hero-copy::before { content: ''; position: absolute; z-index: -1; inset: -24px -32px; background: radial-gradient(ellipse, #10131CC2 10%, #10131C52 55%, transparent 75%); pointer-events: none; }
 }
 @layer responsive {
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {

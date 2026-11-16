@@ -1,8 +1,8 @@
 import './showcase';
+import './target-cursor';
 import { selectActiveSection } from '../lib/active-section';
 
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-const finePointer = window.matchMedia('(pointer: fine)');
 const root = document.documentElement;
 const motionDisabled = () => preference.matches;
 const activeAnimations = new Set<Animation>();
@@ -87,24 +87,6 @@ document.addEventListener('focusin', (event) => {
     target.scrollIntoView({ block: 'center', behavior: 'instant' });
   }
 });
-let pointerFrame = 0;
-let pointerX = 0;
-let pointerY = 0;
-function updatePointer(): void {
-  pointerFrame = 0;
-  if (motionDisabled() || !finePointer.matches) return;
-  root.style.setProperty('--spot-x', `${pointerX}px`);
-  root.style.setProperty('--spot-y', `${pointerY}px`);
-
-}
-// The light lives in viewport coordinates and follows the pointer on every page.
-document.addEventListener('pointermove', (event) => {
-  if (motionDisabled() || !finePointer.matches || event.pointerType === 'touch') return;
-  pointerX = event.clientX;
-  pointerY = event.clientY;
-  if (!pointerFrame) pointerFrame = requestAnimationFrame(updatePointer);
-}, { passive: true });
-
 const header = document.querySelector<HTMLElement>('.site-header');
 let headerHeight = 88;
 function measureHeader(): void {
@@ -181,8 +163,6 @@ window.addEventListener('resize', () => { measureHeader(); if (!scrollFrame) scr
 function applyMotionPreference(): void {
   root.dataset.effects = motionDisabled() ? 'paused' : 'running';
   activeAnimations.forEach((animation) => animation.cancel());
-  if (pointerFrame) cancelAnimationFrame(pointerFrame);
-  pointerFrame = 0;
   updateScroll();
 }
 preference.addEventListener('change', applyMotionPreference);

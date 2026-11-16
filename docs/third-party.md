@@ -19,3 +19,5 @@ ContactNumbers.ttf — подмножество цифр PT Serif Regular из �
 Обложки в public/images/projects — собственные SVG-иллюстрации портфолио. Не являются скриншотами коммерческих продуктов, не используют чужие логотипы или реальные данные. Обложка ограниченного кейса с календарём и часами не воспроизводит его графики, данные или материалы.
 
 Silk: https://reactbits.dev/backgrounds/silk, исходник https://github.com/DavidHDev/react-bits/blob/main/src/ts-default/Backgrounds/Silk/Silk.tsx. Исходные shader-формулы и реакция на указатель адаптированы под mount/dispose без React; добавлены ограничение пикселей, четырёхсекундный автоход, touch/reduced-motion fallback и очистка ресурсов. Применяется та же лицензия React Bits в public/licenses/react-bits.txt.
+
+Target Cursor: https://reactbits.dev/animations/target-cursor — ориентир поведения четырёх уголков. Реализация в src/scripts/target-cursor.ts написана на native DOM/TypeScript без React, GSAP и дополнительных зависимостей; обычный указатель остаётся видимым.

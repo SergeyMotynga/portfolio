@@ -259,7 +259,7 @@ const link = (gl: WebGL2RenderingContext, fragmentSource: string): Program | nul
 export function mountSilk(host: HTMLElement, options: Partial<Settings> = {}): (() => void) | undefined {
   const container = host;
   const settings: Settings = {
-    speed: 2.6, scale: 1, color: '#554367', sheenColor: '#BFA7FF',
+    speed: 2.6, scale: 1, color: '#35435C', sheenColor: '#9EAEFF',
     noiseIntensity: .35, rotation: -.22, sheen: .22, depth: .6, glow: .08,
     ripple: .5, wave: .65, variation: 0, mouseInteraction: true,
     interactionStrength: .45, clickRipple: false, intro: false, fade: 0,
