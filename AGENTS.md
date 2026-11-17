@@ -12,27 +12,36 @@
 
 Use the project copies below, including their references and scripts. Preserve each skill's invocation policy; a manual skill is not an automatic workflow.
 
+### Routing
+
+Choose one primary frontend skill by the requested outcome in the table below. This project routing narrows broad upstream descriptions such as "any UI change"; those descriptions alone do not trigger another full workflow. The owner can describe the task without naming a skill. For mixed work, choose by the deliverable: researched alternatives, an implemented page, or a shared component/token specification.
+
+- For a local fix, preserve the existing composition, tokens and component conventions. Use `ui-ux-pro-max` as a supporting search reference only when a specific pattern or implementation question remains unresolved; use its focused domain/stack search. Generate a design direction only when choosing a new direction is part of the request.
+- Add a supporting skill for a named gap in the primary workflow, and limit its work to that question. For example, use `better-layout` for a cramped mobile card and add `better-typography` if heading wrapping is the cause. A whole-screen review may use the orchestration defined by `better-interface`.
+- Distinguish local values from shared rules: adjusting one card's padding belongs to `better-layout`; changing the shared spacing scale belongs to `design-system`. Supporting specialists check the affected properties without creating a second token system.
+- A vague visual complaint starts with inspecting the affected screen and choosing the relevant domain. A full audit or redesign needs that scope in the request. Preserve mandatory accessibility, browser and implementation checks regardless of the primary skill, and apply engineering skills below when their own conditions are met.
+
 | Skill | Apply when |
 |---|---|
-| [ui-ux-pro-max](.agents/skills/ui-ux-pro-max/SKILL.md) | Designing or changing UI, interaction, motion, responsive behaviour or accessibility |
-| [design-system](.agents/skills/design-system/SKILL.md) | Changing tokens or component states; consult the existing component guide first |
-| [design-taste-frontend](.agents/skills/design-taste-frontend/SKILL.md) | Building or polishing the landing page; preserve the owner's agreed design, content and motion requests |
+| [ui-ux-pro-max](.agents/skills/ui-ux-pro-max/SKILL.md) | Primary when the deliverable is research into visual directions or unfamiliar UX patterns; supporting reference for a specific unresolved UI question during implementation |
+| [design-system](.agents/skills/design-system/SKILL.md) | Primary for shared tokens, scales, component variants and state specifications; consult the existing component guide first |
+| [design-taste-frontend](.agents/skills/design-taste-frontend/SKILL.md) | Primary for building a landing page or substantially changing its composition and visual direction; preserve the owner's agreed design, content and motion requests |
 | [prototype](.agents/skills/prototype/SKILL.md) | The owner requests a prototype; keep temporary prototypes outside the repository |
 | [codebase-design](.agents/skills/codebase-design/SKILL.md) | Changing module boundaries or component interfaces |
 | [domain-modeling](.agents/skills/domain-modeling/SKILL.md) | Changing domain terminology or architecture decisions |
 | [diagnosing-bugs](.agents/skills/diagnosing-bugs/SKILL.md) | Diagnosing a defect or performance regression |
 | [tdd](.agents/skills/tdd/SKILL.md) | Test-first development requested by the owner; visual edits do not require tests mirroring CSS |
-| [code-review](.agents/skills/code-review/SKILL.md) | Reviewing substantive implementation before handover |
+| [code-review](.agents/skills/code-review/SKILL.md) | Engineering correctness and compliance with project standards/specification before substantive implementation handover; UI regression review has a separate route below |
 | [graphify](.agents/skills/graphify/SKILL.md) | Refreshing the code graph after substantive features or module changes |
 | [writing-for-agents](.agents/skills/writing-for-agents/SKILL.md) | Editing this file or project skill instructions |
-| [better-interface](.agents/skills/better-interface/SKILL.md) | Reviewing overall interface quality across the focused UI domains |
-| [better-ui](.agents/skills/better-ui/SKILL.md) | Polishing surfaces, controls and motion; preserve deliberate project conventions |
-| [better-typography](.agents/skills/better-typography/SKILL.md) | Text rendering, heading scales, wrapping and translated text |
-| [better-colors](.agents/skills/better-colors/SKILL.md) | Colour tokens and contrast measurement |
-| [better-accessibility](.agents/skills/better-accessibility/SKILL.md) | Keyboard, accessible names, focus, reduced motion and reflow |
-| [better-layout](.agents/skills/better-layout/SKILL.md) | Alignment, grouping, responsive layout and translated content |
-| [better-writing](.agents/skills/better-writing/SKILL.md) | Interface labels and feedback; project descriptions remain subject to owner review |
-| [interface-review](.agents/skills/interface-review/SKILL.md) | Explicit owner request for interface review of a branch, PR or working changes |
+| [better-interface](.agents/skills/better-interface/SKILL.md) | Primary for a requested cross-discipline review of the current screen or flow, including existing problems; consolidate the focused UI reviews |
+| [better-ui](.agents/skills/better-ui/SKILL.md) | Primary for local surface, icon, hover and animation polish; preserve deliberate project conventions |
+| [better-typography](.agents/skills/better-typography/SKILL.md) | Primary for text rendering, local type sizing and heading wrapping/truncation; support `design-system` when the shared type scale changes |
+| [better-colors](.agents/skills/better-colors/SKILL.md) | Primary for palette work and contrast measurement; support `design-system` when shared colour-token architecture changes |
+| [better-accessibility](.agents/skills/better-accessibility/SKILL.md) | Primary for keyboard, accessible names, focus, reduced-motion behaviour and accessible reflow |
+| [better-layout](.agents/skills/better-layout/SKILL.md) | Primary for grouping, alignment, spacing, responsive structure and room for translated content |
+| [better-writing](.agents/skills/better-writing/SKILL.md) | Primary for interface labels and feedback wording; project descriptions remain subject to owner review |
+| [interface-review](.agents/skills/interface-review/SKILL.md) | Primary on explicit owner request for UI regression review of a branch, PR or working changes; focus on problems caused by the change |
 
 ## Checks and motion
 
