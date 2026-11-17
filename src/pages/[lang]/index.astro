@@ -4,7 +4,7 @@ import ProjectRow from '../../components/ProjectRow.astro';
 import HeroBadge from '../../components/HeroBadge.astro';
 import TextEffect from '../../components/TextEffect.astro';
 import MotionHeading from '../../components/MotionHeading.astro';
-import { languages, ui, projectUrl, type Language } from '../../i18n/ui';
+import { languages, ui, achievementUrl, type Language } from '../../i18n/ui';
 import { getProjects } from '../../lib/projects';
 import { profile, skills, achievements } from '../../data/profile';
 
@@ -56,9 +56,9 @@ const resume = profile.resume?.[lang];
     <div class="presentations-grid">{achievements.map((achievement, index) => {
       const text = achievement.labels[lang];
       return <article class="presentation" data-reveal={index % 2 ? 'right' : 'up'} data-sequence={index}>
-        <a class="presentation-link" href={projectUrl(lang, achievement.project)} aria-labelledby={`event-${index}-title`}>
+        <a class="presentation-link" href={achievementUrl(lang, achievement.key)} aria-labelledby={`event-${index}-title`}>
           <p class="micro">{text.type}</p><h3 id={`event-${index}-title`}>{text.title}</h3><p>{text.description}</p>
-          <span class="text-link" aria-hidden="true"><span class="link-label">{t.project}</span> <span aria-hidden="true">↗</span></span>
+          <span class="text-link" aria-hidden="true"><span class="link-label">{lang === 'ru' ? 'Подробнее' : 'View achievement'}</span> <span aria-hidden="true">↗</span></span>
         </a>
       </article>;
     })}</div>

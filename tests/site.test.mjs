@@ -9,6 +9,8 @@ import { approvedRepositoryUrls } from '../src/lib/publication-policy.ts';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const dist = path.join(root, 'dist');
 const projectKeys = (await readdir(path.join(root, 'src/content/projects'), { withFileTypes: true })).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
+const achievementKeys = ['bdai', 'avtomatika-service', 'data-match', 'it-forum-xi'];
+const achievementRoutes = ['ru', 'en'].flatMap((lang) => achievementKeys.map((key) => `/${lang}/achievements/${key}`));
 const pages = new Map();
 const routeFile = (route) => path.join(dist, route.endsWith('.html') ? route : `${route}/index.html`);
 
@@ -49,7 +51,7 @@ test('language switching keeps the current project', async () => {
 
 test('contact details are available in static footers on home and case pages', async () => {
   for (const lang of ['ru', 'en']) {
-    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`)]) {
+    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`), ...achievementKeys.map((key) => `/${lang}/achievements/${key}`)]) {
       const doc = await page(route);
       assert.equal(doc.querySelectorAll('#contact').length, 1, `${route}: one contact destination`);
       const footer = doc.querySelector('footer');
@@ -61,7 +63,7 @@ test('contact details are available in static footers on home and case pages', a
 });
 
 test('all local links, fragment targets and stylesheet assets resolve', async () => {
-  const routes = ['/ru', '/en', ...['ru', 'en'].flatMap((lang) => projectKeys.map((key) => `/${lang}/projects/${key}`)), '/404.html', '/'];
+  const routes = ['/ru', '/en', ...achievementRoutes, ...['ru', 'en'].flatMap((lang) => projectKeys.map((key) => `/${lang}/projects/${key}`)), '/404.html', '/'];
   for (const route of routes) {
     const doc = await page(route);
     for (const element of doc.querySelectorAll('a[href], link[href]')) {
@@ -82,13 +84,13 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
 test('public pages contain only approved external links and anonymised case content', async () => {
   const approved = new Set(['https://github.com/SergeyMotynga', 'https://t.me/S1moll', ...approvedRepositoryUrls]);
   for (const lang of ['ru', 'en']) {
-    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`)]) {
+    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`), ...achievementKeys.map((key) => `/${lang}/achievements/${key}`)]) {
       const doc = await page(route);
       for (const anchor of doc.querySelectorAll('a[href^="http"]')) assert(approved.has(anchor.getAttribute('href')), `${route}: unapproved external link`);
       assert(!/aimy-ii|gitlab\.extserv|vector_badges_backend|defect_radar_backend|datamatch-ticket-demand/i.test(doc.documentElement.outerHTML), `${route}: internal identifier`);
       const outsideAchievements = doc.documentElement.cloneNode(true);
       outsideAchievements.querySelector('#presentations')?.remove();
-      assert(!/DATA\s*MATCH|Авангард|Avangard/i.test(outsideAchievements.outerHTML), `${route}: event identity is approved only in achievements`);
+      if (!route.includes('/achievements/')) assert(!/DATA\s*MATCH|Авангард|Avangard/i.test(outsideAchievements.outerHTML), `${route}: event identity is approved only in achievements`);
     }
     const restricted = await page(`/${lang}/projects/demand-forecasting`);
     assert.equal(restricted.querySelector('article').dataset.disclosure, 'restricted');
@@ -99,10 +101,10 @@ test('public pages contain only approved external links and anonymised case cont
 
 test('achievements preserve the owner-confirmed event and project associations', async () => {
   const expected = [
-    ['BDAI', 'finguru'],
-    ['Автоматика-Сервис', 'spas-system'],
-    ['Data Match', 'demand-forecasting'],
-    ['XI Международный ИТ-форум', 'chess-broadcast'],
+    ['BDAI', 'bdai'],
+    ['Автоматика-Сервис', 'avtomatika-service'],
+    ['Data Match', 'data-match'],
+    ['XI Международный ИТ-форум', 'it-forum-xi'],
   ];
   const home = await page('/ru');
   const entries = [...home.querySelectorAll('.presentation')];
@@ -110,7 +112,7 @@ test('achievements preserve the owner-confirmed event and project associations',
   for (const [title, key] of expected) {
     const entry = entries.find((item) => item.querySelector('h3').textContent.includes(title));
     assert.ok(entry, title);
-    assert.equal(entry.querySelector('a').getAttribute('href'), `/ru/projects/${key}/`);
+    assert.equal(entry.querySelector('a').getAttribute('href'), `/ru/achievements/${key}/`);
   }
   assert(entries[1].textContent.includes('по приглашению'));
   const english = await page('/en');
@@ -157,11 +159,33 @@ test('each event is one named native link covering its heading and description i
       const link = event.querySelector('.presentation-link');
       assert.ok(link);
       assert.equal(event.querySelectorAll('a').length, 1);
-      assert.ok(link.getAttribute('href').startsWith(`/${lang}/projects/`));
+      assert.ok(link.getAttribute('href').startsWith(`/${lang}/achievements/`));
       const title = document.getElementById(link.getAttribute('aria-labelledby'));
       assert.ok(title && link.contains(title));
       assert.ok(link.querySelector('p:not(.micro)'));
       assert.equal(link.querySelectorAll('button, a, input').length, 0);
+    }
+  }
+});
+
+
+test('achievement pages include a labelled diploma placeholder, related project and matching translation', async () => {
+  const related = { bdai: 'finguru', 'avtomatika-service': 'spas-system', 'data-match': 'demand-forecasting', 'it-forum-xi': 'chess-broadcast' };
+  for (const lang of ['ru', 'en']) {
+    const other = lang === 'ru' ? 'en' : 'ru';
+    for (const [key, project] of Object.entries(related)) {
+      const doc = await page(`/${lang}/achievements/${key}`);
+      assert.equal(doc.querySelectorAll('h1').length, 1);
+      assert(doc.querySelector('article[data-achievement] .prose p').textContent.length > 50);
+      const preview = doc.querySelector('.achievement-document img');
+      assert.equal(preview.getAttribute('src'), '/images/achievement-placeholder.svg');
+      assert(preview.getAttribute('alt').length > 10);
+      assert.match(doc.querySelector('figcaption').textContent, /заглушка|placeholder/);
+      assert(doc.querySelector(`.prose a[href="/${lang}/projects/${project}/"]`));
+      assert(doc.querySelector(`.back-link[href="/${lang}/#presentations"]`));
+      assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), `/${other}/achievements/${key}/`);
+      assert.equal(doc.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), `/${other}/achievements/${key}/`);
+      assert(doc.querySelector('a[href="mailto:Motynga12345@mail.ru"]'));
     }
   }
 });

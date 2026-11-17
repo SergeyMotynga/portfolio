@@ -112,3 +112,5 @@ export const ui = {
 
 export const homeUrl = (language: Language) => `/${language}/`;
 export const projectUrl = (language: Language, key: string) => `/${language}/projects/${key}/`;
+
+export const achievementUrl = (language: Language, key: string) => `/${language}/achievements/${key}/`;

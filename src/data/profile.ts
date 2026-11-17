@@ -18,13 +18,16 @@ export const skills = {
   tools: ['Git', 'Docker', 'Linux'],
 } as const;
 
-interface Achievement {
+export interface Achievement {
+  key: string;
+  diplomaImage?: string;
   project: string;
   labels: Record<Language, { type: string; title: string; description: string }>;
 }
 
 export const achievements: Achievement[] = [
   {
+    key: 'bdai',
     project: 'finguru',
     labels: {
       ru: { type: 'Хакатон · ПМиФИ ОмГТУ', title: 'BDAI', description: 'Представил командного финансового ассистента FinGuru. Разрабатывал backend бюджета, транзакций и целей накопления, участвовал в интеграции мобильного клиента.' },
@@ -32,6 +35,7 @@ export const achievements: Achievement[] = [
     },
   },
   {
+    key: 'avtomatika-service',
     project: 'spas-system',
     labels: {
       ru: { type: 'Конференция · выступление по приглашению', title: 'Научно-техническая конференция ООО «Автоматика-Сервис»', description: 'По приглашению представил SPAS System — командную систему обнаружения аномалий временных рядов. Разрабатывал интерфейс анализа, графики и интеграцию с API.' },
@@ -39,6 +43,7 @@ export const achievements: Achievement[] = [
     },
   },
   {
+    key: 'data-match',
     project: 'demand-forecasting',
     labels: {
       ru: { type: 'Хакатон · исследование спроса', title: 'Data Match · ХК «Авангард»', description: 'Представил проект по исследованию спроса. Работал над признаками, сравнением моделей и проверкой на временных выборках. Данные, код и численные результаты не публикуются.' },
@@ -46,6 +51,7 @@ export const achievements: Achievement[] = [
     },
   },
   {
+    key: 'it-forum-xi',
     project: 'chess-broadcast',
     labels: {
       ru: { type: 'Хакатон · защита проекта', title: 'XI Международный ИТ-форум', description: 'Представил командный проект шахматной трансляции. Разрабатывал backend обработки распознанных позиций, состояние партии и обновления для зрителей.' },
