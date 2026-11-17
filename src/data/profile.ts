@@ -20,7 +20,13 @@ export const skills = {
 
 export interface Achievement {
   key: string;
-  diplomaImage?: string;
+  document?: {
+    preview: string;
+    file: string;
+    width: number;
+    height: number;
+    caption: Record<Language, string>;
+  };
   project: string;
   labels: Record<Language, { type: string; title: string; description: string }>;
 }
@@ -28,10 +34,19 @@ export interface Achievement {
 export const achievements: Achievement[] = [
   {
     key: 'bdai',
+    document: {
+      preview: '/documents/achievements/bdai-diploma.jpg',
+      file: '/documents/achievements/bdai-diploma.pdf',
+      width: 1132, height: 1600,
+      caption: {
+        ru: 'Диплом за II место в чемпионате «Технологии больших данных и искусственного интеллекта». Команда «СМС», кейс ИИ-ассистента для повышения финансовой грамотности молодёжи.',
+        en: 'Diploma for second place in the Big Data and Artificial Intelligence Technologies championship. Team «СМС», AI assistant for improving financial literacy among young people.',
+      },
+    },
     project: 'finguru',
     labels: {
-      ru: { type: 'Хакатон · ПМиФИ ОмГТУ', title: 'BDAI', description: 'Представил командного финансового ассистента FinGuru. Разрабатывал backend бюджета, транзакций и целей накопления, участвовал в интеграции мобильного клиента.' },
-      en: { type: 'Hackathon · OmSTU applied mathematics department', title: 'BDAI', description: 'Presented our team financial assistant, FinGuru. Developed the backend for budgets, transactions and savings goals, and contributed to mobile integration.' },
+      ru: { type: 'Чемпионат · II место · ПМиФИ ОмГТУ', title: 'BDAI', description: 'Занял II место в составе команды «СМС» с финансовым ассистентом FinGuru. Разрабатывал backend бюджета, транзакций и целей накопления, участвовал в интеграции мобильного клиента.' },
+      en: { type: 'Championship · 2nd place · OmSTU', title: 'BDAI', description: 'Placed second with team «СМС» and our financial assistant, FinGuru. Developed the backend for budgets, transactions and savings goals, and contributed to mobile integration.' },
     },
   },
   {
@@ -44,10 +59,19 @@ export const achievements: Achievement[] = [
   },
   {
     key: 'data-match',
+    document: {
+      preview: '/documents/achievements/data-match-certificate.png',
+      file: '/documents/achievements/data-match-certificate.png',
+      width: 3507, height: 2480,
+      caption: {
+        ru: 'Сертификат участника технического трека хоккейного хакатона Data Match. Омск, 2026.',
+        en: 'Participation certificate for the technical track of the Data Match hockey hackathon. Omsk, 2026.',
+      },
+    },
     project: 'demand-forecasting',
     labels: {
-      ru: { type: 'Хакатон · исследование спроса', title: 'Data Match · ХК «Авангард»', description: 'Представил проект по исследованию спроса. Работал над признаками, сравнением моделей и проверкой на временных выборках. Данные, код и численные результаты не публикуются.' },
-      en: { type: 'Hackathon · demand research', title: 'Data Match · Avangard hockey club', description: 'Presented a demand research project. Worked on features, model comparison and time-based evaluation. Data, code and numerical results are not published.' },
+      ru: { type: 'Хакатон · технический трек', title: 'Data Match · ХК «Авангард»', description: 'Представил проект по исследованию спроса. Работал над признаками, сравнением моделей и проверкой на временных выборках. Данные, код и численные результаты не публикуются.' },
+      en: { type: 'Hackathon · technical track', title: 'Data Match · Avangard hockey club', description: 'Presented a demand research project. Worked on features, model comparison and time-based evaluation. Data, code and numerical results are not published.' },
     },
   },
   {

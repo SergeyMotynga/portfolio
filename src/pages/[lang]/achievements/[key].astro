@@ -15,7 +15,7 @@ const text = achievement.labels[lang];
 const project = (await getProjects(lang)).find(({ data }) => data.key === achievement.project);
 const ru = lang === 'ru';
 const back = ru ? 'Все достижения' : 'All achievements';
-const hasDiploma = Boolean(achievement.diplomaImage);
+const document = achievement.document;
 ---
 <BaseLayout lang={lang} title={text.title} description={text.description} achievementKey={achievement.key}>
   <article class="case-page" data-achievement={achievement.key}>
@@ -29,10 +29,11 @@ const hasDiploma = Boolean(achievement.diplomaImage);
       <p>{text.description}</p>
       <h2>{ru ? 'Диплом и подтверждение' : 'Diploma and supporting document'}</h2>
       <figure class="achievement-document">
-        <img src={achievement.diplomaImage ?? '/images/achievement-placeholder.svg'}
-          alt={hasDiploma ? (ru ? `Диплом: ${text.title}` : `Diploma: ${text.title}`) : (ru ? 'Иллюстрация-заглушка вместо диплома' : 'Placeholder illustration for a diploma')}
-          width="1200" height="800" loading="lazy" />
-        <figcaption>{hasDiploma ? (ru ? 'Документ об участии в мероприятии.' : 'Document confirming participation.') : (ru ? 'Здесь будет диплом или сертификат. Пока показана иллюстрация-заглушка.' : 'A diploma or certificate will appear here. This is a placeholder illustration.')}</figcaption>
+        <img src={document?.preview ?? '/images/achievement-placeholder.svg'}
+          alt={document ? (ru ? `Документ: ${text.title}. ${document.caption.ru}` : `Document: ${text.title}. ${document.caption.en}`) : (ru ? 'Иллюстрация-заглушка вместо диплома' : 'Placeholder illustration for a diploma')}
+          width={document?.width ?? 1200} height={document?.height ?? 800} loading="lazy" />
+        <figcaption>{document ? document.caption[lang] : (ru ? 'Здесь будет диплом или сертификат. Пока показана иллюстрация-заглушка.' : 'A diploma or certificate will appear here. This is a placeholder illustration.')}</figcaption>
+        {document && <a class="text-link document-link" href={document.file} target="_blank" rel="noopener noreferrer"><span class="link-label">{ru ? 'Открыть оригинал' : 'Open original'}</span> <span aria-hidden="true">↗</span></a>}
       </figure>
       {project && <section aria-labelledby="related-project-title">
         <h2 id="related-project-title">{ru ? 'Связанный проект' : 'Related project'}</h2>
@@ -46,5 +47,6 @@ const hasDiploma = Boolean(achievement.diplomaImage);
 <style>
   .achievement-document { margin: 24px 0 40px; }
   .achievement-document img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 16px; }
+  .document-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 12px; }
   .achievement-document figcaption { margin-top: 16px; color: var(--muted); font-size: .9375rem; line-height: 1.6; }
 </style>

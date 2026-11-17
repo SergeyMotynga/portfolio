@@ -169,7 +169,7 @@ test('each event is one named native link covering its heading and description i
 });
 
 
-test('achievement pages include a labelled diploma placeholder, related project and matching translation', async () => {
+test('achievement pages include the correct documents or placeholders, related project and translation', async () => {
   const related = { bdai: 'finguru', 'avtomatika-service': 'spas-system', 'data-match': 'demand-forecasting', 'it-forum-xi': 'chess-broadcast' };
   for (const lang of ['ru', 'en']) {
     const other = lang === 'ru' ? 'en' : 'ru';
@@ -178,9 +178,19 @@ test('achievement pages include a labelled diploma placeholder, related project 
       assert.equal(doc.querySelectorAll('h1').length, 1);
       assert(doc.querySelector('article[data-achievement] .prose p').textContent.length > 50);
       const preview = doc.querySelector('.achievement-document img');
-      assert.equal(preview.getAttribute('src'), '/images/achievement-placeholder.svg');
+      const documents = { bdai: ['bdai-diploma.jpg', 'bdai-diploma.pdf'], 'data-match': ['data-match-certificate.png', 'data-match-certificate.png'] };
+      if (documents[key]) {
+        const [image, original] = documents[key];
+        assert.equal(preview.getAttribute('src'), `/documents/achievements/${image}`);
+        assert.equal(doc.querySelector('.document-link').getAttribute('href'), `/documents/achievements/${original}`);
+        assert(!/заглушка|placeholder/.test(doc.querySelector('figcaption').textContent));
+        assert(preview.getAttribute('width') && preview.getAttribute('height'));
+      } else {
+        assert.equal(preview.getAttribute('src'), '/images/achievement-placeholder.svg');
+        assert.match(doc.querySelector('figcaption').textContent, /заглушка|placeholder/);
+        assert.equal(doc.querySelector('.document-link'), null);
+      }
       assert(preview.getAttribute('alt').length > 10);
-      assert.match(doc.querySelector('figcaption').textContent, /заглушка|placeholder/);
       assert(doc.querySelector(`.prose a[href="/${lang}/projects/${project}/"]`));
       assert(doc.querySelector(`.back-link[href="/${lang}/#presentations"]`));
       assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), `/${other}/achievements/${key}/`);
@@ -188,4 +198,14 @@ test('achievement pages include a labelled diploma placeholder, related project 
       assert(doc.querySelector('a[href="mailto:Motynga12345@mail.ru"]'));
     }
   }
+});
+
+
+test('documents confirm second place at BDAI and participation in the Data Match technical track', async () => {
+  const bdai = await page('/ru/achievements/bdai');
+  assert.match(bdai.querySelector('.case-header').textContent, /II место/);
+  assert.match(bdai.querySelector('figcaption').textContent, /II место/);
+  const dataMatch = await page('/ru/achievements/data-match');
+  assert.match(dataMatch.querySelector('figcaption').textContent, /участника технического трека/);
+  assert(!/II место|призёр|победитель/.test(dataMatch.querySelector('.prose').textContent));
 });
