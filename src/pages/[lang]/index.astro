@@ -6,7 +6,7 @@ import TextEffect from '../../components/TextEffect.astro';
 import MotionHeading from '../../components/MotionHeading.astro';
 import { languages, ui, projectUrl, type Language } from '../../i18n/ui';
 import { getProjects } from '../../lib/projects';
-import { profile, skills, presentations } from '../../data/profile';
+import { profile, skills, achievements } from '../../data/profile';
 
 export function getStaticPaths() { return languages.map((lang) => ({ params: { lang }, props: { lang } })); }
 interface Props { lang: Language }
@@ -53,10 +53,10 @@ const resume = profile.resume?.[lang];
   <div class="scene-frame" id="presentations" data-scene-frame>
   <section class="section page-scene scene-presentations" aria-labelledby="presentations-title">
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">02</span><MotionHeading id="presentations-title" text={t.presentations} /></div><p class="micro">{t.presentationsMeta}</p></div>
-    <div class="presentations-grid">{presentations.map((presentation, index) => {
-      const text = presentation.labels[lang];
+    <div class="presentations-grid">{achievements.map((achievement, index) => {
+      const text = achievement.labels[lang];
       return <article class="presentation" data-reveal={index % 2 ? 'right' : 'up'} data-sequence={index}>
-        <a class="presentation-link" href={projectUrl(lang, presentation.project)} aria-labelledby={`event-${index}-title`}>
+        <a class="presentation-link" href={projectUrl(lang, achievement.project)} aria-labelledby={`event-${index}-title`}>
           <p class="micro">{text.type}</p><h3 id={`event-${index}-title`}>{text.title}</h3><p>{text.description}</p>
           <span class="text-link" aria-hidden="true"><span class="link-label">{t.project}</span> <span aria-hidden="true">↗</span></span>
         </a>

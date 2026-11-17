@@ -85,19 +85,36 @@ test('public pages contain only approved external links and anonymised case cont
     for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`)]) {
       const doc = await page(route);
       for (const anchor of doc.querySelectorAll('a[href^="http"]')) assert(approved.has(anchor.getAttribute('href')), `${route}: unapproved external link`);
-      assert(!/aimy-ii|gitlab\.extserv|vector_badges_backend|defect_radar_backend|datamatch-ticket-demand|DATA MATCH|Авангард/i.test(doc.documentElement.outerHTML), `${route}: internal identifier`);
+      assert(!/aimy-ii|gitlab\.extserv|vector_badges_backend|defect_radar_backend|datamatch-ticket-demand/i.test(doc.documentElement.outerHTML), `${route}: internal identifier`);
+      const outsideAchievements = doc.documentElement.cloneNode(true);
+      outsideAchievements.querySelector('#presentations')?.remove();
+      assert(!/DATA\s*MATCH|Авангард|Avangard/i.test(outsideAchievements.outerHTML), `${route}: event identity is approved only in achievements`);
     }
     const restricted = await page(`/${lang}/projects/demand-forecasting`);
     assert.equal(restricted.querySelector('article').dataset.disclosure, 'restricted');
+    assert(!/DATA\s*MATCH|Авангард|Avangard/i.test(restricted.documentElement.outerHTML), 'restricted case stays anonymous');
     assert(!/RMSE|\b\d+(?:[.,]\d+)?\s*%|predictions\.csv|\.ipynb/i.test(restricted.querySelector('.prose').textContent));
   }
 });
 
-test('FinGuru is a hackathon and SPAS is an invited conference presentation', async () => {
+test('achievements preserve the owner-confirmed event and project associations', async () => {
+  const expected = [
+    ['BDAI', 'finguru'],
+    ['Автоматика-Сервис', 'spas-system'],
+    ['Data Match', 'demand-forecasting'],
+    ['XI Международный ИТ-форум', 'chess-broadcast'],
+  ];
   const home = await page('/ru');
   const entries = [...home.querySelectorAll('.presentation')];
-  assert(entries.some((entry) => entry.textContent.includes('FinGuru') && entry.textContent.includes('Хакатон')));
-  assert(entries.some((entry) => entry.textContent.includes('SPAS System') && entry.textContent.includes('по приглашению')));
+  assert.equal(home.querySelector('#presentations-title').textContent, 'Достижения');
+  for (const [title, key] of expected) {
+    const entry = entries.find((item) => item.querySelector('h3').textContent.includes(title));
+    assert.ok(entry, title);
+    assert.equal(entry.querySelector('a').getAttribute('href'), `/ru/projects/${key}/`);
+  }
+  assert(entries[1].textContent.includes('по приглашению'));
+  const english = await page('/en');
+  assert.equal(english.querySelector('#presentations-title').textContent, 'Achievements');
 });
 
 

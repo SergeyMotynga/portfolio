@@ -18,38 +18,38 @@ export const skills = {
   tools: ['Git', 'Docker', 'Linux'],
 } as const;
 
-interface Presentation {
+interface Achievement {
   project: string;
   labels: Record<Language, { type: string; title: string; description: string }>;
 }
 
-export const presentations: Presentation[] = [
+export const achievements: Achievement[] = [
   {
     project: 'finguru',
     labels: {
-      ru: { type: 'Хакатон · презентация проекта', title: 'FinGuru', description: 'На хакатоне представил командного финансового помощника. Разрабатывал backend бюджета, транзакций и целей, участвовал в интеграции мобильного клиента.' },
-      en: { type: 'Hackathon · project presentation', title: 'FinGuru', description: 'Presented our team financial assistant at a hackathon. Developed the backend for budgets, transactions and goals, and contributed to mobile integration.' },
+      ru: { type: 'Хакатон · ПМиФИ ОмГТУ', title: 'BDAI', description: 'Представил командного финансового ассистента FinGuru. Разрабатывал backend бюджета, транзакций и целей накопления, участвовал в интеграции мобильного клиента.' },
+      en: { type: 'Hackathon · OmSTU applied mathematics department', title: 'BDAI', description: 'Presented our team financial assistant, FinGuru. Developed the backend for budgets, transactions and savings goals, and contributed to mobile integration.' },
     },
   },
   {
     project: 'spas-system',
     labels: {
-      ru: { type: 'Конференция · выступление по приглашению', title: 'SPAS System', description: 'По приглашению выступил на конференции с командной системой обнаружения аномалий временных рядов. Моя часть — интерфейс анализа, графики и интеграция с API.' },
-      en: { type: 'Conference · invited presentation', title: 'SPAS System', description: 'Presented our team time-series anomaly detection system at a conference by invitation. My work covered the analysis interface, charts and API integration.' },
-    },
-  },
-  {
-    project: 'chess-broadcast',
-    labels: {
-      ru: { type: 'Хакатон · командная работа', title: 'Оцифровка шахматной партии', description: 'Разрабатывал backend командной шахматной трансляции: обработку распознанных позиций, состояние партии и обновления для зрителей.' },
-      en: { type: 'Hackathon · team project', title: 'Chess game digitisation', description: 'Developed the backend for a team chess-broadcasting project: recognised-position processing, game state and live spectator updates.' },
+      ru: { type: 'Конференция · выступление по приглашению', title: 'Научно-техническая конференция ООО «Автоматика-Сервис»', description: 'По приглашению представил SPAS System — командную систему обнаружения аномалий временных рядов. Разрабатывал интерфейс анализа, графики и интеграцию с API.' },
+      en: { type: 'Conference · invited presentation', title: 'Avtomatika-Service scientific and technical conference', description: 'Presented SPAS System, our team time-series anomaly detection system, by invitation. Developed the analysis interface, charts and API integration.' },
     },
   },
   {
     project: 'demand-forecasting',
     labels: {
-      ru: { type: 'ML-соревнование · обезличено', title: 'Прогнозирование спроса', description: 'Работал над признаками, сравнением моделей и подбором параметров. Проверял прогнозы на временных выборках; закрытые материалы и результаты не раскрываются.' },
-      en: { type: 'ML competition · anonymised', title: 'Demand forecasting', description: 'Worked on features, model comparison and parameter search. Evaluated forecasts on time-based splits; confidential materials and results are omitted.' },
+      ru: { type: 'Хакатон · исследование спроса', title: 'Data Match · ХК «Авангард»', description: 'Представил проект по исследованию спроса. Работал над признаками, сравнением моделей и проверкой на временных выборках. Данные, код и численные результаты не публикуются.' },
+      en: { type: 'Hackathon · demand research', title: 'Data Match · Avangard hockey club', description: 'Presented a demand research project. Worked on features, model comparison and time-based evaluation. Data, code and numerical results are not published.' },
+    },
+  },
+  {
+    project: 'chess-broadcast',
+    labels: {
+      ru: { type: 'Хакатон · защита проекта', title: 'XI Международный ИТ-форум', description: 'Представил командный проект шахматной трансляции. Разрабатывал backend обработки распознанных позиций, состояние партии и обновления для зрителей.' },
+      en: { type: 'Hackathon · project presentation', title: '11th International IT Forum', description: 'Presented our team chess-broadcasting project. Developed recognised-position processing, game state and live spectator updates on the backend.' },
     },
   },
 ];
