@@ -116,6 +116,10 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
   const routes = ['/ru', '/en', ...achievementRoutes, ...experienceRoutes, ...['ru', 'en'].flatMap((lang) => projectKeys.map((key) => `/${lang}/projects/${key}`)), '/404.html', '/'];
   for (const route of routes) {
     const doc = await page(route);
+    assert(!doc.body.textContent.includes('\u2197'), `${route}: old link arrow`);
+    for (const icon of doc.querySelectorAll('a svg[data-link-icon]')) {
+      assert.equal(icon.getAttribute('aria-hidden'), 'true', `${route}: decorative link icon`);
+    }
     for (const element of doc.querySelectorAll('a[href], link[href]')) {
       const href = element.getAttribute('href');
       if (/^(https?:|mailto:|tel:)/.test(href)) continue;

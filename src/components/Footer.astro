@@ -2,6 +2,7 @@
 import { ui, type Language } from '../i18n/ui';
 import { profile } from '../data/profile';
 import MotionHeading from './MotionHeading.astro';
+import LinkIcon from './LinkIcon.astro';
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = ui[lang];
@@ -10,22 +11,22 @@ const t = ui[lang];
 <footer class="site-footer">
   <section class="contact-section" aria-labelledby="contact-title">
     <div class="contact-intro">
-      <div class="contact-kicker"><span class="scene-number" aria-hidden="true">05</span><p class="micro">{t.contactLabel}</p></div>
+      <span class="scene-number" aria-hidden="true">05</span>
       <MotionHeading id="contact-title" text={t.contact} />
       <p class="contact-lead">{t.contactText}</p>
     </div>
     <ul class="contact-links">
       {profile.email && <li><a class="contact-link" href={`mailto:${profile.email}`}>
         <span class="contact-channel">{t.emailLabel}</span>
-        <span class="contact-value">{profile.email}</span><span class="contact-arrow" aria-hidden="true">↗</span>
+        <span class="contact-value">{profile.email}</span><LinkIcon kind="email" class="contact-arrow" />
       </a></li>}
       {profile.telegram && <li><a class="contact-link" href={profile.telegram} target="_blank" rel="noopener noreferrer">
         <span class="contact-channel">Telegram</span>
-        <span class="contact-value">@{new URL(profile.telegram).pathname.slice(1)}</span><span class="contact-arrow" aria-hidden="true">↗</span>
+        <span class="contact-value">@{new URL(profile.telegram).pathname.slice(1)}</span><LinkIcon kind="external" class="contact-arrow" />
       </a></li>}
       <li><a class="contact-link" href={profile.github} target="_blank" rel="noopener noreferrer">
         <span class="contact-channel">GitHub · {t.githubLabel}</span>
-        <span class="contact-value">{new URL(profile.github).pathname.slice(1)}</span><span class="contact-arrow" aria-hidden="true">↗</span>
+        <span class="contact-value">{new URL(profile.github).pathname.slice(1)}</span><LinkIcon kind="external" class="contact-arrow" />
       </a></li>
     </ul>
   </section>

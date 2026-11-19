@@ -132,7 +132,7 @@
 .target-cursor span { position: absolute; left: 0; top: 0; width: 11px; height: 11px; border: solid currentColor; border-width: 2px 0 0 2px; transform-origin: 0 0; }
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce), (forced-colors: active) { .target-cursor { display: none; } }
 
-.text-link > span[aria-hidden='true'] { color: var(--muted); }
+.text-link > span[aria-hidden='true'], .text-link > .link-icon { color: var(--muted); }
 @media (hover: hover) {
   .text-link:hover > .link-label, .presentation-link:hover .link-label { text-decoration: underline; text-underline-offset: 4px; }
 }

@@ -1,12 +1,13 @@
 ---
 import { projectUrl, ui, type Language } from '../i18n/ui';
+import LinkIcon from './LinkIcon.astro';
 
 interface Props { lang: Language; projectKey: string; title: string }
 const { lang, projectKey, title } = Astro.props;
 ---
 <a class="related-project presentation-link" href={projectUrl(lang, projectKey)}>
   <span class="related-project-name">{title}</span>
-  <span class="text-link" aria-hidden="true"><span class="link-label">{ui[lang].viewRelatedProject}</span> <span aria-hidden="true">↗</span></span>
+  <span class="text-link" aria-hidden="true"><span class="link-label">{ui[lang].viewRelatedProject}</span> <LinkIcon /></span>
 </a>
 <style>
   .related-project {
@@ -20,7 +21,7 @@ const { lang, projectKey, title } = Astro.props;
     background-color: color-mix(in srgb, var(--surface) 55%, transparent);
   }
   .related-project > .text-link { color: var(--accent); }
-  .related-project > .text-link > span[aria-hidden='true'] { color: inherit; }
+  .related-project > .text-link > :global(.link-icon) { color: inherit; }
   @media (hover: hover) {
     .related-project:hover { background-color: var(--surface); }
     .related-project:hover > .related-project-name { color: var(--accent); }

@@ -1,0 +1,21 @@
+---
+interface Props {
+  kind?: 'forward' | 'external' | 'email';
+  class?: string;
+}
+
+const { kind = 'forward', class: extraClass } = Astro.props;
+const paths = {
+  forward: 'M3 8h9.5m-4-4 4 4-4 4',
+  external: 'M9 2.5h4.5V7m0-4.5L7 9m.5-5.5H3.75c-.69 0-1.25.56-1.25 1.25v7.5c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25V8.5',
+  email: 'M3 4h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm-.5 1L8 8.5 13.5 5',
+};
+---
+<svg class:list={['link-icon', extraClass]} data-link-icon={kind} width="16" height="16" viewBox="0 0 16 16"
+  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+  aria-hidden="true" focusable="false">
+  <path d={paths[kind]} />
+</svg>
+<style>
+  .link-icon { flex: none; vertical-align: -.2em; }
+</style>

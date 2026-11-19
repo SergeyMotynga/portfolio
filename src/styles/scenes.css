@@ -54,11 +54,12 @@
 .experience-description { font-size: 16px; }
 .experience-period { color: var(--muted); font-size: 14px; margin-block-start: 8px; }
 .experience-link .text-link { color: var(--accent); margin-block-start: 4px; }
-.experience-link .text-link > span[aria-hidden='true'] { color: inherit; }
+.experience-link .text-link > .link-icon { color: inherit; }
 .scene-about { background: var(--scene-about); padding-block: clamp(48px, 6vw, 88px); overflow: clip; }
 .scene-about .about-grid { border: 0; padding-top: 0; gap: clamp(40px, 8vw, 140px); }
-.scene-about .skills { gap: 26px 24px; }
+.scene-about .skills { grid-template-columns: max-content minmax(0, 1fr); gap: 26px 24px; }
 .scene-about .education { border: 0; margin: 0; padding: 0; }
+.scene-about .education > .micro { font-size: 12px; }
 .scene-about .education h3 { font: 400 clamp(30px, 3.1vw, 46px)/1.2 var(--display); margin-top: 16px; }
 .scene-about .crystal-stage { opacity: .16; }
 .site-footer {
@@ -70,12 +71,11 @@
   border-radius: 28px;
 }
 .site-footer .contact-section { padding-block: var(--scene-space); align-items: start; }
-.contact-kicker { display: flex; align-items: center; gap: 24px; margin-bottom: 28px; }
+.contact-intro > .scene-number { display: block; margin-block-end: 28px; }
 .site-footer .contact-section h2 { font-size: clamp(48px, 5.8vw, 84px); line-height: 1.12; }
 .site-footer .contact-links { margin-top: 6px; }
 .site-footer .contact-link:hover { background: #9EAEFF0A; }
 .site-footer .contact-link:focus-visible, .site-footer .footer-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
-.site-footer .contact-arrow { color: var(--accent); }
 .site-footer .footer-bottom { border-color: var(--line); }
 @media (max-width: 1100px) {
   .scene-presentations .presentation-link { grid-template-columns: minmax(140px, .6fr) minmax(0, 1.5fr); }
@@ -128,7 +128,7 @@
 /* Soft local scrims keep the particle sphere visible in the open space. */
 .scene-about .skills, .scene-about .education { position: relative; isolation: isolate; }
 .scene-about .skills::before, .scene-about .education::before { content: ''; position: absolute; z-index: -1; inset: -24px -28px; pointer-events: none; background: radial-gradient(ellipse, #151A25CC 15%, #151A2566 60%, transparent 80%); }
-.scene-about .education > p:not(.micro) { line-height: 1.75; }
+.scene-about .education > p:not(.micro) { font-size: 17px; line-height: 1.75; }
 .scene-presentations .presentation h3 { text-wrap: balance; }
 
 .presentation-link { color: var(--text); text-decoration: none; border-radius: 10px; }
