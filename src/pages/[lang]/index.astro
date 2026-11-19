@@ -44,7 +44,13 @@ const resume = profile.resume?.[lang];
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">01</span><MotionHeading id="projects-title" text={t.selected} /></div><p class="micro">{t.selectedMeta}</p></div>
     {featured.map((project, index) => <ProjectRow project={project} index={index + 1} lang={lang} />)}
     {catalog.length > 0 && <details class="catalog">
-      <summary><span>{t.catalog}</span><span class="catalog-count">{t.more} {catalog.length} <span aria-hidden="true">↗</span></span></summary>
+      <summary>
+        <span>{t.catalog}</span>
+        <span class="catalog-action">
+          <span class="catalog-expand">{t.more} {catalog.length} <span aria-hidden="true">↓</span></span>
+          <span class="catalog-collapse">{t.collapseCatalog} <span aria-hidden="true">↑</span></span>
+        </span>
+      </summary>
       <div>{catalog.map((project, index) => <ProjectRow project={project} index={featured.length + index + 1} lang={lang} compact />)}</div>
     </details>}
   </section>

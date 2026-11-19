@@ -82,7 +82,8 @@
   .stack-list { display: flex; flex-wrap: wrap; gap: 8px 17px; padding: 0; margin-top: 21px; list-style: none; color: var(--muted); font: 11px/1.8 var(--mono); }
   .catalog { border-bottom: 1px solid var(--line); }
   .catalog > summary { border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 23px 0; font-size: 13px; }
-  .catalog-count { color: var(--accent); font: 11px var(--mono); }
+  .catalog-action { color: var(--accent); font: 11px var(--mono); }
+  .catalog:not([open]) .catalog-collapse, .catalog[open] .catalog-expand { display: none; }
   .catalog[open] > summary { color: var(--accent); }
   .compact .project-title { font-size: 20px; }
   .presentation { border-top: 1px solid var(--line); }
@@ -126,7 +127,8 @@
   .prose p, .prose li { color: var(--text); font-size: inherit; line-height: 1.7; text-wrap: pretty; }
   .prose ul, .prose ol { padding-left: 22px; }
   .prose li + li { margin-top: 13px; }
-  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+  .prose a { color: var(--accent); }
+  .prose a:not(.text-link) { text-decoration: underline; text-underline-offset: 4px; }
   .prose code { font: .85em var(--mono); }
   .case-bottom { border-top: 1px solid var(--line); padding: 28px 0 42px; display: flex; align-items: start; justify-content: space-between; gap: 30px; }
   .next-project { display: flex; flex-direction: column; gap: 8px; max-width: 58%; text-align: right; font-size: 15px; }
@@ -314,7 +316,7 @@
     .navigation a:hover { text-decoration: none; }
     .navigation a:hover::after { transform: scaleX(1); }
     .text-link > span[aria-hidden], .primary-link > span[aria-hidden], .contact-arrow, .footer-top > span[aria-hidden] { display: inline-block; transition: transform 180ms ease-out; }
-    .text-link:hover > span[aria-hidden], .text-link:focus-visible > span[aria-hidden], .contact-link:hover .contact-arrow, .contact-link:focus-visible .contact-arrow { transform: translate(3px, -3px); }
+    .text-link:hover > .link-label + span[aria-hidden], .text-link:focus-visible > .link-label + span[aria-hidden], .contact-link:hover .contact-arrow, .contact-link:focus-visible .contact-arrow { transform: translate(3px, -3px); }
     .primary-link:hover > span[aria-hidden] { transform: translate(3px, 3px); }
     .footer-top:hover > span[aria-hidden] { transform: translateY(-3px); }
   }
