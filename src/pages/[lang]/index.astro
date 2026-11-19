@@ -80,8 +80,8 @@ const resume = profile.resume?.[lang];
       return <article class="experience-entry" data-reveal="up" data-sequence={index}>
         <a class="experience-link presentation-link" href={experienceUrl(lang, entry.key)} aria-labelledby={companyId}>
           <div>
-            <p id={companyId} class="micro experience-company">{company}</p>
-            <h3>{contribution}</h3>
+            <h3 id={companyId} class="experience-company">{company}</h3>
+            <p class="experience-role">{contribution}</p>
           </div>
           <div>
             <p class="experience-description">{description}</p>

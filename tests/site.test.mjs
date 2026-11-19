@@ -72,7 +72,9 @@ test('home and company pages connect the confirmed experience to its related pro
       const links = entry.querySelectorAll('a');
       assert.equal(links.length, 1);
       assert.equal(links[0].getAttribute('href'), href);
-      assert.equal(entry.querySelector('.micro').textContent, company);
+      const companyHeading = entry.querySelector('h3');
+      assert.equal(companyHeading.textContent, company);
+      assert.equal(links[0].getAttribute('aria-labelledby'), companyHeading.id);
       assert(entry.querySelector('.experience-period').textContent.startsWith(duration));
 
       const detail = await page(href.slice(0, -1));
