@@ -1,17 +1,14 @@
 ---
-import { homeUrl, ui, type Language } from '../i18n/ui';
+import { ui, type Language } from '../i18n/ui';
 import { profile } from '../data/profile';
 import MotionHeading from './MotionHeading.astro';
 import LinkIcon from './LinkIcon.astro';
-import SceneBackdrop from './SceneBackdrop.astro';
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = ui[lang];
-const onHome = Astro.url.pathname === homeUrl(lang);
 ---
 <div class="scene-frame footer-frame" id="contact" data-scene-frame>
-<footer class:list={['site-footer', { 'scene-contact': onHome }]}>
-  {onHome && <SceneBackdrop name="soft-aurora" />}
+<footer class="site-footer">
   <section class="contact-section" aria-labelledby="contact-title">
     <div class="contact-intro">
       <span class="scene-number" aria-hidden="true">05</span>

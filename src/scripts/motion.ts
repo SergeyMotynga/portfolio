@@ -1,5 +1,4 @@
 import './showcase';
-import './scene-backgrounds';
 import './target-cursor';
 import { selectActiveSection } from '../lib/active-section';
 

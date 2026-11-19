@@ -181,14 +181,6 @@ test('the showcase keeps project contributions and hero navigation in static HTM
     for (const id of ['projects', 'presentations', 'experience', 'about', 'contact']) {
       assert(doc.getElementById(id)?.hasAttribute('data-scene-frame'), `${id}: navigation targets the stationary frame`);
     }
-    const backdrops = [...doc.querySelectorAll('video[data-scene-video]')];
-    assert.equal(backdrops.length, 4);
-    for (const video of backdrops) {
-      assert(!video.hasAttribute('src'), 'the background video loads on entry');
-      assert.equal(video.getAttribute('preload'), 'none');
-      assert.equal(video.closest('.scene-backdrop')?.getAttribute('aria-hidden'), 'true');
-      await access(path.join(dist, video.getAttribute('data-scene-video')));
-    }
     assert.equal(doc.querySelectorAll('[data-badge-flip]').length, 0);
     const crystal = doc.querySelector('#about > .page-scene > [data-crystal]');
     assert.equal(crystal?.getAttribute('aria-hidden'), 'true');

@@ -1,7 +1,0 @@
----
-interface Props { name: 'topography' | 'side-rays' | 'line-waves' | 'soft-aurora' }
-const { name } = Astro.props;
----
-<div class="scene-backdrop" aria-hidden="true">
-  <video data-scene-video={`/images/scenes/${name}.webm`} preload="none" muted playsinline tabindex="-1"></video>
-</div>
