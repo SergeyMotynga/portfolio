@@ -9,6 +9,7 @@ disclosure: "open"
 order: 5
 featured: false
 stack: ["Python", "scikit-learn", "Optuna"]
+repository: "https://github.com/SergeyMotynga/AutomationML/tree/develop"
 ---
 
 ## Purpose

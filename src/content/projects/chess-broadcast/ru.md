@@ -9,6 +9,7 @@ disclosure: "open"
 order: 9
 featured: false
 stack: ["FastAPI", "Redis", "python-chess", "Python", "PostgreSQL", "SQLAlchemy", "Alembic", "WebSocket", "Docker"]
+repository: "https://github.com/SergeyMotynga/Chess_Hackathon_backend/tree/develop"
 ---
 
 ## Для чего нужен проект

@@ -9,6 +9,7 @@ disclosure: "open"
 order: 8
 featured: false
 stack: ["FastAPI", "PostgreSQL", "Redis", "Python", "Firebase", "Flutter"]
+repository: "https://github.com/SergeyMotynga/T-assistant_backend"
 ---
 
 ## Для чего нужен проект

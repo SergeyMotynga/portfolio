@@ -9,6 +9,7 @@ disclosure: "open"
 order: 4
 featured: false
 stack: ["Streamlit", "pandas", "FastAPI", "Python", "Docker"]
+repository: "https://github.com/SergeyMotynga/SPAS_system/tree/develop"
 ---
 
 ## Purpose

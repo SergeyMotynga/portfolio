@@ -9,6 +9,7 @@ disclosure: "open"
 order: 6
 featured: false
 stack: ["Python", "ChromaDB", "Ollama", "FastAPI", "Streamlit", "LangChain", "sentence-transformers"]
+repository: "https://github.com/SergeyMotynga/NLP_project"
 ---
 
 ## Purpose

@@ -9,6 +9,7 @@ disclosure: "open"
 order: 10
 featured: false
 stack: ["FastAPI", "PostgreSQL", "S3", "Python", "Firebase", "NativeScript", "Vue"]
+repository: "https://github.com/SergeyMotynga/Royality_backend/tree/develop"
 ---
 
 ## Для чего нужен проект

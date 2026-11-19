@@ -9,6 +9,7 @@ disclosure: "open"
 order: 7
 featured: false
 stack: ["Streamlit", "pandas", "FastAPI", "Python", "NumPy", "statsmodels", "Docker"]
+repository: "https://github.com/SergeyMotynga/Time_series_task"
 ---
 
 ## Purpose
