@@ -750,6 +750,7 @@ export function mountLanyard(host, {
 
     const container = containerRef.current;
     if (!container) return undefined;
+    const hero = host.closest('.hero');
 
     let renderer;
     try {
@@ -1164,7 +1165,7 @@ export function mountLanyard(host, {
     };
 
     const start = () => {
-      if (raf || !visible || !alive || host.closest('.hero')?.dataset.sceneHidden === 'true') return;
+      if (raf || !visible || !alive || hero?.dataset.sceneHidden === 'true') return;
       sim.calm = 0;
       last = performance.now();
       raf = requestAnimationFrame(tick);
@@ -1199,7 +1200,7 @@ export function mountLanyard(host, {
     };
 
     const onPointerDown = event => {
-      if (event.pointerType === 'touch' || host.closest('.hero')?.dataset.sceneHidden === 'true' || !visible) return;
+      if (event.pointerType === 'touch' || hero?.dataset.sceneHidden === 'true' || !visible) return;
       if (sim.grab || !settingsRef.current.interactive || event.button > 0) return;
       if (event.clientY < (document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0)) return;
       toPointer(event);
@@ -1225,7 +1226,7 @@ export function mountLanyard(host, {
     const onPointerMove = event => {
       if (event.pointerType === 'touch' || (sim.grab && event.pointerId !== capturedPointer)) return;
       if (!settingsRef.current.interactive) return;
-      if (host.closest('.hero')?.dataset.sceneHidden === 'true' || !visible) { setCursor(''); return; }
+      if (hero?.dataset.sceneHidden === 'true' || !visible) { setCursor(''); return; }
       toPointer(event);
       if (sim.grab) {
         if (press && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 6) press = null;
@@ -1298,6 +1299,8 @@ export function mountLanyard(host, {
       if (document.hidden) cancelDrag(); else start();
     };
     document.addEventListener('visibilitychange', onVisibility);
+    // The sticky slot can intersect before the scroll fade releases the hero.
+    hero?.addEventListener('hero-visible', start);
 
     const onFlip = () => { flip(); start(); };
     host.addEventListener('badge-flip', onFlip);
@@ -1314,6 +1317,7 @@ export function mountLanyard(host, {
       document.fonts.removeEventListener('loadingdone', resize);
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
+      hero?.removeEventListener('hero-visible', start);
       cancelDrag();
       window.removeEventListener('resize', resize);
       document.removeEventListener('pointerdown', onPointerDown, true);

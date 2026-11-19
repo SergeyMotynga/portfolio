@@ -148,8 +148,11 @@ function updateScroll(): void {
     const opacity = Math.pow(1 - progress, 3);
     heroScene.style.setProperty('--scene-opacity', String(opacity));
     root.style.setProperty('--badge-opacity', String(opacity));
-    root.style.setProperty('--badge-visibility', opacity < .02 ? 'hidden' : 'visible');
-    hero.dataset.sceneHidden = String(opacity < .02);
+    const hidden = opacity < .02;
+    root.style.setProperty('--badge-visibility', hidden ? 'hidden' : 'visible');
+    const wasHidden = hero.dataset.sceneHidden === 'true';
+    hero.dataset.sceneHidden = String(hidden);
+    if (wasHidden && !hidden) hero.dispatchEvent(new Event('hero-visible'));
     hero.dataset.sceneFading = String(progress > 0);
   }
   root.style.setProperty('--ambient-shift', motionDisabled() ? '0px' : `${-Math.min(window.scrollY * .04, 120)}px`);
