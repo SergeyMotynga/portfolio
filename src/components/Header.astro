@@ -1,8 +1,8 @@
 ---
-import { languages, ui, homeUrl, projectUrl, achievementUrl, type Language } from '../i18n/ui';
+import { languages, ui, homeUrl, type Language } from '../i18n/ui';
 
-interface Props { lang: Language; projectKey?: string; achievementKey?: string }
-const { lang, projectKey, achievementKey } = Astro.props;
+interface Props { lang: Language; languagePath: (language: Language) => string }
+const { lang, languagePath } = Astro.props;
 const t = ui[lang];
 const sections = ['projects', 'presentations', 'experience', 'about', 'contact'];
 const onHome = Astro.url.pathname === homeUrl(lang);
@@ -14,7 +14,7 @@ const onHome = Astro.url.pathname === homeUrl(lang);
   </nav>
   <nav class="language" aria-label={t.language}>
     {languages.map((language) => <a
-      href={achievementKey ? achievementUrl(language, achievementKey) : projectKey ? projectUrl(language, projectKey) : homeUrl(language)}
+      href={languagePath(language)}
       lang={language}
       hreflang={language}
       aria-current={language === lang ? 'page' : undefined}

@@ -18,7 +18,7 @@ const projects = await getProjects(lang);
 const current = projects.findIndex(({ data: item }) => item.key === data.key);
 const next = projects[(current + 1) % projects.length];
 ---
-<BaseLayout lang={lang} title={data.title} description={data.summary} projectKey={data.key}>
+<BaseLayout lang={lang} title={data.title} description={data.summary} detail={{ section: 'projects', key: data.key }}>
   <article class="case-page" data-project={data.key} data-disclosure={data.disclosure}>
     <a class="back-link" href={`${homeUrl(lang)}#projects`}><span aria-hidden="true">←</span> {t.back}</a>
     <header class="case-header">

@@ -27,6 +27,11 @@ export const ui = {
     presentationsMeta: 'Выступления · участие в проектах',
     project: 'К проекту',
     experience: 'Опыт',
+    viewExperience: 'Подробнее',
+    backToExperience: 'Весь опыт',
+    myWork: 'Что я делал',
+    relatedProjects: 'Связанные проекты',
+    viewRelatedProject: 'Подробнее',
     about: 'Стек и образование',
     aboutMeta: 'Инструменты и развитие',
     backend: 'Backend',
@@ -82,6 +87,11 @@ export const ui = {
     presentationsMeta: 'Presentations · project participation',
     project: 'View project',
     experience: 'Experience',
+    viewExperience: 'View experience',
+    backToExperience: 'All experience',
+    myWork: 'My work',
+    relatedProjects: 'Related projects',
+    viewRelatedProject: 'View project',
     about: 'Skills & education',
     aboutMeta: 'Tools and development',
     backend: 'Backend',
@@ -114,7 +124,13 @@ export const ui = {
   },
 } as const;
 
-export const homeUrl = (language: Language) => `/${language}/`;
-export const projectUrl = (language: Language, key: string) => `/${language}/projects/${key}/`;
+export interface DetailPage {
+  section: 'projects' | 'achievements' | 'experience';
+  key: string;
+}
 
-export const achievementUrl = (language: Language, key: string) => `/${language}/achievements/${key}/`;
+export const homeUrl = (language: Language) => `/${language}/`;
+export const detailUrl = (language: Language, { section, key }: DetailPage) => `${homeUrl(language)}${section}/${key}/`;
+export const projectUrl = (language: Language, key: string) => detailUrl(language, { section: 'projects', key });
+export const achievementUrl = (language: Language, key: string) => detailUrl(language, { section: 'achievements', key });
+export const experienceUrl = (language: Language, key: string) => detailUrl(language, { section: 'experience', key });

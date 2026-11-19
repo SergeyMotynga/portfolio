@@ -11,6 +11,12 @@ const dist = path.join(root, 'dist');
 const projectKeys = (await readdir(path.join(root, 'src/content/projects'), { withFileTypes: true })).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
 const achievementKeys = ['bdai', 'avtomatika-service', 'data-match', 'it-forum-xi'];
 const achievementRoutes = ['ru', 'en'].flatMap((lang) => achievementKeys.map((key) => `/${lang}/achievements/${key}`));
+const experienceProjects = {
+  aimy: ['audio-badges', 'defect-monitoring'],
+  'avtomatika-service': ['git-sync', 'spas-system', 'time-series'],
+};
+const experienceKeys = Object.keys(experienceProjects);
+const experienceRoutes = ['ru', 'en'].flatMap((lang) => experienceKeys.map((key) => `/${lang}/experience/${key}`));
 const pages = new Map();
 const routeFile = (route) => path.join(dist, route.endsWith('.html') ? route : `${route}/index.html`);
 
@@ -48,25 +54,46 @@ test('language switching keeps the current project', async () => {
   }
 });
 
-test('both home pages show the confirmed experience and link to it from the navigation', async () => {
+test('home and company pages connect the confirmed experience to its related projects', async () => {
   const expected = {
-    ru: [['AIMY', '4 месяца'], ['Автоматика-Сервис', '8 месяцев']],
-    en: [['AIMY', '4 months'], ['Avtomatika-Service', '8 months']],
+    ru: [['aimy', 'AIMY', '4 месяца'], ['avtomatika-service', 'Автоматика-Сервис', '8 месяцев']],
+    en: [['aimy', 'AIMY', '4 months'], ['avtomatika-service', 'Avtomatika-Service', '8 months']],
   };
   for (const lang of ['ru', 'en']) {
+    const other = lang === 'ru' ? 'en' : 'ru';
     const home = await page(`/${lang}`);
     const section = home.querySelector('#experience > section');
     assert(section.querySelector('#experience-title'));
     const entries = [...section.querySelectorAll('article')];
     assert.equal(entries.length, expected[lang].length);
-    entries.forEach((entry, index) => {
-      const [company, duration] = expected[lang][index];
+    for (const [index, entry] of entries.entries()) {
+      const [key, company, duration] = expected[lang][index];
+      const href = `/${lang}/experience/${key}/`;
+      const links = entry.querySelectorAll('a');
+      assert.equal(links.length, 1);
+      assert.equal(links[0].getAttribute('href'), href);
       assert.equal(entry.querySelector('.micro').textContent, company);
       assert(entry.querySelector('.experience-period').textContent.startsWith(duration));
-    });
+
+      const detail = await page(href.slice(0, -1));
+      const translatedHref = `/${other}/experience/${key}/`;
+      assert.equal(detail.querySelector('h1').textContent, company);
+      assert(detail.querySelector('.case-header .experience-period').textContent.startsWith(duration));
+      assert(detail.querySelector(`.back-link[href="/${lang}/#experience"]`));
+      assert.equal(detail.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), translatedHref);
+      assert.equal(detail.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), translatedHref);
+      assert.deepEqual(
+        [...detail.querySelectorAll('.related-project')].map((link) => link.getAttribute('href')),
+        experienceProjects[key].map((project) => `/${lang}/projects/${project}/`),
+      );
+    }
     assert(home.querySelector('.navigation a[href="#experience"][data-section-link="experience"]'));
     const project = await page(`/${lang}/projects/chess-broadcast`);
     assert(project.querySelector(`.navigation a[href="/${lang}/#experience"]`));
+    const stack = home.querySelector('#about .skills').textContent;
+    for (const technology of ['Pydantic', 'Docker Compose', 'GitLab CI/CD', 'Nginx']) {
+      assert(stack.includes(technology), `${lang}: missing ${technology}`);
+    }
   }
 });
 
@@ -84,7 +111,7 @@ test('contact details are available in static footers on home and case pages', a
 });
 
 test('all local links, fragment targets and stylesheet assets resolve', async () => {
-  const routes = ['/ru', '/en', ...achievementRoutes, ...['ru', 'en'].flatMap((lang) => projectKeys.map((key) => `/${lang}/projects/${key}`)), '/404.html', '/'];
+  const routes = ['/ru', '/en', ...achievementRoutes, ...experienceRoutes, ...['ru', 'en'].flatMap((lang) => projectKeys.map((key) => `/${lang}/projects/${key}`)), '/404.html', '/'];
   for (const route of routes) {
     const doc = await page(route);
     for (const element of doc.querySelectorAll('a[href], link[href]')) {
@@ -105,7 +132,7 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
 test('public pages contain only approved external links and anonymised case content', async () => {
   const approved = new Set(['https://github.com/SergeyMotynga', 'https://t.me/S1moll', ...approvedRepositoryUrls]);
   for (const lang of ['ru', 'en']) {
-    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`), ...achievementKeys.map((key) => `/${lang}/achievements/${key}`)]) {
+    for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`), ...achievementKeys.map((key) => `/${lang}/achievements/${key}`), ...experienceKeys.map((key) => `/${lang}/experience/${key}`)]) {
       const doc = await page(route);
       for (const anchor of doc.querySelectorAll('a[href^="http"]')) assert(approved.has(anchor.getAttribute('href')), `${route}: unapproved external link`);
       assert(!/aimy-ii|gitlab\.extserv|vector_badges_backend|defect_radar_backend|datamatch-ticket-demand/i.test(doc.documentElement.outerHTML), `${route}: internal identifier`);

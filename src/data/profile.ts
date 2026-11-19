@@ -12,39 +12,59 @@ export const profile: {
 };
 
 export const skills = {
-  backend: ['Python', 'FastAPI', 'SQLAlchemy', 'Alembic'],
+  backend: ['Python', 'FastAPI', 'Pydantic', 'SQLAlchemy', 'Alembic'],
   data: ['PostgreSQL', 'Redis', 'SQLite'],
   ml: ['scikit-learn', 'pandas', 'Optuna', 'RAG'],
-  tools: ['Git', 'Docker', 'Linux'],
+  tools: ['Git', 'Docker', 'Docker Compose', 'Linux', 'GitLab CI/CD', 'Nginx'],
 } as const;
 
 export const experience = [
   {
+    key: 'aimy',
+    projects: ['audio-badges', 'defect-monitoring'],
     ru: {
       company: 'AIMY',
       contribution: 'Backend коммерческих сервисов',
       description: 'Разрабатывал серверную логику и REST API, работал с базами данных и участвовал в интеграции ML-компонентов.',
       period: '4 месяца · стажировка и проекты по ГПХ',
+      highlights: [
+        'Разрабатывал проверки прав доступа с учётом ролей и структуры подразделений, а также логику рабочих смен.',
+        'Обрабатывал результаты распознавания и согласовывал сохранение данных с обновлениями по WebSocket.',
+      ],
     },
     en: {
       company: 'AIMY',
       contribution: 'Backend development for commercial services',
       description: 'Developed backend logic and REST APIs, worked with databases and helped integrate ML components.',
       period: '4 months · internship and contract work',
+      highlights: [
+        'Built access checks based on roles and organisational structure, and developed shift management logic.',
+        'Processed recognition results and coordinated database updates with WebSocket notifications.',
+      ],
     },
   },
   {
+    key: 'avtomatika-service',
+    projects: ['git-sync', 'spas-system', 'time-series'],
     ru: {
       company: 'Автоматика-Сервис',
       contribution: 'Промышленный мониторинг',
       description: 'Обрабатывал временные ряды, разрабатывал дашборды и тестировал модели обнаружения аномалий. Готовил технические отчёты по требованиям к серверу.',
       period: '8 месяцев · работа и практика. Часть задач выполнял как лаборант ОмГТУ.',
+      highlights: [
+        'Переписал инструмент синхронизации Git с Bash на Python. Добавлял хранение состояния веток, обработку конфликтов и запуск в Docker.',
+        'Разрабатывал интерфейсы на Streamlit для поиска аномалий и прогнозирования. Интегрировал их с API и визуализировал результаты.',
+      ],
     },
     en: {
       company: 'Avtomatika-Service',
       contribution: 'Industrial monitoring',
       description: 'Processed time-series data, developed dashboards and tested anomaly detection models. Prepared technical reports on server requirements.',
       period: '8 months · work and placements. I handled some of this work as a lab assistant at OmSTU.',
+      highlights: [
+        'Rewrote a Git synchronisation tool from Bash to Python. Worked on branch state storage, conflict handling and running the tool in Docker.',
+        'Built Streamlit interfaces for anomaly detection and forecasting. Connected them to APIs and visualised the results.',
+      ],
     },
   },
 ] as const;

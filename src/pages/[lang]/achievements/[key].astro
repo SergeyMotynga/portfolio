@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedProjectLink from '../../../components/RelatedProjectLink.astro';
 import { achievements, type Achievement } from '../../../data/profile';
-import { languages, homeUrl, projectUrl, type Language } from '../../../i18n/ui';
+import { languages, homeUrl, type Language } from '../../../i18n/ui';
 import { getProjects } from '../../../lib/projects';
 
 export function getStaticPaths() {
@@ -17,7 +18,7 @@ const ru = lang === 'ru';
 const back = ru ? 'Все достижения' : 'All achievements';
 const document = achievement.document;
 ---
-<BaseLayout lang={lang} title={text.title} description={text.description} achievementKey={achievement.key}>
+<BaseLayout lang={lang} title={text.title} description={text.description} detail={{ section: 'achievements', key: achievement.key }}>
   <article class="case-page" data-achievement={achievement.key}>
     <a class="back-link" href={`${homeUrl(lang)}#presentations`}><span aria-hidden="true">←</span> {back}</a>
     <header class="case-header">
@@ -36,10 +37,7 @@ const document = achievement.document;
       </figure>
       {project && <section aria-labelledby="related-project-title">
         <h2 id="related-project-title">{ru ? 'Связанный проект' : 'Related project'}</h2>
-        <a class="related-project presentation-link" href={projectUrl(lang, achievement.project)} aria-labelledby="related-project-name">
-          <span id="related-project-name">{project.data.title}</span>
-          <span class="text-link" aria-hidden="true"><span class="link-label">{ru ? 'Подробнее' : 'View project'}</span> <span aria-hidden="true">↗</span></span>
-        </a>
+        <RelatedProjectLink lang={lang} projectKey={project.data.key} title={project.data.title} />
       </section>}
     </div>
     <nav class="case-bottom" aria-label={back}><a class="text-link" href={`${homeUrl(lang)}#presentations`}><span aria-hidden="true">←</span> <span class="link-label">{back}</span></a></nav>
@@ -54,20 +52,4 @@ const document = achievement.document;
     clip-path: inset(1px round 16px);
   }
   .achievement-document figcaption { margin-top: 16px; color: var(--muted); font-size: .9375rem; line-height: 1.6; }
-  .related-project {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    column-gap: 20px;
-    padding: 8px 16px;
-    border-block: 1px solid var(--line);
-    background-color: color-mix(in srgb, var(--surface) 55%, transparent);
-  }
-  .related-project > .text-link { color: var(--accent); }
-  .related-project > .text-link > span[aria-hidden='true'] { color: inherit; }
-  @media (hover: hover) {
-    .related-project:hover { background-color: var(--surface); }
-    .related-project:hover > #related-project-name { color: var(--accent); }
-  }
 </style>
