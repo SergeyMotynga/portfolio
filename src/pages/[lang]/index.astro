@@ -99,7 +99,9 @@ const resume = profile.resume?.[lang];
     <div class="crystal-stage" data-crystal aria-hidden="true"><span class="crystal-fallback"></span></div>
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">04</span><MotionHeading id="about-title" text={t.about} /></div><p class="micro">{t.aboutMeta}</p></div>
     <div class="about-grid">
-      <dl class="skills" data-reveal="left">{(Object.keys(skills) as (keyof typeof skills)[]).map((key) => <><dt>{t[key]}</dt><dd>{skills[key].join(' · ')}</dd></>)}<dt>{t.next}</dt><dd>{t.go}</dd></dl>
+      <dl class="skills" data-reveal="left">
+        {(Object.keys(skills) as (keyof typeof skills)[]).map((key) => <><dt>{t[key]}</dt><dd>{skills[key].join(' · ')}</dd></>)}
+      </dl>
       <div class="about-visual"><div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div></div>
     </div>
   </section>

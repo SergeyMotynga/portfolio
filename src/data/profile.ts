@@ -16,6 +16,7 @@ export const skills = {
   data: ['PostgreSQL', 'Redis', 'SQLite'],
   ml: ['scikit-learn', 'pandas', 'Optuna', 'RAG'],
   tools: ['Git', 'Docker', 'Docker Compose', 'Linux', 'GitLab CI/CD', 'Nginx'],
+  aiTools: ['Codex', 'Claude', 'Gemini', 'DeepSeek'],
 } as const;
 
 export const experience = [
