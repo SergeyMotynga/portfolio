@@ -1,5 +1,5 @@
 ---
-import { ui, type Language } from '../i18n/ui';
+import { homeUrl, ui, type Language } from '../i18n/ui';
 import { profile } from '../data/profile';
 import MotionHeading from './MotionHeading.astro';
 import LinkIcon from './LinkIcon.astro';
@@ -8,7 +8,7 @@ const { lang } = Astro.props;
 const t = ui[lang];
 ---
 <div class="scene-frame footer-frame" id="contact" data-scene-frame>
-<footer class="site-footer">
+<footer class:list={['site-footer', { 'scene-contact': Astro.url.pathname === homeUrl(lang) }]}>
   <section class="contact-section" aria-labelledby="contact-title">
     <div class="contact-intro">
       <span class="scene-number" aria-hidden="true">05</span>

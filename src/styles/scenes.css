@@ -77,6 +77,62 @@
 .site-footer .contact-link:hover { background: #9EAEFF0A; }
 .site-footer .contact-link:focus-visible, .site-footer .footer-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .site-footer .footer-bottom { border-color: var(--line); }
+
+/* Static shader frames sit behind the content and fade into the panel. */
+.scene-contact { isolation: isolate; }
+:is(.scene-projects, .scene-presentations, .scene-experience, .scene-contact)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+  mix-blend-mode: screen;
+}
+.scene-projects::before {
+  inset-inline-start: 20%;
+  inset-block-end: auto;
+  height: min(100%, 510px);
+  background-image: url('/images/scenes/topography.webp');
+  background-position: center 72%;
+  mask-image: radial-gradient(ellipse 78% 72% at 72% 24%, #000 22%, transparent 100%);
+  opacity: .48;
+}
+.scene-presentations::before {
+  inset-block-end: auto;
+  height: min(100%, 630px);
+  background-image: url('/images/scenes/side-rays.webp');
+  background-position: right top;
+  mask-image: linear-gradient(#000 40%, transparent);
+  opacity: .9;
+}
+.scene-experience::before {
+  inset-inline: 12%;
+  background-image: url('/images/scenes/line-waves.webp');
+  background-position: center;
+  mask-image: radial-gradient(ellipse 52% 60% at 50% 50%, #000 15%, transparent 100%);
+  opacity: .27;
+}
+.scene-contact::before {
+  inset-inline-end: 34%;
+  background-image: url('/images/scenes/soft-aurora.webp');
+  background-position: center;
+  mask-image: radial-gradient(ellipse 55% 64% at 57% 48%, #000 18%, transparent 100%);
+  transform: scaleX(-1);
+  opacity: .48;
+}
+@media (max-width: 750px) {
+  .scene-projects::before { inset-inline-start: 0; height: min(100%, 340px); opacity: .35; }
+  .scene-presentations::before { height: min(100%, 530px); }
+  .scene-experience::before { inset-inline: 0; opacity: .19; }
+  .scene-contact::before { inset-inline-end: 0; inset-block-end: 35%; opacity: .36; }
+}
+@media (forced-colors: active) {
+  :is(.scene-projects, .scene-presentations, .scene-experience, .scene-contact)::before { display: none; }
+}
+
 @media (max-width: 1100px) {
   .scene-presentations .presentation-link { grid-template-columns: minmax(140px, .6fr) minmax(0, 1.5fr); }
   .scene-presentations .presentation h3, .scene-presentations .presentation-link > p:not(.micro), .scene-presentations .presentation .text-link { grid-column: 2; }
