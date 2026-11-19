@@ -3,7 +3,7 @@ key: "project-release-tracker"
 lang: "en"
 title: "Project and release management system"
 summary: "An internal tool for managing projects, planning releases and assigning team roles."
-contribution: "Built the entire application independently, including the API, database and web interface. Implemented project records, team membership and roles, and release planning with dates, statuses and owners."
+contribution: "Designed the database and built the API and web interface on my own. The tool lets users create projects, assign roles to team members, and track release dates, statuses and owners."
 category: "corporate"
 disclosure: "anonymised"
 order: 12
