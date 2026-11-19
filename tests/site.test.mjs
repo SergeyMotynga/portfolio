@@ -28,7 +28,6 @@ test('both home pages and every translated case contain useful static HTML', asy
     assert.equal(home.querySelectorAll('.presentation').length, 4);
     assert.equal(home.querySelectorAll('h1').length, 1);
     assert(home.querySelector('meta[name="description"]').content.length > 30);
-    assert(!home.querySelector('#experience'));
     for (const key of projectKeys) {
       const doc = await page(`/${lang}/projects/${key}`);
       assert.equal(doc.documentElement.lang, lang);
@@ -46,6 +45,28 @@ test('language switching keeps the current project', async () => {
       assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), `/${other}/projects/${key}/`);
       assert.equal(doc.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), `/${other}/projects/${key}/`);
     }
+  }
+});
+
+test('both home pages show the confirmed experience and link to it from the navigation', async () => {
+  const expected = {
+    ru: [['AIMY', '4 месяца'], ['Автоматика-Сервис', '8 месяцев']],
+    en: [['AIMY', '4 months'], ['Avtomatika-Service', '8 months']],
+  };
+  for (const lang of ['ru', 'en']) {
+    const home = await page(`/${lang}`);
+    const section = home.querySelector('#experience > section');
+    assert(section.querySelector('#experience-title'));
+    const entries = [...section.querySelectorAll('article')];
+    assert.equal(entries.length, expected[lang].length);
+    entries.forEach((entry, index) => {
+      const [company, duration] = expected[lang][index];
+      assert.equal(entry.querySelector('.micro').textContent, company);
+      assert(entry.querySelector('.experience-period').textContent.startsWith(duration));
+    });
+    assert(home.querySelector('.navigation a[href="#experience"][data-section-link="experience"]'));
+    const project = await page(`/${lang}/projects/chess-broadcast`);
+    assert(project.querySelector(`.navigation a[href="/${lang}/#experience"]`));
   }
 });
 
@@ -124,7 +145,7 @@ test('the showcase keeps project contributions and hero navigation in static HTM
   for (const lang of ['ru', 'en']) {
     const doc = await page(`/${lang}`);
     assert(doc.querySelector('.hero a[href="#contact"]'));
-    for (const id of ['projects', 'presentations', 'about', 'contact']) {
+    for (const id of ['projects', 'presentations', 'experience', 'about', 'contact']) {
       assert(doc.getElementById(id)?.hasAttribute('data-scene-frame'), `${id}: navigation targets the stationary frame`);
     }
     assert.equal(doc.querySelectorAll('[data-badge-flip]').length, 0);

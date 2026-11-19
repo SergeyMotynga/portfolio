@@ -6,7 +6,7 @@ import TextEffect from '../../components/TextEffect.astro';
 import MotionHeading from '../../components/MotionHeading.astro';
 import { languages, ui, achievementUrl, type Language } from '../../i18n/ui';
 import { getProjects } from '../../lib/projects';
-import { profile, skills, achievements } from '../../data/profile';
+import { profile, skills, experience, achievements } from '../../data/profile';
 
 export function getStaticPaths() { return languages.map((lang) => ({ params: { lang }, props: { lang } })); }
 interface Props { lang: Language }
@@ -71,10 +71,29 @@ const resume = profile.resume?.[lang];
   </section>
   </div>
 
+  <div class="scene-frame" id="experience" data-scene-frame>
+  <section class="section page-scene scene-experience" aria-labelledby="experience-title">
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">03</span><MotionHeading id="experience-title" text={t.experience} /></div></div>
+    {experience.map((entry, index) => {
+      const { company, contribution, description, period } = entry[lang];
+      return <article class="experience-entry" data-reveal="up" data-sequence={index}>
+        <div>
+          <p class="micro">{company}</p>
+          <h3>{contribution}</h3>
+        </div>
+        <div>
+          <p class="experience-description">{description}</p>
+          <p class="experience-period">{period}</p>
+        </div>
+      </article>;
+    })}
+  </section>
+  </div>
+
   <div class="scene-frame" id="about" data-scene-frame>
   <section class="section page-scene scene-about" aria-labelledby="about-title">
     <div class="crystal-stage" data-crystal aria-hidden="true"><span class="crystal-fallback"></span></div>
-    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">03</span><MotionHeading id="about-title" text={t.about} /></div><p class="micro">{t.aboutMeta}</p></div>
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">04</span><MotionHeading id="about-title" text={t.about} /></div><p class="micro">{t.aboutMeta}</p></div>
     <div class="about-grid">
       <dl class="skills" data-reveal="left">{(Object.keys(skills) as (keyof typeof skills)[]).map((key) => <><dt>{t[key]}</dt><dd>{skills[key].join(' · ')}</dd></>)}<dt>{t.next}</dt><dd>{t.go}</dd></dl>
       <div class="about-visual"><div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div></div>

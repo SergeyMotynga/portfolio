@@ -4,7 +4,7 @@ import { languages, ui, homeUrl, projectUrl, achievementUrl, type Language } fro
 interface Props { lang: Language; projectKey?: string; achievementKey?: string }
 const { lang, projectKey, achievementKey } = Astro.props;
 const t = ui[lang];
-const sections = ['projects', 'presentations', 'about', 'contact'];
+const sections = ['projects', 'presentations', 'experience', 'about', 'contact'];
 const onHome = Astro.url.pathname === homeUrl(lang);
 ---
 <header class="site-header">

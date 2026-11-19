@@ -18,6 +18,37 @@ export const skills = {
   tools: ['Git', 'Docker', 'Linux'],
 } as const;
 
+export const experience = [
+  {
+    ru: {
+      company: 'AIMY',
+      contribution: 'Backend коммерческих сервисов',
+      description: 'Разрабатывал серверную логику и REST API, работал с базами данных и участвовал в интеграции ML-компонентов.',
+      period: '4 месяца · стажировка и проекты по ГПХ',
+    },
+    en: {
+      company: 'AIMY',
+      contribution: 'Backend development for commercial services',
+      description: 'Developed backend logic and REST APIs, worked with databases and helped integrate ML components.',
+      period: '4 months · internship and contract work',
+    },
+  },
+  {
+    ru: {
+      company: 'Автоматика-Сервис',
+      contribution: 'Промышленный мониторинг',
+      description: 'Обрабатывал временные ряды, разрабатывал дашборды и тестировал модели обнаружения аномалий. Готовил технические отчёты по требованиям к серверу.',
+      period: '8 месяцев · работа и практика. Часть задач выполнял как лаборант ОмГТУ.',
+    },
+    en: {
+      company: 'Avtomatika-Service',
+      contribution: 'Industrial monitoring',
+      description: 'Processed time-series data, developed dashboards and tested anomaly detection models. Prepared technical reports on server requirements.',
+      period: '8 months · work and placements. I handled some of this work as a lab assistant at OmSTU.',
+    },
+  },
+] as const;
+
 export interface Achievement {
   key: string;
   document?: {

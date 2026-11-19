@@ -39,6 +39,20 @@
 .scene-presentations .presentation-link > .micro { font-size: 10px; padding-top: 5px; }
 .scene-presentations .presentation-link > p:not(.micro) { max-width: none; margin: 0; line-height: 1.65; }
 .scene-presentations .presentation .text-link { margin: 0; white-space: nowrap; }
+.scene-experience { background: var(--scene-projects); }
+.experience-entry {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: 12px clamp(24px, 5vw, 76px);
+  padding-block: clamp(18px, 2.6vw, 32px);
+  border-block-start: 1px solid var(--line);
+}
+.experience-entry:last-child { border-block-end: 1px solid var(--line); }
+.experience-entry .micro { color: var(--accent); margin-block-end: 6px; }
+.experience-entry h3 { font: 400 clamp(24px, 2.6vw, 36px)/1.2 var(--display); text-wrap: balance; }
+.experience-description, .experience-period { max-inline-size: 65ch; line-height: 1.65; }
+.experience-description { font-size: 16px; }
+.experience-period { color: var(--muted); font-size: 14px; margin-block-start: 8px; }
 .scene-about { background: var(--scene-about); padding-block: clamp(48px, 6vw, 88px); overflow: clip; }
 .scene-about .about-grid { border: 0; padding-top: 0; gap: clamp(40px, 8vw, 140px); }
 .scene-about .skills { gap: 26px 24px; }
@@ -70,6 +84,7 @@
   .page-scene .section-heading { align-items: start; flex-direction: column; gap: 16px; }
   .page-scene .section-heading .micro { text-align: start; max-width: none; }
   .scene-heading-main { gap: 20px; }
+  .experience-entry { grid-template-columns: minmax(0, 1fr); }
   .scene-about .about-grid { gap: 40px; }
   .site-footer .contact-section { grid-template-columns: minmax(0, 1fr); gap: 40px; }
 }
