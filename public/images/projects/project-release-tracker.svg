@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360">
+  <defs>
+    <radialGradient id="glow">
+      <stop stop-color="#9EAEFF" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#9EAEFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="720" height="360" rx="28" fill="#141923"/>
+  <ellipse cx="360" cy="180" rx="310" ry="165" fill="url(#glow)"/>
+  <g fill="none" stroke="#8F97C2" stroke-width="3">
+    <path d="M226 180h90m88 0h90M360 146v-28m0 96v28"/>
+    <rect x="118" y="139" width="108" height="82" rx="16" fill="#242B40"/>
+    <rect x="316" y="146" width="88" height="68" rx="14" fill="#353D59"/>
+    <rect x="494" y="139" width="108" height="82" rx="16" fill="#242B40"/>
+    <circle cx="360" cy="99" r="19" fill="#242B40"/>
+    <circle cx="360" cy="261" r="19" fill="#242B40"/>
+  </g>
+  <g fill="none" stroke="#C9D2FB" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+    <path d="M148 163h48v35h-48zm0 10h48m-33-15v10m18-10v10"/>
+    <path d="M340 173h14l6-7h20v28h-40z"/>
+    <path d="M523 168h49m-49 12h38m-38 12h28"/>
+    <path d="m353 99 5 5 9-10m-14 167 5 5 9-10"/>
+  </g>
+</svg>

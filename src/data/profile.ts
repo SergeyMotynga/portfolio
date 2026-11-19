@@ -46,7 +46,7 @@ export const experience = [
   },
   {
     key: 'avtomatika-service',
-    projects: ['git-sync', 'spas-system', 'time-series'],
+    projects: ['git-sync', 'project-release-tracker', 'spas-system', 'time-series'],
     ru: {
       company: 'Автоматика-Сервис',
       contribution: 'Промышленный мониторинг',

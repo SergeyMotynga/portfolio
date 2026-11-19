@@ -13,7 +13,7 @@ const achievementKeys = ['bdai', 'avtomatika-service', 'data-match', 'it-forum-x
 const achievementRoutes = ['ru', 'en'].flatMap((lang) => achievementKeys.map((key) => `/${lang}/achievements/${key}`));
 const experienceProjects = {
   aimy: ['audio-badges', 'defect-monitoring'],
-  'avtomatika-service': ['git-sync', 'spas-system', 'time-series'],
+  'avtomatika-service': ['git-sync', 'project-release-tracker', 'spas-system', 'time-series'],
 };
 const experienceKeys = Object.keys(experienceProjects);
 const experienceRoutes = ['ru', 'en'].flatMap((lang) => experienceKeys.map((key) => `/${lang}/experience/${key}`));
