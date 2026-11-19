@@ -171,6 +171,11 @@ test('each event is one named native link covering its heading and description i
 
 test('achievement pages include the correct documents or placeholders, related project and translation', async () => {
   const related = { bdai: 'finguru', 'avtomatika-service': 'spas-system', 'data-match': 'demand-forecasting', 'it-forum-xi': 'chess-broadcast' };
+  const previews = { bdai: 'bdai-diploma.jpg', 'data-match': 'data-match-certificate-preview.webp' };
+  assert.deepEqual(
+    (await readdir(path.join(dist, 'documents/achievements'))).sort(),
+    Object.values(previews).sort(),
+  );
   for (const lang of ['ru', 'en']) {
     const other = lang === 'ru' ? 'en' : 'ru';
     for (const [key, project] of Object.entries(related)) {
@@ -178,17 +183,14 @@ test('achievement pages include the correct documents or placeholders, related p
       assert.equal(doc.querySelectorAll('h1').length, 1);
       assert(doc.querySelector('article[data-achievement] .prose p').textContent.length > 50);
       const preview = doc.querySelector('.achievement-document img');
-      const documents = { bdai: ['bdai-diploma.jpg', 'bdai-diploma.pdf'], 'data-match': ['data-match-certificate.png', 'data-match-certificate.png'] };
-      if (documents[key]) {
-        const [image, original] = documents[key];
-        assert.equal(preview.getAttribute('src'), `/documents/achievements/${image}`);
-        assert.equal(doc.querySelector('.document-link').getAttribute('href'), `/documents/achievements/${original}`);
+      assert.equal(doc.querySelector('.achievement-document a'), null);
+      if (previews[key]) {
+        assert.equal(preview.getAttribute('src'), `/documents/achievements/${previews[key]}`);
         assert(!/заглушка|placeholder/.test(doc.querySelector('figcaption').textContent));
         assert(preview.getAttribute('width') && preview.getAttribute('height'));
       } else {
         assert.equal(preview.getAttribute('src'), '/images/achievement-placeholder.svg');
         assert.match(doc.querySelector('figcaption').textContent, /заглушка|placeholder/);
-        assert.equal(doc.querySelector('.document-link'), null);
       }
       assert(preview.getAttribute('alt').length > 10);
       assert(doc.querySelector(`.prose a[href="/${lang}/projects/${project}/"]`));

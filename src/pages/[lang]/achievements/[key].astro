@@ -33,7 +33,6 @@ const document = achievement.document;
           alt={document ? (ru ? `Документ: ${text.title}. ${document.caption.ru}` : `Document: ${text.title}. ${document.caption.en}`) : (ru ? 'Иллюстрация-заглушка вместо диплома' : 'Placeholder illustration for a diploma')}
           width={document?.width ?? 1200} height={document?.height ?? 800} loading="lazy" />
         <figcaption>{document ? document.caption[lang] : (ru ? 'Здесь будет диплом или сертификат. Пока показана иллюстрация-заглушка.' : 'A diploma or certificate will appear here. This is a placeholder illustration.')}</figcaption>
-        {document && <a class="text-link document-link" href={document.file} target="_blank" rel="noopener noreferrer"><span class="link-label">{ru ? 'Открыть оригинал' : 'Open original'}</span> <span aria-hidden="true">↗</span></a>}
       </figure>
       {project && <section aria-labelledby="related-project-title">
         <h2 id="related-project-title">{ru ? 'Связанный проект' : 'Related project'}</h2>
@@ -54,7 +53,6 @@ const document = achievement.document;
     /* The PDF preview has a light fringe baked into the raster edge. */
     clip-path: inset(1px round 16px);
   }
-  .document-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 12px; }
   .achievement-document figcaption { margin-top: 16px; color: var(--muted); font-size: .9375rem; line-height: 1.6; }
   .related-project {
     display: flex;

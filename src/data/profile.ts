@@ -22,7 +22,6 @@ export interface Achievement {
   key: string;
   document?: {
     preview: string;
-    file: string;
     width: number;
     height: number;
     caption: Record<Language, string>;
@@ -36,7 +35,6 @@ export const achievements: Achievement[] = [
     key: 'bdai',
     document: {
       preview: '/documents/achievements/bdai-diploma.jpg',
-      file: '/documents/achievements/bdai-diploma.pdf',
       width: 1132, height: 1600,
       caption: {
         ru: 'Диплом за II место в чемпионате «Технологии больших данных и искусственного интеллекта». Команда «СМС», кейс ИИ-ассистента для повышения финансовой грамотности молодёжи.',
@@ -60,9 +58,8 @@ export const achievements: Achievement[] = [
   {
     key: 'data-match',
     document: {
-      preview: '/documents/achievements/data-match-certificate.png',
-      file: '/documents/achievements/data-match-certificate.png',
-      width: 3507, height: 2480,
+      preview: '/documents/achievements/data-match-certificate-preview.webp',
+      width: 1754, height: 1240,
       caption: {
         ru: 'Сертификат участника технического трека хоккейного хакатона Data Match. Омск, 2026.',
         en: 'Participation certificate for the technical track of the Data Match hockey hackathon. Omsk, 2026.',
