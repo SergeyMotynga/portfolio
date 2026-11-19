@@ -4,7 +4,7 @@ import { readdir, readFile, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseHTML } from 'linkedom';
-import { approvedRepositoryUrls } from '../src/lib/publication-policy.ts';
+import { approvedPackageUrls, approvedRepositoryUrls } from '../src/lib/publication-policy.ts';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const dist = path.join(root, 'dist');
@@ -136,7 +136,7 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
 });
 
 test('public pages contain only approved external links and anonymised case content', async () => {
-  const approved = new Set(['https://github.com/SergeyMotynga', 'https://t.me/S1moll', ...approvedRepositoryUrls]);
+  const approved = new Set(['https://github.com/SergeyMotynga', 'https://t.me/S1moll', ...approvedRepositoryUrls, ...approvedPackageUrls]);
   for (const lang of ['ru', 'en']) {
     for (const route of [`/${lang}`, ...projectKeys.map((key) => `/${lang}/projects/${key}`), ...achievementKeys.map((key) => `/${lang}/achievements/${key}`), ...experienceKeys.map((key) => `/${lang}/experience/${key}`)]) {
       const doc = await page(route);

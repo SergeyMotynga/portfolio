@@ -14,6 +14,8 @@ repository: "https://github.com/SergeyMotynga/AutomationML/tree/develop"
 
 ## Purpose
 
+The package is available on [TestPyPI](https://test.pypi.org/project/AutomationML/).
+
 AutomationML brings recurring machine-learning steps together: model creation, configuration validation, pipeline assembly and hyperparameter search. It exposes these operations through shared interfaces.
 
 ## My work

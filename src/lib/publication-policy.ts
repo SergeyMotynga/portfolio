@@ -13,3 +13,7 @@ export const approvedRepositoryUrls = [
 export function isApprovedRepository(url: string): boolean {
   return approvedRepositoryUrls.some((approved) => approved === url);
 }
+
+export const approvedPackageUrls = [
+  'https://test.pypi.org/project/AutomationML/',
+] as const;
