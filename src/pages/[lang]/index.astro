@@ -5,6 +5,7 @@ import HeroBadge from '../../components/HeroBadge.astro';
 import TextEffect from '../../components/TextEffect.astro';
 import MotionHeading from '../../components/MotionHeading.astro';
 import LinkIcon from '../../components/LinkIcon.astro';
+import SceneBackdrop from '../../components/SceneBackdrop.astro';
 import { languages, ui, achievementUrl, experienceUrl, type Language } from '../../i18n/ui';
 import { getProjects } from '../../lib/projects';
 import { profile, skills, experience, achievements } from '../../data/profile';
@@ -42,6 +43,7 @@ const resume = profile.resume?.[lang];
 
   <div class="scene-frame" id="projects" data-scene-frame>
   <section class="section page-scene scene-projects" aria-labelledby="projects-title">
+    <SceneBackdrop name="topography" />
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">01</span><MotionHeading id="projects-title" text={t.selected} /></div><p class="micro">{t.selectedMeta}</p></div>
     {featured.map((project, index) => <ProjectRow project={project} index={index + 1} lang={lang} />)}
     {catalog.length > 0 && <details class="catalog">
@@ -59,6 +61,7 @@ const resume = profile.resume?.[lang];
 
   <div class="scene-frame" id="presentations" data-scene-frame>
   <section class="section page-scene scene-presentations" aria-labelledby="presentations-title">
+    <SceneBackdrop name="side-rays" />
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">02</span><MotionHeading id="presentations-title" text={t.presentations} /></div><p class="micro">{t.presentationsMeta}</p></div>
     <div class="presentations-grid">{achievements.map((achievement, index) => {
       const text = achievement.labels[lang];
@@ -74,6 +77,7 @@ const resume = profile.resume?.[lang];
 
   <div class="scene-frame" id="experience" data-scene-frame>
   <section class="section page-scene scene-experience" aria-labelledby="experience-title">
+    <SceneBackdrop name="line-waves" />
     <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">03</span><MotionHeading id="experience-title" text={t.experience} /></div></div>
     {experience.map((entry, index) => {
       const { company, contribution, description, period } = entry[lang];

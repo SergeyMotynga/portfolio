@@ -78,10 +78,9 @@
 .site-footer .contact-link:focus-visible, .site-footer .footer-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .site-footer .footer-bottom { border-color: var(--line); }
 
-/* Static shader frames sit behind the content and fade into the panel. */
+/* A shader clip and its static frame share the same position and mask. */
 .scene-contact { isolation: isolate; }
-:is(.scene-projects, .scene-presentations, .scene-experience, .scene-contact)::before {
-  content: '';
+.scene-backdrop {
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -89,48 +88,63 @@
   pointer-events: none;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: var(--scene-backdrop-position, center);
   mix-blend-mode: screen;
+  overflow: clip;
 }
-.scene-projects::before {
+.scene-backdrop video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--scene-backdrop-position, center);
+  opacity: 0;
+}
+.scene-backdrop video[data-started] { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .scene-backdrop video { transition: opacity 180ms ease-out; }
+}
+.scene-projects > .scene-backdrop {
   inset-inline-start: 20%;
   inset-block-end: auto;
   height: min(100%, 510px);
   background-image: url('/images/scenes/topography.webp');
-  background-position: center 72%;
+  --scene-backdrop-position: center 72%;
   mask-image: radial-gradient(ellipse 78% 72% at 72% 24%, #000 22%, transparent 100%);
   opacity: .48;
 }
-.scene-presentations::before {
+.scene-presentations > .scene-backdrop {
   inset-block-end: auto;
   height: min(100%, 630px);
   background-image: url('/images/scenes/side-rays.webp');
-  background-position: right top;
+  --scene-backdrop-position: right top;
   mask-image: linear-gradient(#000 40%, transparent);
   opacity: .9;
 }
-.scene-experience::before {
+.scene-experience > .scene-backdrop {
   inset-inline: 12%;
   background-image: url('/images/scenes/line-waves.webp');
-  background-position: center;
   mask-image: radial-gradient(ellipse 52% 60% at 50% 50%, #000 15%, transparent 100%);
   opacity: .27;
 }
-.scene-contact::before {
+.scene-contact > .scene-backdrop {
   inset-inline-end: 34%;
   background-image: url('/images/scenes/soft-aurora.webp');
-  background-position: center;
   mask-image: radial-gradient(ellipse 55% 64% at 57% 48%, #000 18%, transparent 100%);
   transform: scaleX(-1);
   opacity: .48;
 }
 @media (max-width: 750px) {
-  .scene-projects::before { inset-inline-start: 0; height: min(100%, 340px); opacity: .35; }
-  .scene-presentations::before { height: min(100%, 530px); }
-  .scene-experience::before { inset-inline: 0; opacity: .19; }
-  .scene-contact::before { inset-inline-end: 0; inset-block-end: 35%; opacity: .36; }
+  .scene-projects > .scene-backdrop { inset-inline-start: 0; height: min(100%, 340px); opacity: .35; }
+  .scene-presentations > .scene-backdrop { height: min(100%, 530px); }
+  .scene-experience > .scene-backdrop { inset-inline: 0; opacity: .19; }
+  .scene-contact > .scene-backdrop { inset-inline-end: 0; inset-block-end: 35%; opacity: .36; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-backdrop video[data-started] { opacity: 0; }
 }
 @media (forced-colors: active) {
-  :is(.scene-projects, .scene-presentations, .scene-experience, .scene-contact)::before { display: none; }
+  .scene-backdrop { display: none; }
 }
 
 @media (max-width: 1100px) {
