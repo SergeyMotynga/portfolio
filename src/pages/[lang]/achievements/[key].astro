@@ -4,6 +4,7 @@ import RelatedProjectLink from '../../../components/RelatedProjectLink.astro';
 import { achievements, type Achievement } from '../../../data/profile';
 import { languages, homeUrl, type Language } from '../../../i18n/ui';
 import { getProjects } from '../../../lib/projects';
+import { sitePath } from '../../../lib/site-path';
 
 export function getStaticPaths() {
   return languages.flatMap((lang) => achievements.map((achievement) => ({
@@ -30,7 +31,7 @@ const document = achievement.document;
       <p>{text.description}</p>
       <h2>{ru ? 'Диплом и подтверждение' : 'Diploma and supporting document'}</h2>
       <figure class="achievement-document">
-        <img src={document?.preview ?? '/images/achievement-placeholder.svg'}
+        <img src={sitePath(document?.preview ?? '/images/achievement-placeholder.svg')}
           alt={document ? (ru ? `Документ: ${text.title}. ${document.caption.ru}` : `Document: ${text.title}. ${document.caption.en}`) : (ru ? 'Иллюстрация-заглушка вместо диплома' : 'Placeholder illustration for a diploma')}
           width={document?.width ?? 1200} height={document?.height ?? 800} loading="lazy" />
         <figcaption>{document ? document.caption[lang] : (ru ? 'Здесь будет диплом или сертификат. Пока показана иллюстрация-заглушка.' : 'A diploma or certificate will appear here. This is a placeholder illustration.')}</figcaption>

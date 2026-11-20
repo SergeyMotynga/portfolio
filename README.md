@@ -46,20 +46,21 @@ npm run preview
 
 Коммерческие и корпоративные кейсы обезличены. Внутренние адреса, исходники, материалы заказчиков, закрытые данные и неподтверждённые показатели в этот репозиторий не переносить. Добавление внешней ссылки требует согласования и изменения поддерживаемого списка разрешённых URL.
 
-## Размещение на Cloudflare Pages
+## Размещение на GitHub Pages
 
-Сайт собирается в обычный каталог `dist/`; серверный адаптер и база данных не нужны.
+В настройках репозитория открой **Settings → Pages** и выбери **GitHub Actions** в качестве источника. GitHub Free поддерживает Pages для публичных репозиториев. Для приватного личного репозитория требуется GitHub Pro.
 
-| Настройка | Значение |
-|---|---|
-| Repository | Этот репозиторий |
-| Production branch | `main`, после принятия изменений |
-| Build command | `npm run verify` |
-| Build output directory | `dist` |
-| Node version | `24` (также указан в `.node-version`) |
-| `SITE_URL` | Полный HTTPS-адрес опубликованного сайта, без выдуманного домена |
+Workflow **Verify portfolio** проверяет сборку для Pages в PR. При пуше в `main` он запускает `npm run verify` и публикует `dist/` после успешной проверки. Его также можно запустить вручную с ветки `main`.
 
-`SITE_URL` задаётся переменной окружения сборки и включает абсолютные canonical/og:url. Пока адрес не известен, эти метаданные не создаются. `public/_headers` задаёт заголовки для статической выдачи Cloudflare Pages. До подключения GitHub к Cloudflare и запуска deployment сайт остаётся локальным; наличие этого раздела не означает публикацию.
+Для этого репозитория стандартный адрес Pages — `https://sergeymotynga.github.io/portfolio/`. При подключении собственного домена укажи его в настройках Pages и настрой DNS по [документации GitHub](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site). При следующей сборке workflow возьмёт актуальные `SITE_URL` и `SITE_BASE_PATH` из настроек Pages.
+
+Чтобы проверить сборку с базовым путём локально, в новом терминале PowerShell выполни:
+
+```powershell
+$env:SITE_URL = 'https://sergeymotynga.github.io'
+$env:SITE_BASE_PATH = '/portfolio'
+npm run verify
+```
 
 ## Проверки
 

@@ -1,3 +1,5 @@
+import { sitePath } from '../lib/site-path';
+
 export const languages = ['ru', 'en'] as const;
 export type Language = (typeof languages)[number];
 
@@ -123,7 +125,7 @@ export interface DetailPage {
   key: string;
 }
 
-export const homeUrl = (language: Language) => `/${language}/`;
+export const homeUrl = (language: Language) => sitePath(`/${language}/`);
 export const detailUrl = (language: Language, { section, key }: DetailPage) => `${homeUrl(language)}${section}/${key}/`;
 export const projectUrl = (language: Language, key: string) => detailUrl(language, { section: 'projects', key });
 export const achievementUrl = (language: Language, key: string) => detailUrl(language, { section: 'achievements', key });

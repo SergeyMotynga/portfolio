@@ -8,6 +8,12 @@ import { approvedPackageUrls, approvedRepositoryUrls } from '../src/lib/publicat
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const dist = path.join(root, 'dist');
+const base = (process.env.SITE_BASE_PATH || '/').replace(/\/$/, '');
+const publishedPath = (pathname) => `${base}${pathname}`;
+const distPath = (href) => {
+  assert(href.startsWith(`${base}/`), `URL must stay under the site base: ${href}`);
+  return href.slice(base.length);
+};
 const projectKeys = (await readdir(path.join(root, 'src/content/projects'), { withFileTypes: true })).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
 const achievementKeys = ['bdai', 'avtomatika-service', 'data-match', 'it-forum-xi'];
 const achievementRoutes = ['ru', 'en'].flatMap((lang) => achievementKeys.map((key) => `/${lang}/achievements/${key}`));
@@ -34,8 +40,8 @@ test('both home pages and every translated case contain useful static HTML', asy
     assert.equal(home.querySelectorAll('.presentation').length, 4);
     assert.equal(home.querySelectorAll('h1').length, 1);
     const pdf = home.querySelector('.hero-actions a[download]');
-    assert.equal(pdf?.getAttribute('href'), `/documents/sergey-motynga-portfolio-${lang}.pdf`);
-    const pdfBytes = await readFile(path.join(dist, pdf.getAttribute('href')));
+    assert.equal(pdf?.getAttribute('href'), publishedPath(`/documents/sergey-motynga-portfolio-${lang}.pdf`));
+    const pdfBytes = await readFile(path.join(dist, distPath(pdf.getAttribute('href'))));
     assert.equal(pdfBytes.subarray(0, 5).toString(), '%PDF-');
     assert(home.querySelector('meta[name="description"]').content.length > 30);
     for (const key of projectKeys) {
@@ -52,8 +58,8 @@ test('language switching keeps the current project', async () => {
     for (const lang of ['ru', 'en']) {
       const other = lang === 'ru' ? 'en' : 'ru';
       const doc = await page(`/${lang}/projects/${key}`);
-      assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), `/${other}/projects/${key}/`);
-      assert.equal(doc.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), `/${other}/projects/${key}/`);
+      assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), publishedPath(`/${other}/projects/${key}/`));
+      assert.equal(doc.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), publishedPath(`/${other}/projects/${key}/`));
     }
   }
 });
@@ -75,27 +81,27 @@ test('home and company pages connect the confirmed experience to its related pro
       const href = `/${lang}/experience/${key}/`;
       const links = entry.querySelectorAll('a');
       assert.equal(links.length, 1);
-      assert.equal(links[0].getAttribute('href'), href);
+      assert.equal(links[0].getAttribute('href'), publishedPath(href));
       const companyHeading = entry.querySelector('h3');
       assert.equal(companyHeading.textContent, company);
       assert.equal(links[0].getAttribute('aria-labelledby'), companyHeading.id);
       assert(entry.querySelector('.experience-period').textContent.startsWith(duration));
 
       const detail = await page(href.slice(0, -1));
-      const translatedHref = `/${other}/experience/${key}/`;
+      const translatedHref = publishedPath(`/${other}/experience/${key}/`);
       assert.equal(detail.querySelector('h1').textContent, company);
       assert(detail.querySelector('.case-header .experience-period').textContent.startsWith(duration));
-      assert(detail.querySelector(`.back-link[href="/${lang}/#experience"]`));
+      assert(detail.querySelector(`.back-link[href="${publishedPath(`/${lang}/#experience`)}"]`));
       assert.equal(detail.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), translatedHref);
       assert.equal(detail.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), translatedHref);
       assert.deepEqual(
         [...detail.querySelectorAll('.related-project')].map((link) => link.getAttribute('href')),
-        experienceProjects[key].map((project) => `/${lang}/projects/${project}/`),
+        experienceProjects[key].map((project) => publishedPath(`/${lang}/projects/${project}/`)),
       );
     }
     assert(home.querySelector('.navigation a[href="#experience"][data-section-link="experience"]'));
     const project = await page(`/${lang}/projects/chess-broadcast`);
-    assert(project.querySelector(`.navigation a[href="/${lang}/#experience"]`));
+    assert(project.querySelector(`.navigation a[href="${publishedPath(`/${lang}/#experience`)}"]`));
     const stack = home.querySelector('#about .skills').textContent;
     for (const technology of ['Pydantic', 'Docker Compose', 'GitLab CI/CD', 'Nginx']) {
       assert(stack.includes(technology), `${lang}: missing ${technology}`);
@@ -124,11 +130,19 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
     for (const icon of doc.querySelectorAll('a svg[data-link-icon]')) {
       assert.equal(icon.getAttribute('aria-hidden'), 'true', `${route}: decorative link icon`);
     }
-    for (const element of doc.querySelectorAll('a[href], link[href]')) {
-      const href = element.getAttribute('href');
+    if (route === '/') {
+      assert.equal(doc.querySelector('meta[http-equiv="refresh"]').getAttribute('content'), `0;url=${publishedPath('/ru/')}`);
+    }
+    if (process.env.SITE_URL && route !== '/') {
+      const canonicalRoute = route === '/404.html' ? '/ru/' : `${route}/`;
+      assert.equal(doc.querySelector('link[rel="canonical"]').getAttribute('href'), new URL(publishedPath(canonicalRoute), process.env.SITE_URL).href);
+    }
+    const urls = [...doc.querySelectorAll('a[href], link[href], img[src], script[src], [data-front][data-back]')]
+      .flatMap((element) => ['href', 'src', 'data-front', 'data-back'].map((attribute) => element.getAttribute(attribute)).filter(Boolean));
+    for (const href of urls) {
       if (/^(https?:|mailto:|tel:)/.test(href)) continue;
-      const url = new URL(href, `https://portfolio.example${route.endsWith('.html') || route === '/' ? route : `${route}/`}`);
-      const pathname = decodeURIComponent(url.pathname);
+      const url = new URL(href, `https://portfolio.example${publishedPath(route.endsWith('.html') || route === '/' ? route : `${route}/`)}`);
+      const pathname = distPath(decodeURIComponent(url.pathname));
       if (/\.[a-z0-9]+$/i.test(pathname) && !pathname.endsWith('.html')) {
         await access(path.join(dist, pathname));
       } else {
@@ -136,6 +150,11 @@ test('all local links, fragment targets and stylesheet assets resolve', async ()
         if (url.hash) assert(destination.getElementById(decodeURIComponent(url.hash.slice(1))), `${route}: missing ${href}`);
       }
     }
+  }
+  const assets = await readdir(path.join(dist, '_astro'));
+  const stylesheets = await Promise.all(assets.filter((name) => name.endsWith('.css')).map((name) => readFile(path.join(dist, '_astro', name), 'utf8')));
+  for (const font of await readdir(path.join(dist, 'fonts'))) {
+    assert(stylesheets.some((css) => css.includes(publishedPath(`/fonts/${font}`))), `missing font URL: ${font}`);
   }
 });
 
@@ -170,7 +189,7 @@ test('achievements preserve the owner-confirmed event and project associations',
   for (const [title, key] of expected) {
     const entry = entries.find((item) => item.querySelector('h3').textContent.includes(title));
     assert.ok(entry, title);
-    assert.equal(entry.querySelector('a').getAttribute('href'), `/ru/achievements/${key}/`);
+    assert.equal(entry.querySelector('a').getAttribute('href'), publishedPath(`/ru/achievements/${key}/`));
   }
   assert(entries[1].textContent.includes('III место'));
   assert(entries[3].textContent.includes('«Лучший технологический проект»'));
@@ -194,13 +213,13 @@ test('the showcase keeps project contributions and hero navigation in static HTM
     assert.equal(crystal?.getAttribute('aria-hidden'), 'true');
     const fallback = doc.querySelector('.hero img');
     assert(fallback?.getAttribute('alt').length > 10);
-    await access(path.join(dist, fallback.getAttribute('src')));
+    await access(path.join(dist, distPath(fallback.getAttribute('src'))));
     for (const card of doc.querySelectorAll('[data-card]')) {
       const front = card.querySelector('[data-card-front]');
       const back = card.querySelector('[data-card-back]');
       const cover = front.querySelector('.project-cover img');
       assert.equal(cover?.getAttribute('alt'), '');
-      await access(path.join(dist, cover.getAttribute('src')));
+      await access(path.join(dist, distPath(cover.getAttribute('src'))));
       const technologies = front.querySelectorAll('.card-preview-stack li');
       assert(technologies.length >= 1 && technologies.length <= 3);
       assert(front.textContent.trim().length > 40);
@@ -221,7 +240,7 @@ test('each event is one named native link covering its heading and description i
       const link = event.querySelector('.presentation-link');
       assert.ok(link);
       assert.equal(event.querySelectorAll('a').length, 1);
-      assert.ok(link.getAttribute('href').startsWith(`/${lang}/achievements/`));
+      assert.ok(link.getAttribute('href').startsWith(publishedPath(`/${lang}/achievements/`)));
       const title = document.getElementById(link.getAttribute('aria-labelledby'));
       assert.ok(title && link.contains(title));
       assert.ok(link.querySelector('p:not(.micro)'));
@@ -247,18 +266,18 @@ test('achievement pages include the correct documents or placeholders, related p
       const preview = doc.querySelector('.achievement-document img');
       assert.equal(doc.querySelector('.achievement-document a'), null);
       if (previews[key]) {
-        assert.equal(preview.getAttribute('src'), `/documents/achievements/${previews[key]}`);
+        assert.equal(preview.getAttribute('src'), publishedPath(`/documents/achievements/${previews[key]}`));
         assert(!/заглушка|placeholder/.test(doc.querySelector('figcaption').textContent));
         assert(preview.getAttribute('width') && preview.getAttribute('height'));
       } else {
-        assert.equal(preview.getAttribute('src'), '/images/achievement-placeholder.svg');
+        assert.equal(preview.getAttribute('src'), publishedPath('/images/achievement-placeholder.svg'));
         assert.match(doc.querySelector('figcaption').textContent, /заглушка|placeholder/);
       }
       assert(preview.getAttribute('alt').length > 10);
-      assert(doc.querySelector(`.prose a[href="/${lang}/projects/${project}/"]`));
-      assert(doc.querySelector(`.back-link[href="/${lang}/#presentations"]`));
-      assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), `/${other}/achievements/${key}/`);
-      assert.equal(doc.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), `/${other}/achievements/${key}/`);
+      assert(doc.querySelector(`.prose a[href="${publishedPath(`/${lang}/projects/${project}/`)}"]`));
+      assert(doc.querySelector(`.back-link[href="${publishedPath(`/${lang}/#presentations`)}"]`));
+      assert.equal(doc.querySelector(`.language a[lang="${other}"]`).getAttribute('href'), publishedPath(`/${other}/achievements/${key}/`));
+      assert.equal(doc.querySelector(`link[rel="alternate"][hreflang="${other}"]`).getAttribute('href'), publishedPath(`/${other}/achievements/${key}/`));
       assert(doc.querySelector('a[href="mailto:Motynga12345@mail.ru"]'));
     }
   }

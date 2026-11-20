@@ -4,7 +4,7 @@ export const profile: {
   github: string;
   email?: string;
   telegram?: string;
-  portfolioPdf: Record<Language, string>;
+  portfolioPdf: Record<Language, `/${string}`>;
 } = {
   github: 'https://github.com/SergeyMotynga',
   email: 'Motynga12345@mail.ru',
@@ -77,7 +77,7 @@ export const experience = [
 export interface Achievement {
   key: string;
   document?: {
-    preview: string;
+    preview: `/${string}`;
     width: number;
     height: number;
     caption: Record<Language, string>;

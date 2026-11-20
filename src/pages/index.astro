@@ -1,13 +1,14 @@
 ---
+import { homeUrl } from '../i18n/ui';
 ---
 <!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0;url=/ru/" />
+    <meta http-equiv="refresh" content={`0;url=${homeUrl('ru')}`} />
     <title>Сергей Мотынга — Python Backend Developer</title>
     <meta name="robots" content="noindex" />
   </head>
-  <body><a href="/ru/">Русская версия</a> · <a href="/en/">English version</a></body>
+  <body><a href={homeUrl('ru')}>Русская версия</a> · <a href={homeUrl('en')}>English version</a></body>
 </html>
