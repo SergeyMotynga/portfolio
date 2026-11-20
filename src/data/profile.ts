@@ -4,11 +4,15 @@ export const profile: {
   github: string;
   email?: string;
   telegram?: string;
-  resume?: Partial<Record<Language, string>>;
+  portfolioPdf: Record<Language, string>;
 } = {
   github: 'https://github.com/SergeyMotynga',
   email: 'Motynga12345@mail.ru',
   telegram: 'https://t.me/S1moll',
+  portfolioPdf: {
+    ru: '/documents/sergey-motynga-portfolio-ru.pdf',
+    en: '/documents/sergey-motynga-portfolio-en.pdf',
+  },
 };
 
 export const skills = {

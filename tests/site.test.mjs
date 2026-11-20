@@ -33,6 +33,10 @@ test('both home pages and every translated case contain useful static HTML', asy
     assert.equal(home.querySelectorAll('#projects > .page-scene > .project-row').length, 4);
     assert.equal(home.querySelectorAll('.presentation').length, 4);
     assert.equal(home.querySelectorAll('h1').length, 1);
+    const pdf = home.querySelector('.hero-actions a[download]');
+    assert.equal(pdf?.getAttribute('href'), `/documents/sergey-motynga-portfolio-${lang}.pdf`);
+    const pdfBytes = await readFile(path.join(dist, pdf.getAttribute('href')));
+    assert.equal(pdfBytes.subarray(0, 5).toString(), '%PDF-');
     assert(home.querySelector('meta[name="description"]').content.length > 30);
     for (const key of projectKeys) {
       const doc = await page(`/${lang}/projects/${key}`);
