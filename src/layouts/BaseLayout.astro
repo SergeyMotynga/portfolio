@@ -1,0 +1,44 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { sitePath } from '../lib/site-path';
+import { languages, ui, homeUrl, detailUrl, type DetailPage, type Language } from '../i18n/ui';
+import '../styles/global.css';
+import '../styles/showcase.css';
+import '../styles/scenes.css';
+
+interface Props { lang: Language; title?: string; description?: string; detail?: DetailPage }
+const { lang, title, description = ui[lang].description, detail } = Astro.props;
+const pageTitle = title ? `${title} — ${ui[lang].name}` : `${ui[lang].name} — Python Backend Developer`;
+const languagePath = (language: Language) => detail ? detailUrl(language, detail) : homeUrl(language);
+const canonical = Astro.site ? new URL(languagePath(lang), Astro.site) : undefined;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#111018" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    {languages.map((language) => <link rel="alternate" hreflang={language} href={languagePath(language)} />)}
+    <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  </head>
+  <body id="top" class:list={{ 'case-view': Boolean(detail) }}>
+    <div class="ambient-background" aria-hidden="true"><div class="silk-background" data-silk></div></div>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <a class="skip-link" href="#content">{ui[lang].skip}</a>
+    <div class="site-shell">
+      <Header lang={lang} languagePath={languagePath} />
+      <main id="content"><slot /></main>
+      <Footer lang={lang} />
+    </div>
+    <script>import '../scripts/motion';</script>
+  </body>
+</html>

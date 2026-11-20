@@ -1,0 +1,12 @@
+---
+import type { Language } from '../i18n/ui';
+import { sitePath } from '../lib/site-path';
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const front = sitePath('/images/portrait-badge.svg');
+---
+<figure class="hero-badge">
+  <div class="badge-stage" data-badge data-front={front} data-back={sitePath('/images/badge-back.svg')}>
+    <img class="badge-fallback" src={front} width="480" height="680" alt={lang === 'ru' ? 'Бейдж с фотографией Сергея Мотынги' : 'Badge with a portrait of Sergey Motynga'} />
+  </div>
+</figure>

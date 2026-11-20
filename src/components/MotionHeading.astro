@@ -1,0 +1,8 @@
+---
+interface Props { text: string; id?: string; as?: 'h2' | 'h3' }
+const { text, id, as: Tag = 'h2' } = Astro.props;
+const words = text.split(/\s+/);
+---
+<Tag id={id} class="motion-heading" aria-label={text}>
+  {words.map((word, index) => <><span class="motion-word-mask" aria-hidden="true"><span class="motion-word">{word}</span></span>{index < words.length - 1 ? ' ' : null}</>)}
+</Tag>

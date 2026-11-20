@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedProjectLink from '../../../components/RelatedProjectLink.astro';
+import { achievements, type Achievement } from '../../../data/profile';
+import { languages, homeUrl, type Language } from '../../../i18n/ui';
+import { getProjects } from '../../../lib/projects';
+import { sitePath } from '../../../lib/site-path';
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) => achievements.map((achievement) => ({
+    params: { lang, key: achievement.key }, props: { lang, achievement },
+  })));
+}
+interface Props { lang: Language; achievement: Achievement }
+const { lang, achievement } = Astro.props;
+const text = achievement.labels[lang];
+const project = (await getProjects(lang)).find(({ data }) => data.key === achievement.project);
+const ru = lang === 'ru';
+const back = ru ? 'Все достижения' : 'All achievements';
+const document = achievement.document;
+---
+<BaseLayout lang={lang} title={text.title} description={text.description} detail={{ section: 'achievements', key: achievement.key }}>
+  <article class="case-page" data-achievement={achievement.key}>
+    <a class="back-link" href={`${homeUrl(lang)}#presentations`}><span aria-hidden="true">←</span> {back}</a>
+    <header class="case-header">
+      <p class="micro">{text.type}</p>
+      <h1>{text.title}</h1>
+    </header>
+    <div class="prose">
+      <h2>{ru ? 'Об участии' : 'My participation'}</h2>
+      <p>{text.description}</p>
+      <h2>{ru ? 'Диплом и подтверждение' : 'Diploma and supporting document'}</h2>
+      <figure class="achievement-document">
+        <img src={sitePath(document?.preview ?? '/images/achievement-placeholder.svg')}
+          alt={document ? (ru ? `Документ: ${text.title}. ${document.caption.ru}` : `Document: ${text.title}. ${document.caption.en}`) : (ru ? 'Иллюстрация-заглушка вместо диплома' : 'Placeholder illustration for a diploma')}
+          width={document?.width ?? 1200} height={document?.height ?? 800} loading="lazy" />
+        <figcaption>{document ? document.caption[lang] : (ru ? 'Здесь будет диплом или сертификат. Пока показана иллюстрация-заглушка.' : 'A diploma or certificate will appear here. This is a placeholder illustration.')}</figcaption>
+      </figure>
+      {project && <section aria-labelledby="related-project-title">
+        <h2 id="related-project-title">{ru ? 'Связанный проект' : 'Related project'}</h2>
+        <RelatedProjectLink lang={lang} projectKey={project.data.key} title={project.data.title} />
+      </section>}
+    </div>
+    <nav class="case-bottom" aria-label={back}><a class="text-link" href={`${homeUrl(lang)}#presentations`}><span aria-hidden="true">←</span> <span class="link-label">{back}</span></a></nav>
+  </article>
+</BaseLayout>
+<style>
+  .achievement-document { margin: 24px 0 40px; }
+  .achievement-document img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 16px; }
+  [data-achievement="bdai"] .achievement-document img {
+    border: 0;
+    /* The PDF preview has a light fringe baked into the raster edge. */
+    clip-path: inset(1px round 16px);
+  }
+  .achievement-document figcaption { margin-top: 16px; color: var(--muted); font-size: .9375rem; line-height: 1.6; }
+</style>

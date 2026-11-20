@@ -1,0 +1,38 @@
+---
+import { ui, type Language } from '../i18n/ui';
+import { profile } from '../data/profile';
+import MotionHeading from './MotionHeading.astro';
+import LinkIcon from './LinkIcon.astro';
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+<div class="scene-frame footer-frame" id="contact" data-scene-frame>
+<footer class="site-footer">
+  <section class="contact-section" aria-labelledby="contact-title">
+    <div class="contact-intro">
+      <span class="scene-number" aria-hidden="true">05</span>
+      <MotionHeading id="contact-title" text={t.contact} />
+      <p class="contact-lead">{t.contactText}</p>
+    </div>
+    <ul class="contact-links">
+      {profile.email && <li><a class="contact-link" href={`mailto:${profile.email}`}>
+        <span class="contact-channel">{t.emailLabel}</span>
+        <span class="contact-value">{profile.email}</span><LinkIcon kind="email" class="contact-arrow" />
+      </a></li>}
+      {profile.telegram && <li><a class="contact-link" href={profile.telegram} target="_blank" rel="noopener noreferrer">
+        <span class="contact-channel">Telegram</span>
+        <span class="contact-value">@{new URL(profile.telegram).pathname.slice(1)}</span><LinkIcon kind="external" class="contact-arrow" />
+      </a></li>}
+      <li><a class="contact-link" href={profile.github} target="_blank" rel="noopener noreferrer">
+        <span class="contact-channel">GitHub · {t.githubLabel}</span>
+        <span class="contact-value">{new URL(profile.github).pathname.slice(1)}</span><LinkIcon kind="external" class="contact-arrow" />
+      </a></li>
+    </ul>
+  </section>
+  <div class="footer-bottom">
+    <span>{t.name}<span class="footer-role">Python Backend · ML Engineering</span></span>
+    <a class="footer-top" href="#top">{lang === 'ru' ? 'Наверх' : 'Back to top'} <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
+</div>

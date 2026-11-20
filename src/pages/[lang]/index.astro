@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import HeroBadge from '../../components/HeroBadge.astro';
+import TextEffect from '../../components/TextEffect.astro';
+import MotionHeading from '../../components/MotionHeading.astro';
+import LinkIcon from '../../components/LinkIcon.astro';
+import { languages, ui, achievementUrl, experienceUrl, type Language } from '../../i18n/ui';
+import { getProjects } from '../../lib/projects';
+import { sitePath } from '../../lib/site-path';
+import { profile, skills, experience, achievements } from '../../data/profile';
+
+export function getStaticPaths() { return languages.map((lang) => ({ params: { lang }, props: { lang } })); }
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = ui[lang];
+const projects = await getProjects(lang);
+const featured = projects.filter(({ data }) => data.featured);
+const catalog = projects.filter(({ data }) => !data.featured);
+---
+<BaseLayout lang={lang}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-scene">
+      <p class="eyebrow micro"><span class="status-dot" aria-hidden="true"></span>Python backend · ML Engineering</p>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title" aria-label={t.name} data-elastic data-text={t.name.replace(' ', '\n')}><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ')[0]}</span></span><span class="name-mask" aria-hidden="true"><span class="name-line">{t.name.split(' ').slice(1).join(' ')}</span></span></h1>
+          <p class="hero-role">Python Backend Developer <span>/ ML Engineering</span></p>
+          <p class="hero-lead"><TextEffect text={t.lead} /></p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#projects">{t.explore} <span aria-hidden="true">↘</span></a>
+            <span data-magnet><a class="text-link" href={profile.github} target="_blank" rel="noopener noreferrer"><span class="link-label">GitHub</span> <LinkIcon kind="external" /></a></span>
+            <span data-magnet><a class="text-link" href="#contact"><span class="link-label">{lang === 'ru' ? 'Связаться' : 'Contact me'}</span> <span aria-hidden="true">↓</span></a></span>
+            <span data-magnet><a class="text-link" href={sitePath(profile.portfolioPdf[lang])} download><span class="link-label">{t.downloadPortfolio}</span> <span aria-hidden="true">↓</span></a></span>
+          </div>
+        </div>
+        <HeroBadge lang={lang} />
+      </div>
+      <ul class="tech-strip" aria-label={lang === 'ru' ? 'Основной стек' : 'Core stack'}>{['Python', 'FastAPI', 'PostgreSQL', 'SQLAlchemy'].map((technology) => <li>{technology}</li>)}</ul>
+    </div>
+  </section>
+
+  <div class="scene-frame" id="projects" data-scene-frame>
+  <section class="section page-scene scene-projects" aria-labelledby="projects-title">
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">01</span><MotionHeading id="projects-title" text={t.selected} /></div><p class="micro">{t.selectedMeta}</p></div>
+    {featured.map((project, index) => <ProjectRow project={project} index={index + 1} lang={lang} />)}
+    {catalog.length > 0 && <details class="catalog">
+      <summary>
+        <span>{t.catalog}</span>
+        <span class="catalog-action">
+          <span class="catalog-expand">{t.more} {catalog.length} <span aria-hidden="true">↓</span></span>
+          <span class="catalog-collapse">{t.collapseCatalog} <span aria-hidden="true">↑</span></span>
+        </span>
+      </summary>
+      <div>{catalog.map((project, index) => <ProjectRow project={project} index={featured.length + index + 1} lang={lang} compact />)}</div>
+    </details>}
+  </section>
+  </div>
+
+  <div class="scene-frame" id="presentations" data-scene-frame>
+  <section class="section page-scene scene-presentations" aria-labelledby="presentations-title">
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">02</span><MotionHeading id="presentations-title" text={t.presentations} /></div><p class="micro">{t.presentationsMeta}</p></div>
+    <div class="presentations-grid">{achievements.map((achievement, index) => {
+      const text = achievement.labels[lang];
+      return <article class="presentation" data-reveal={index % 2 ? 'right' : 'up'} data-sequence={index}>
+        <a class="presentation-link" href={achievementUrl(lang, achievement.key)} aria-labelledby={`event-${index}-title`}>
+          <p class="micro">{text.type}</p><h3 id={`event-${index}-title`}>{text.title}</h3><p>{text.description}</p>
+          <span class="text-link" aria-hidden="true"><span class="link-label">{lang === 'ru' ? 'Подробнее' : 'View achievement'}</span> <LinkIcon /></span>
+        </a>
+      </article>;
+    })}</div>
+  </section>
+  </div>
+
+  <div class="scene-frame" id="experience" data-scene-frame>
+  <section class="section page-scene scene-experience" aria-labelledby="experience-title">
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">03</span><MotionHeading id="experience-title" text={t.experience} /></div></div>
+    {experience.map((entry, index) => {
+      const { company, contribution, description, period } = entry[lang];
+      const companyId = `experience-${entry.key}-company`;
+      return <article class="experience-entry" data-reveal="up" data-sequence={index}>
+        <a class="experience-link presentation-link" href={experienceUrl(lang, entry.key)} aria-labelledby={companyId}>
+          <div>
+            <h3 id={companyId} class="experience-company">{company}</h3>
+            <p class="experience-role">{contribution}</p>
+          </div>
+          <div>
+            <p class="experience-description">{description}</p>
+            <p class="experience-period">{period}</p>
+            <span class="text-link" aria-hidden="true"><span class="link-label">{t.viewExperience}</span> <LinkIcon /></span>
+          </div>
+        </a>
+      </article>;
+    })}
+  </section>
+  </div>
+
+  <div class="scene-frame" id="about" data-scene-frame>
+  <section class="section page-scene scene-about" aria-labelledby="about-title">
+    <div class="crystal-stage" data-crystal aria-hidden="true"><span class="crystal-fallback"></span></div>
+    <div class="section-heading"><div class="scene-heading-main"><span class="scene-number" aria-hidden="true">04</span><MotionHeading id="about-title" text={t.about} /></div></div>
+    <div class="about-grid">
+      <dl class="skills" data-reveal="left">
+        {(Object.keys(skills) as (keyof typeof skills)[]).map((key) => <><dt>{t[key]}</dt><dd>{skills[key].join(' · ')}</dd></>)}
+      </dl>
+      <div class="about-visual"><div class="education" data-reveal="right"><p class="micro">{t.education}</p><h3>{t.university}</h3><p>{t.programme}</p><p>{t.educationText}</p></div></div>
+    </div>
+  </section>
+  </div>
+
+</BaseLayout>

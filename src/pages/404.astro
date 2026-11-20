@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LinkIcon from '../components/LinkIcon.astro';
+import { homeUrl } from '../i18n/ui';
+---
+<BaseLayout lang="ru" title="Страница не найдена">
+  <section class="not-found"><p class="micro">404</p><h1>Страница не найдена</h1><p>The page could not be found.</p><div class="hero-actions"><a class="primary-link" href={homeUrl('ru')}>На главную <LinkIcon /></a><a class="text-link" href={homeUrl('en')}><span class="link-label">English version</span> <LinkIcon /></a></div></section>
+</BaseLayout>

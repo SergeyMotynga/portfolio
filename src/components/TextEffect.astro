@@ -1,0 +1,6 @@
+---
+interface Props { text: string }
+const { text } = Astro.props;
+const words = text.split(/\s+/);
+---
+<span data-text-effect>{words.map((word, index) => <><span class="effect-word">{word}</span>{index < words.length - 1 ? ' ' : null}</>)}</span>
