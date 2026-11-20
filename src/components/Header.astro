@@ -8,7 +8,7 @@ const sections = ['projects', 'presentations', 'experience', 'about', 'contact']
 const onHome = Astro.url.pathname === homeUrl(lang);
 ---
 <header class="site-header">
-  <a class="wordmark" href={homeUrl(lang)} aria-label={`${t.name} — ${t.home}`}>sm<span>.dev</span></a>
+  <a class="wordmark" href={homeUrl(lang)} aria-label={`${t.name} — ${t.home}`}>semot<span>.ru</span></a>
   <nav class="navigation" aria-label={lang === 'ru' ? 'Главная навигация' : 'Main navigation'}>
     {t.navigation.map((label, index) => <a href={`${onHome ? '' : homeUrl(lang)}#${sections[index]}`} data-section-link={onHome ? sections[index] : undefined}>{label}</a>)}
   </nav>
