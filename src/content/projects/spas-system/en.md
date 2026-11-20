@@ -3,7 +3,7 @@ key: "spas-system"
 lang: "en"
 title: "SPAS System"
 summary: "Time-series upload, anomaly detection and visual exploration of analysis results."
-contribution: "Built the analysis interface for a team anomaly-detection system: data upload, parameter controls and result charts. Integrated it with the API and later presented the project at a conference by invitation."
+contribution: "Built the analysis interface for a team anomaly-detection system: data upload, parameter controls and result charts. Integrated it with the API and later placed third with the project at a conference."
 category: "team"
 disclosure: "open"
 order: 4
@@ -27,4 +27,4 @@ SPAS System helps explore time series and identify unusual segments. Users uploa
 
 Streamlit and pandas support data handling and visualisation. A FastAPI backend exposes the analysis API, with Docker used to run components. My contribution focused on the interface and integration; anomaly-detection methods belong to the wider team solution.
 
-I later presented the project at a conference by invitation.
+I presented the project at a scientific and technical conference and placed third.

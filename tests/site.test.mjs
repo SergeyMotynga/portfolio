@@ -172,9 +172,13 @@ test('achievements preserve the owner-confirmed event and project associations',
     assert.ok(entry, title);
     assert.equal(entry.querySelector('a').getAttribute('href'), `/ru/achievements/${key}/`);
   }
-  assert(entries[1].textContent.includes('по приглашению'));
+  assert(entries[1].textContent.includes('III место'));
+  assert(entries[3].textContent.includes('«Лучший технологический проект»'));
   const english = await page('/en');
   assert.equal(english.querySelector('#presentations-title').textContent, 'Achievements');
+  const englishEntries = [...english.querySelectorAll('.presentation')];
+  assert(englishEntries[1].textContent.includes('3rd place'));
+  assert(englishEntries[3].textContent.includes('Best Technology Project'));
 });
 
 
