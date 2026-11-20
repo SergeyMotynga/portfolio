@@ -15,13 +15,14 @@
 }
 .page-scene .section-heading {
   align-items: end;
+  flex-wrap: wrap;
   gap: 24px 48px;
   margin-bottom: clamp(36px, 4vw, 64px);
 }
 .scene-heading-main { display: flex; align-items: baseline; gap: clamp(20px, 2.5vw, 40px); min-width: 0; }
 .scene-number { flex-shrink: 0; color: var(--accent); font: 400 clamp(32px, 3.7vw, 56px)/1 var(--display); letter-spacing: -.02em; }
 .page-scene .section-heading h2 { font-size: clamp(36px, 4.8vw, 68px); line-height: 1.15; letter-spacing: -.025em; }
-.page-scene .section-heading .micro { max-width: 30ch; }
+.page-scene .section-heading > .micro { inline-size: max-content; max-inline-size: 100%; overflow-wrap: anywhere; }
 .scene-projects { background: var(--scene-projects); }
 .scene-projects .card-face { background: var(--surface); }
 .scene-projects > .section-heading { margin-bottom: clamp(20px, 3vw, 44px); }
@@ -84,7 +85,7 @@
 }
 @media (max-width: 750px) {
   .page-scene .section-heading { align-items: start; flex-direction: column; gap: 16px; }
-  .page-scene .section-heading .micro { text-align: start; max-width: none; }
+  .page-scene .section-heading > .micro { text-align: start; }
   .scene-heading-main { gap: 20px; }
   .experience-link { grid-template-columns: minmax(0, 1fr); }
   .scene-about .about-grid { gap: 40px; }
@@ -118,6 +119,7 @@
   .site-footer { padding-inline: 20px; }
   .scene-heading-main { gap: 14px; }
   .page-scene .section-heading h2 { font-size: 32px; }
+  .page-scene .section-heading > .micro { letter-spacing: 0; }
   .scene-number { font-size: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
